@@ -6,7 +6,9 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager instance;
 
-    public GameObject inputPBullet;
+    public GameObject inputPBullet_Lv1;
+    public GameObject inputPBullet_Lv2;
+
     public GameObject inputEBullet_SG1;
     public GameObject inputEBullet_SB1;
     public GameObject inputEBullet_SP1;
@@ -14,7 +16,9 @@ public class PoolManager : MonoBehaviour
 
     public GameObject inputEffect_EDestroy;
 
-    public GameObject[] poolPBullet;
+    public GameObject[] poolPBullet_Lv1;
+    public GameObject[] poolPBullet_Lv2;
+
     public GameObject[] poolEBullet_SG1;
     public GameObject[] poolEBullet_SB1;
     public GameObject[] poolEBullet_SP1;
@@ -26,11 +30,18 @@ public class PoolManager : MonoBehaviour
     {
         if (instance == null) instance = this;
 
-        poolPBullet = new GameObject[50];
-        for (int i = 0; i < poolPBullet.Length; i++)
+        poolPBullet_Lv1 = new GameObject[20];
+        for (int i = 0; i < poolPBullet_Lv1.Length; i++)
         {
-            poolPBullet[i] = Instantiate(inputPBullet);
-            poolPBullet[i].SetActive(false);
+            poolPBullet_Lv1[i] = Instantiate(inputPBullet_Lv1);
+            poolPBullet_Lv1[i].SetActive(false);
+        }
+
+        poolPBullet_Lv2 = new GameObject[20];
+        for (int i = 0; i < poolPBullet_Lv2.Length; i++)
+        {
+            poolPBullet_Lv2[i] = Instantiate(inputPBullet_Lv2);
+            poolPBullet_Lv2[i].SetActive(false);
         }
 
         poolEBullet_SG1 = new GameObject[500];

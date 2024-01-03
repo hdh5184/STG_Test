@@ -12,6 +12,10 @@ public class PlayerBullet : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector2.up * 15f * Time.deltaTime);
+        if (transform.position.y > GameManager.instance.transform.position.y + 8f)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

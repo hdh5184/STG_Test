@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5684791509784546450}
   - component: {fileID: 4992720516326731417}
   m_Layer: 0
-  m_Name: PBullet_Small
+  m_Name: PBullet_Small_Lv1
   m_TagString: PlayerBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -52,11 +52,18 @@ public class Player : MonoBehaviour
     {
         shootTime += Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.Z) && shootTime > 0.07f && GameManager.playerLevel == 1)
+        if (Input.GetKey(KeyCode.Z) && shootTime > 0.07f)
         {
-            for (int i = 0; i < pool.poolPBullet.Length; i++)
+            for (int i = 0; i < 20; i++) //pool.poolPBullet_Lv1.Length = 20
             {
-                GameObject playerBullet = pool.poolPBullet[i];
+                GameObject playerBullet = null;
+
+                switch (GameManager.playerLevel)
+                {
+                    case 1: playerBullet = pool.poolPBullet_Lv1[i]; break;
+                    case 2: playerBullet = pool.poolPBullet_Lv2[i]; break;
+                }
+                
                 if (playerBullet.activeSelf == false)
                 {
                     playerBullet.gameObject.SetActive(true);
