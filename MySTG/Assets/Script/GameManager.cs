@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public PoolManager pool;
+
     public GameObject Player;
 
     public Vector2 playerPos;

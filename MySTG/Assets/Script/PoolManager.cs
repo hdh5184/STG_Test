@@ -12,11 +12,15 @@ public class PoolManager : MonoBehaviour
     public GameObject inputEBullet_SP1;
     public GameObject inputEBullet_BG1;
 
+    public GameObject inputEffect_EDestroy;
+
     public GameObject[] poolPBullet;
     public GameObject[] poolEBullet_SG1;
     public GameObject[] poolEBullet_SB1;
     public GameObject[] poolEBullet_SP1;
     public GameObject[] poolEBullet_BG1;
+
+    public GameObject[] poolEffect_EDestroy;
 
     private void Awake()
     {
@@ -55,6 +59,13 @@ public class PoolManager : MonoBehaviour
         {
             poolEBullet_BG1[i] = Instantiate(inputEBullet_BG1);
             poolEBullet_BG1[i].SetActive(false);
+        }
+
+        poolEffect_EDestroy = new GameObject[20];
+        for (int i = 0; i < poolEffect_EDestroy.Length; i++)
+        {
+            poolEffect_EDestroy[i] = Instantiate(inputEffect_EDestroy);
+            poolEffect_EDestroy[i].SetActive(false);
         }
     }
 
