@@ -52,7 +52,7 @@ public class Player : MonoBehaviour
     {
         shootTime += Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.Z) && shootTime > 0.07f)
+        if (Input.GetKey(KeyCode.Z) && shootTime > 0.07f && GameManager.playerLevel == 1)
         {
             for (int i = 0; i < pool.poolPBullet.Length; i++)
             {

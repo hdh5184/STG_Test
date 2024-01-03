@@ -8,9 +8,11 @@ public class GameManager : MonoBehaviour
 
     public PoolManager pool;
 
-    public GameObject Player;
+    public GameObject player;
 
     public Vector2 playerPos;
+
+    public static int playerLevel = 1;
 
     void Start()
     {
@@ -19,6 +21,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        playerPos = new Vector2(Player.transform.position.x, Player.transform.position.y);
+        playerPos = new Vector2(player.transform.position.x, player.transform.position.y);
     }
 }
