@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
 
     Vector2 PlayerMovingVec;
 
-    float shootTime = 0;
+    float shootTime = 0, shootTimeII = 0;
 
     private void Awake()
     {
@@ -51,26 +51,57 @@ public class Player : MonoBehaviour
     void Fire()
     {
         shootTime += Time.deltaTime;
+        shootTimeII += Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.Z) && shootTime > 0.07f)
+        if (Input.GetKey(KeyCode.Z))
         {
-            for (int i = 0; i < 20; i++) //pool.poolPBullet_Lv1.Length = 20
+            if(shootTime > 0.07f)
             {
-                GameObject playerBullet = null;
-
-                switch (GameManager.playerLevel)
+                for (int i = 0; i < 20; i++) //pool.poolPBullet_Lv1.Length = 20
                 {
-                    case 1: playerBullet = pool.poolPBullet_Lv1[i]; break;
-                    case 2: playerBullet = pool.poolPBullet_Lv2[i]; break;
+                    GameObject playerBullet = null;
+
+                    switch (GameManager.playerLevel)
+                    {
+                        case 1: playerBullet = pool.poolPBullet_Lv1[i]; break;
+                        case 2:
+                        case 3: playerBullet = pool.poolPBullet_Lv2[i]; break;
+                    }
+
+                    if (playerBullet.activeSelf == false)
+                    {
+                        playerBullet.gameObject.SetActive(true);
+                        playerBullet.transform.position = playerShootPos.transform.position;
+                        shootTime = 0f;
+                        break;
+                    }
+                }
+            }
+            
+
+            if (GameManager.playerLevel == 3)
+            {
+                if (shootTimeII > 0.2f)
+                {
+                    int Lv3Count = 0;
+                    for (int i = 0; i < 20; i++) //pool.poolPBullet_Lv3.Length = 20
+                    {
+                        GameObject playerBullet = null;
+                        playerBullet = pool.poolPBullet_Lv3[i];
+
+                        if (playerBullet.activeSelf == false)
+                        {
+                            playerBullet.gameObject.SetActive(true);
+                            playerBullet.transform.position = (Lv3Count == 0) ?
+                                new Vector2(playerShootPos.transform.position.x - 0.35f, playerShootPos.transform.position.y) :
+                                new Vector2(playerShootPos.transform.position.x + 0.35f, playerShootPos.transform.position.y);
+                            Lv3Count++;
+
+                            if (Lv3Count == 2) { shootTimeII = 0f; break; }
+                        }
+                    }
                 }
                 
-                if (playerBullet.activeSelf == false)
-                {
-                    playerBullet.gameObject.SetActive(true);
-                    playerBullet.transform.position = playerShootPos.transform.position;
-                    shootTime = 0f;
-                    break;
-                }
             }
         }
     }

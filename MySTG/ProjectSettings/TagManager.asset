@@ -9,6 +9,9 @@ TagManager:
   - Field
   - PoolManager
   - Item
+  - PlayerBullet_Lv1
+  - PlayerBullet_Lv2
+  - PlayerBullet_Lv3
   layers:
   - Default
   - TransparentFX

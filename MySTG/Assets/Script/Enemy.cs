@@ -57,11 +57,14 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("PlayerBullet"))
+        switch (collision.tag)
         {
-            Health--;
-            collision.gameObject.SetActive(false);
+            case "PlayerBullet_Lv1": Health--;      collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv2": Health -= 3;   collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv3": Health -= 5;   collision.gameObject.SetActive(false); break;
         }
+
+        
 
         if (Health <= 0)
         {
