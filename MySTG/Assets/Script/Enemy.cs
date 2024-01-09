@@ -62,6 +62,7 @@ public class Enemy : MonoBehaviour
             case "PlayerBullet_Lv1": Health--;      collision.gameObject.SetActive(false); break;
             case "PlayerBullet_Lv2": Health -= 3;   collision.gameObject.SetActive(false); break;
             case "PlayerBullet_Lv3": Health -= 5;   collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv4": Health--;      collision.gameObject.SetActive(false); break;
         }
 
         

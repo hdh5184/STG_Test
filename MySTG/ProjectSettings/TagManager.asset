@@ -12,6 +12,7 @@ TagManager:
   - PlayerBullet_Lv1
   - PlayerBullet_Lv2
   - PlayerBullet_Lv3
+  - PlayerBullet_Lv4
   layers:
   - Default
   - TransparentFX

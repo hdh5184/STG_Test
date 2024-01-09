@@ -9,6 +9,7 @@ public class PoolManager : MonoBehaviour
     public GameObject inputPBullet_Lv1;
     public GameObject inputPBullet_Lv2;
     public GameObject inputPBullet_Lv3;
+    public GameObject inputPBullet_Lv4;
 
     public GameObject inputEBullet_SG1;
     public GameObject inputEBullet_SB1;
@@ -20,6 +21,7 @@ public class PoolManager : MonoBehaviour
     public GameObject[] poolPBullet_Lv1;
     public GameObject[] poolPBullet_Lv2;
     public GameObject[] poolPBullet_Lv3;
+    public GameObject[] poolPBullet_Lv4;
 
     public GameObject[] poolEBullet_SG1;
     public GameObject[] poolEBullet_SB1;
@@ -52,6 +54,14 @@ public class PoolManager : MonoBehaviour
             poolPBullet_Lv3[i] = Instantiate(inputPBullet_Lv3);
             poolPBullet_Lv3[i].SetActive(false);
         }
+
+        poolPBullet_Lv4 = new GameObject[80];
+        for (int i = 0; i < poolPBullet_Lv4.Length; i++)
+        {
+            poolPBullet_Lv4[i] = Instantiate(inputPBullet_Lv4);
+            poolPBullet_Lv4[i].SetActive(false);
+        }
+
 
         poolEBullet_SG1 = new GameObject[500];
         for (int i = 0; i < poolEBullet_SG1.Length; i++)

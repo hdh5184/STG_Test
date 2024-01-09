@@ -10,17 +10,21 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
 
-    public Vector2 playerPos;
+    public Vector3 playerPos;
+    public Vector3 playerMovingVec;
 
     public static int playerLevel = 1;
 
     void Start()
     {
         instance = this;
+        playerPos = player.transform.position;
     }
 
     void Update()
     {
-        playerPos = new Vector2(player.transform.position.x, player.transform.position.y);
+        playerMovingVec = player.transform.position - playerPos;
+        playerPos = player.transform.position;
+        Debug.Log(playerLevel);
     }
 }
