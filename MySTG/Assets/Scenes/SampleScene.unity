@@ -810,6 +810,8 @@ MonoBehaviour:
   inputEBullet_BG1: {fileID: 7169466389742091165, guid: d58e4ee231cf44e0ca9b72c7adad5a9e, type: 3}
   inputEffect_EDestroy: {fileID: 8646459174201566620, guid: 660469384892a44fcba1b14400510973, type: 3}
   inputItem_PowerUp: {fileID: 6586005199732551998, guid: f3f11228552ee4195ad3d22e7f815f6d, type: 3}
+  inputItem_SilverCoin: {fileID: 1548284935227467726, guid: 7e4dbd090ce9d4afd97651e4d618ec4d, type: 3}
+  inputItem_GoldCoin: {fileID: 7264613992857059105, guid: fec150b26879d4d8fa3bc72a6da277af, type: 3}
   poolPBullet_Lv1: []
   poolPBullet_Lv2: []
   poolPBullet_Lv3: []
@@ -820,6 +822,8 @@ MonoBehaviour:
   poolEBullet_BG1: []
   poolEffect_EDestroy: []
   poolItem_PowerUp: []
+  poolItem_SilverCoin: []
+  poolItem_GoldCoin: []
 --- !u!4 &1471678772
 Transform:
   m_ObjectHideFlags: 0
@@ -1116,6 +1120,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8516958490266207680, guid: 3ef8e541bc45b4d95b91bed0888316c1, type: 3}
+      propertyPath: pool
+      value: 
+      objectReference: {fileID: 1471678771}
     - target: {fileID: 8516958490266207680, guid: 3ef8e541bc45b4d95b91bed0888316c1, type: 3}
       propertyPath: outputBulletPool
       value: 

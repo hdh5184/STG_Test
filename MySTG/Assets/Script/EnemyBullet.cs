@@ -6,6 +6,8 @@ public class EnemyBullet : MonoBehaviour
 {
     public EBulletType bulletType;
 
+    public float enemyFromCode = 0;
+
     public enum EBulletType
     {
         Big_G1,
@@ -19,9 +21,15 @@ public class EnemyBullet : MonoBehaviour
         
     }
 
+    private void OnEnable()
+    {
+        
+    }
+
     void Update()
     {
         MovingBullet();
+        //EnemyDestroyCompare();
     }
 
     void MovingBullet()
@@ -41,7 +49,20 @@ public class EnemyBullet : MonoBehaviour
                 transform.Translate(Vector2.down * 5f * Time.deltaTime);
                 break;
         }
+    }
 
+    void EnemyDestroyCompare()
+    {
+        bool findEnemy = false;
+        foreach (var code in GameManager.EnemyCode)
+        {
+            if (code == enemyFromCode) { findEnemy = true; break; }
+        }
+
+        if (!findEnemy)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

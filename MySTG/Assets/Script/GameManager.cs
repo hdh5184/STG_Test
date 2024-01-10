@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    public static List<float> EnemyCode = new List<float>();
+
     public PoolManager pool;
 
     public GameObject player;
@@ -15,10 +17,13 @@ public class GameManager : MonoBehaviour
 
     public static int playerLevel = 1;
 
+    public static int Score = 0;
+
     void Start()
     {
         instance = this;
         playerPos = player.transform.position;
+        Score = 0;
     }
 
     void Update()

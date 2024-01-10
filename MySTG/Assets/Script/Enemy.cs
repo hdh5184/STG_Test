@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public PoolManager outputBulletPool;
+    public PoolManager pool;
 
     public EnemyType enemyType;
     public int Health;
@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour
     float shootTime = 0;
     float shootTime2 = 0, shootTime2_1 = 0;
     float pattenS1DegCos = 0f;
+
+    float bulletFromCode = 0;
 
     Vector2 playerVec;
     bool isShoot = false;
@@ -28,7 +30,8 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        
+        bulletFromCode = Random.Range(0f, 1f) * Random.Range(0f, 1f);
+        GameManager.EnemyCode.Add(bulletFromCode);
     }
 
     private void OnEnable()
@@ -42,7 +45,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
@@ -70,9 +73,45 @@ public class Enemy : MonoBehaviour
         if (Health <= 0)
         {
             gameObject.SetActive(false);
-            for (int i = 0; i < outputBulletPool.poolEffect_EDestroy.Length; i++)
+
+            List<float> temp = new List<float>();
+
+            foreach (var code in GameManager.EnemyCode)
             {
-                GameObject Explosion = outputBulletPool.poolEffect_EDestroy[i];
+                if (code == bulletFromCode) temp.Add(bulletFromCode);
+            }
+
+            for (int i = 0; i < pool.poolEBullet_SP1.Length; i++)
+            {
+                GameObject bullet = pool.poolEBullet_SP1[i];
+                EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
+
+                if (bullet.activeSelf && bulletFrom.enemyFromCode == bulletFromCode)
+                {
+                    bullet.SetActive(false);
+                    for (int j = 0; j < pool.poolItem_SilverCoin.Length; j++)
+                    {
+                        GameObject Coin = pool.poolItem_SilverCoin[j];
+                        if (Coin.activeSelf == false)
+                        {
+                            Coin.transform.position = bullet.transform.position;
+                            Coin.SetActive(true);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            foreach (var code in temp)
+            {
+                GameManager.EnemyCode.Remove(code);
+            }
+
+
+
+            for (int i = 0; i < pool.poolEffect_EDestroy.Length; i++)
+            {
+                GameObject Explosion = pool.poolEffect_EDestroy[i];
                 if (Explosion.activeSelf == false)
                 {
                     Explosion.transform.position = transform.position;
@@ -94,9 +133,9 @@ public class Enemy : MonoBehaviour
 
         if (shootTime > 0.1f)
         {
-            for (int i = 0; i < outputBulletPool.poolEBullet_SP1.Length; i++)
+            for (int i = 0; i < pool.poolEBullet_SP1.Length; i++)
             {
-                GameObject bullet = outputBulletPool.poolEBullet_SP1[i];
+                GameObject bullet = pool.poolEBullet_SP1[i];
                 if (bullet.activeSelf == false)
                 {
                     bullet.transform.position = transform.position;
@@ -129,9 +168,9 @@ public class Enemy : MonoBehaviour
             if (shootTime >= 0.08f)
             {
                 int bulletWayCount = 0;
-                for (int i = 0; i < outputBulletPool.poolEBullet_SP1.Length; i++)
+                for (int i = 0; i < pool.poolEBullet_SP1.Length; i++)
                 {
-                    GameObject bullet = outputBulletPool.poolEBullet_SP1[i];
+                    GameObject bullet = pool.poolEBullet_SP1[i];
                     if (bullet.activeSelf == false)
                     {
                         bullet.transform.position = transform.position;
@@ -139,6 +178,9 @@ public class Enemy : MonoBehaviour
                         if      (bulletWayCount == 0) bullet.transform.rotation = Quaternion.Euler(0, 0, degree - 10);
                         else if (bulletWayCount == 1) bullet.transform.rotation = Quaternion.Euler(0, 0, degree);
                         else if (bulletWayCount == 2) bullet.transform.rotation = Quaternion.Euler(0, 0, degree + 10);
+
+                        EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
+                        bulletFrom.enemyFromCode = bulletFromCode;
                         bullet.SetActive(true);
 
                         if (bulletWayCount == 2) break; else bulletWayCount++;
