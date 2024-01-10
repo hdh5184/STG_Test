@@ -149,7 +149,33 @@ public class Player : MonoBehaviour
     {
         if (collision.CompareTag("EnemyBullet"))
         {
-            Debug.Log("Ooooooooooooooof");
+            DestroyPlayer();
+            Invoke("ReloadPlayer", 1.5f);
         }
+    }
+
+    void DestroyPlayer()
+    {
+        gameObject.SetActive(false);
+        for (int i = 0; i < pool.poolEffect_EDestroy.Length; i++)
+        {
+            GameObject Explosion = pool.poolEffect_EDestroy[i];
+            if (Explosion.activeSelf == false)
+            {
+                Explosion.transform.position = transform.position;
+                Explosion.SetActive(true);
+                break;
+            }
+        }
+
+        transform.position = GameManager.instance.transform.position + new Vector3(0, -3f);
+
+        GameManager.playerLevel = 1;
+    }
+
+    void ReloadPlayer()
+    {
+        gameObject.SetActive(true);
+
     }
 }
