@@ -8,7 +8,7 @@ public class Item : MonoBehaviour
     public ItemType itemType;
 
     Vector2 ItemMoving;
-    bool movingisLeft, movingisUp;
+    bool movingisLeft, movingisDown;
 
     public enum ItemType
     {
@@ -24,18 +24,18 @@ public class Item : MonoBehaviour
     {
         if      (transform.position.x >= GameManager.instance.transform.position.x + 2.5f) movingisLeft = true;
         else if (transform.position.x <= GameManager.instance.transform.position.x - 2.5f) movingisLeft = false;
-        else if (transform.position.y <= GameManager.instance.transform.position.x - 4.5f) movingisUp = true;
-        if      (transform.position.y >= GameManager.instance.transform.position.x + 4.5f) movingisUp = false;
+        if      (transform.position.y >= GameManager.instance.transform.position.x + 4.5f) movingisDown = true;
+        else if (transform.position.y <= GameManager.instance.transform.position.x - 4.5f) movingisDown = false;
 
         transform.Translate(
-            new Vector2(ItemMoving.x * ((movingisLeft) ? -1 : 1), ItemMoving.y * ((movingisUp) ? 1 : -1)) * Time.deltaTime);
+            new Vector2(ItemMoving.x * ((movingisLeft) ? -1 : 1), ItemMoving.y * ((movingisDown) ? 1 : -1)) * Time.deltaTime);
     }
 
     private void OnEnable()
     {
         movingisLeft = (Random.Range(-1, 1) == -1)? true : false;
-        movingisUp = (Random.Range(-1, 1) == 0) ? true : false;
-        ItemMoving = new Vector2(Random.Range(1f, 2f), Random.Range(1f, 2f));
+        movingisDown = true;
+        ItemMoving = new Vector2(Random.Range(1f, 2f), -Random.Range(1f, 2f));
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
