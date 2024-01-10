@@ -25,6 +25,5 @@ public class GameManager : MonoBehaviour
     {
         playerMovingVec = player.transform.position - playerPos;
         playerPos = player.transform.position;
-        Debug.Log(playerLevel);
     }
 }

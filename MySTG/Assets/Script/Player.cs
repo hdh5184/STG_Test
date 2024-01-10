@@ -8,10 +8,13 @@ public class Player : MonoBehaviour
 
     public GameObject playerShootPos;
     public GameObject playerOptionL, playerOptionR;
+    public GameObject playerGuardSprite;
 
     Animator animator;
 
     Vector2 PlayerMovingVec;
+
+    bool isGuard = false;
 
     float shootTime = 0, shootTimeII = 0, shootTimeIII;
 
@@ -22,7 +25,8 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        
+        if (GameManager.playerLevel == 4) { playerOptionL.SetActive(true); playerOptionR.SetActive(true); }
+        else { playerOptionL.SetActive(false); playerOptionR.SetActive(false); }
     }
 
     void Update()
@@ -100,8 +104,6 @@ public class Player : MonoBehaviour
                         {
                             playerBullet.gameObject.SetActive(true);
                             playerBullet.transform.position = (Lv3Count == 0) ?
-                                //new Vector2(playerShootPos.transform.position.x - 0.35f, playerShootPos.transform.position.y) :
-                                //new Vector2(playerShootPos.transform.position.x + 0.35f, playerShootPos.transform.position.y);
                                 playerShootPos.transform.position + new Vector3(-0.35f, 0f) :
                                 playerShootPos.transform.position + new Vector3(0.35f, 0f);
                             Lv3Count++;
@@ -115,6 +117,8 @@ public class Player : MonoBehaviour
 
             if (GameManager.playerLevel == 4)
             {
+                playerOptionL.SetActive(true); playerOptionR.SetActive(true);
+
                 if (shootTimeIII > 0.03f)
                 {
                     int Lv4Count = 0;
@@ -147,7 +151,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("EnemyBullet"))
+        if (collision.CompareTag("EnemyBullet") && !isGuard)
         {
             DestroyPlayer();
             Invoke("ReloadPlayer", 1.5f);
@@ -168,14 +172,33 @@ public class Player : MonoBehaviour
             }
         }
 
+        int summonItemLimit = 0;
+        for (int i = 0; i < pool.poolItem_PowerUp.Length; i++)
+        {
+            GameObject Item = pool.poolItem_PowerUp[i];
+            if (Item.activeSelf == false)
+            {
+                
+                Item.transform.position = transform.position;
+                Item.SetActive(true);
+                summonItemLimit++;
+                if (summonItemLimit == 2) break;
+            }
+        }
+        
         transform.position = GameManager.instance.transform.position + new Vector3(0, -3f);
 
         GameManager.playerLevel = 1;
+        playerOptionL.SetActive(false); playerOptionR.SetActive(false);
     }
 
     void ReloadPlayer()
     {
+        isGuard = true;
+        playerGuardSprite.SetActive(true);
         gameObject.SetActive(true);
-
+        Invoke("Unguard", 2.5f);
     }
+
+    void Unguard() { isGuard = false; playerGuardSprite.SetActive(false); }
 }
