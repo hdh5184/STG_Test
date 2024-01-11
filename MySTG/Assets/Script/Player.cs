@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
 {
     public PoolManager pool;
 
+    List<GameObject> triggerCompare = new List<GameObject>();
+
     public GameObject playerShootPos;
     public GameObject playerOptionL, playerOptionR;
     public GameObject playerGuardSprite;
@@ -15,6 +17,7 @@ public class Player : MonoBehaviour
     Vector2 PlayerMovingVec;
 
     bool isGuard = false;
+    bool isDestroyed = false;
 
     float shootTime = 0, shootTimeII = 0, shootTimeIII;
 
@@ -151,15 +154,25 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("EnemyBullet") && !isGuard)
+        if (collision.CompareTag("EnemyBullet") && !isGuard && !isDestroyed)
         {
-            DestroyPlayer();
+            Debug.Log("1111");
+            //foreach (var trigger in triggerCompare)
+            //{
+            //    if (trigger == collision.gameObject) return;
+            //}
+            //triggerCompare.Add(collision.gameObject);
+            StartCoroutine("DestroyPlayer");
             Invoke("ReloadPlayer", 1.5f);
+
+            //Invoke("ReloadPlayer", 1.5f);
         }
     }
 
-    void DestroyPlayer()
+    private IEnumerator DestroyPlayer()
     {
+        isDestroyed = true;
+        GetComponent<Collider2D>().isTrigger = false;
         gameObject.SetActive(false);
         for (int i = 0; i < pool.poolEffect_EDestroy.Length; i++)
         {
@@ -190,10 +203,15 @@ public class Player : MonoBehaviour
 
         GameManager.playerLevel = 1;
         playerOptionL.SetActive(false); playerOptionR.SetActive(false);
+
+        yield return new WaitForSeconds(1.5f);
     }
 
     void ReloadPlayer()
     {
+        //triggerCompare.Clear();
+        GetComponent<Collider2D>().isTrigger = true;
+        isDestroyed = false;
         isGuard = true;
         playerGuardSprite.SetActive(true);
         gameObject.SetActive(true);

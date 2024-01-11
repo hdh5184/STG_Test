@@ -10,8 +10,6 @@ public class Enemy : MonoBehaviour
     public int Health;
     public float fieldTime = 0;
     float shootTime = 0;
-    float shootTime2 = 0, shootTime2_1 = 0;
-    float pattenS1DegCos = 0f;
 
     float bulletFromCode = 0;
 
@@ -20,8 +18,6 @@ public class Enemy : MonoBehaviour
     int shootCount = 0;
     float degree = 0f;
     public static float degreeCos = 0f;
-
-    float eachDistance = 0f;
 
     public enum EnemyType
     {
@@ -140,6 +136,10 @@ public class Enemy : MonoBehaviour
                 {
                     bullet.transform.position = transform.position;
                     bullet.transform.rotation = Quaternion.Euler(0, 0, degree);
+
+                    EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
+                    bulletFrom.enemyFromCode = bulletFromCode;
+
                     bullet.SetActive(true);
                     break;
                 }
@@ -181,6 +181,7 @@ public class Enemy : MonoBehaviour
 
                         EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
                         bulletFrom.enemyFromCode = bulletFromCode;
+
                         bullet.SetActive(true);
 
                         if (bulletWayCount == 2) break; else bulletWayCount++;
