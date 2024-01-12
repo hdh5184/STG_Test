@@ -11,7 +11,9 @@ public class Item : MonoBehaviour
     public ItemType itemType;
 
     Vector3 playerVec;
-    bool coinPosLR; // L : true / R = false
+    bool coinPosLR; // Left : true / Right = false
+    bool coinPosUD; // Up : true / Down = false
+    bool isGetCoin = false;
 
     Vector2 ItemMoving;
     bool movingisLeft, movingisDown;
@@ -45,7 +47,6 @@ public class Item : MonoBehaviour
                 break;
             case ItemType.SilverCoin:
             case ItemType.GoldCoin:
-                coinPosLR = (transform.position.x <= GameManager.instance.playerPos.x) ? true : false;
                 rb.gravityScale = 1f;
                 rb.velocity = Vector2.up * 5f;
                 break;
@@ -85,14 +86,22 @@ public class Item : MonoBehaviour
         playerVec = GameManager.instance.playerPos;
         if (fieldTime >= 0.5f)
         {
+            if (!isGetCoin)
+            {
+                coinPosLR = (transform.position.x <= GameManager.instance.playerPos.x) ? true : false;
+                coinPosUD = (transform.position.y <= GameManager.instance.playerPos.y) ? true : false;
+            }
+
+            isGetCoin = true;
             CoinMoving = playerVec - transform.position;
             playerCoinDis = Vector2.Distance(playerVec, transform.position);
             coinStretch = (2 / playerCoinDis);
             rb.AddForce(coinStretch * CoinMoving, ForceMode2D.Force);
-            transform.position = new Vector2(Mathf.Clamp(transform.position.x,
-                (coinPosLR) ? transform.position.x : playerVec.x,
-                (!coinPosLR) ? transform.position.x : playerVec.x),
-                transform.position.y);
+            transform.position = new Vector2(
+                Mathf.Clamp(transform.position.x,
+                (coinPosLR) ? transform.position.x : playerVec.x, (!coinPosLR) ? transform.position.x : playerVec.x),
+                Mathf.Clamp(transform.position.y,
+                (coinPosUD) ? transform.position.y : playerVec.y, (!coinPosUD) ? transform.position.y : playerVec.y));
         }
     }
 
