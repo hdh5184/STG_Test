@@ -10,9 +10,16 @@ public class Item : MonoBehaviour
 
     public ItemType itemType;
 
+    Vector3 playerVec;
+    bool coinPosLR; // L : true / R = false
+
     Vector2 ItemMoving;
     bool movingisLeft, movingisDown;
-    float timeLimit = 0f;
+    float fieldTime = 0f;
+
+    Vector2 CoinMoving;
+    float playerCoinDis;
+    float coinStretch;
 
     public enum ItemType
     {
@@ -30,7 +37,7 @@ public class Item : MonoBehaviour
         switch (itemType)
         {
             case ItemType.PowerUp:
-                timeLimit = 0f;
+                fieldTime = 0f;
                 sr.enabled = true;
                 movingisLeft = (Random.Range(-1, 1) == -1) ? true : false;
                 movingisDown = true;
@@ -38,6 +45,7 @@ public class Item : MonoBehaviour
                 break;
             case ItemType.SilverCoin:
             case ItemType.GoldCoin:
+                coinPosLR = (transform.position.x <= GameManager.instance.playerPos.x) ? true : false;
                 rb.gravityScale = 1f;
                 rb.velocity = Vector2.up * 5f;
                 break;
@@ -48,6 +56,8 @@ public class Item : MonoBehaviour
 
     void Update()
     {
+        fieldTime += Time.deltaTime;
+
         switch (itemType)
         {
             case ItemType.PowerUp:      PowerUp();  break;
@@ -58,8 +68,6 @@ public class Item : MonoBehaviour
 
     void PowerUp()
     {
-        timeLimit += Time.deltaTime;
-
         if (transform.position.x >= GameManager.instance.transform.position.x + 2.5f) movingisLeft = true;
         else if (transform.position.x <= GameManager.instance.transform.position.x - 2.5f) movingisLeft = false;
         if (transform.position.y >= GameManager.instance.transform.position.x + 4.5f) movingisDown = true;
@@ -68,13 +76,24 @@ public class Item : MonoBehaviour
         transform.Translate(
             new Vector2(ItemMoving.x * ((movingisLeft) ? -1 : 1), ItemMoving.y * ((movingisDown) ? 1 : -1)) * Time.deltaTime);
 
-        if (timeLimit >= 8f) sr.enabled = !sr.enabled;
-        if (timeLimit >= 10f) gameObject.SetActive(false);
+        if (fieldTime >= 8f) sr.enabled = !sr.enabled;
+        if (fieldTime >= 10f) gameObject.SetActive(false);
     }
 
     void SilverCoin()
     {
-        //transform.Translate(Vector2.down * 3f * Time.deltaTime);
+        playerVec = GameManager.instance.playerPos;
+        if (fieldTime >= 0.5f)
+        {
+            CoinMoving = playerVec - transform.position;
+            playerCoinDis = Vector2.Distance(playerVec, transform.position);
+            coinStretch = (2 / playerCoinDis);
+            rb.AddForce(coinStretch * CoinMoving, ForceMode2D.Force);
+            transform.position = new Vector2(Mathf.Clamp(transform.position.x,
+                (coinPosLR) ? transform.position.x : playerVec.x,
+                (!coinPosLR) ? transform.position.x : playerVec.x),
+                transform.position.y);
+        }
     }
 
     void GoldCoin()

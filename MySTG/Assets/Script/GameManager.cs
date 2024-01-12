@@ -19,10 +19,14 @@ public class GameManager : MonoBehaviour
 
     public static int Score = 0;
 
-    void Start()
+    private void Awake()
     {
         instance = this;
         playerPos = player.transform.position;
+    }
+
+    void Start()
+    {
         Score = 0;
     }
 
