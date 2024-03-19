@@ -6,19 +6,26 @@ public class Enemy : MonoBehaviour
 {
     public PoolManager pool;
 
+    // 적 타입, 체력, 출현 시간, 공격 쿨타임
     public EnemyType enemyType;
     public int Health;
     public float fieldTime = 0;
     float shootTime = 0;
 
+
+    // 적기 코드
     float bulletFromCode = 0;
 
+    // 플레이어 위치 참조용
     Vector2 playerVec;
+
+
     bool isShoot = false;
     int shootCount = 0;
     float degree = 0f;
     public static float degreeCos = 0f;
 
+    // 적 타입
     public enum EnemyType
     {
         Zako, Small
@@ -26,6 +33,7 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
+        // 적기 코드 생성 후 기록
         bulletFromCode = Random.Range(0f, 1f) * Random.Range(0f, 1f);
         GameManager.EnemyCode.Add(bulletFromCode);
     }
@@ -56,6 +64,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // 플레이어 공격 충돌 시 체력 감소
         switch (collision.tag)
         {
             case "PlayerBullet_Lv1": Health--;      collision.gameObject.SetActive(false); break;
@@ -64,8 +73,7 @@ public class Enemy : MonoBehaviour
             case "PlayerBullet_Lv4": Health--;      collision.gameObject.SetActive(false); break;
         }
 
-        
-
+        // 적기 파괴
         if (Health <= 0)
         {
             gameObject.SetActive(false);
