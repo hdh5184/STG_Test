@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
 
     public PoolManager pool;    // 오브젝트 Pool
 
+    public GameObject debugObj;
+
     // 플레이어 위치 및 이동 벡터
     public GameObject player;
     public Vector3 playerPos;
@@ -29,7 +31,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Score = 0;
-        SpawnEnemy();
+        DebugTest debugtest = debugObj.GetComponent<DebugTest>();
+        debugtest.pool = pool;
+
+        //SpawnEnemy();
+
     }
 
     void Update()

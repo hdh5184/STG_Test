@@ -11,10 +11,12 @@ public class EnemyBullet : MonoBehaviour
     public enum EBulletType
     {
         Big_G1,
-        Small_G1, Small_B1, Small_P1
+        Small_G1, Small_B1, Small_P1,
+        Homing
     }
 
-    Vector2 playerVec;
+    Vector2 playerPos;
+    float degree = 0f;
 
     void Start()
     {
@@ -48,6 +50,10 @@ public class EnemyBullet : MonoBehaviour
             case EBulletType.Small_P1:
                 transform.Translate(Vector2.down * 5f * Time.deltaTime);
                 break;
+            case EBulletType.Homing:
+                Homing();
+                transform.Translate(Vector2.down * 3f * Time.deltaTime);
+                break;
         }
     }
 
@@ -71,5 +77,16 @@ public class EnemyBullet : MonoBehaviour
         {
             gameObject.SetActive(false);
         }
+    }
+
+    void Homing()
+    {
+        float deg2 = degree;
+        playerPos = GameManager.instance.playerPos;
+        degree = (Mathf.Atan2
+                (playerPos.y - transform.position.y, playerPos.x - transform.position.x)
+                / Mathf.PI * 180 + 90);
+        Debug.Log(degree - deg2);
+        transform.rotation = Quaternion.Euler(0, 0, degree);
     }
 }

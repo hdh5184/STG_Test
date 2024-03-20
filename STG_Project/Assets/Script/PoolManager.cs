@@ -16,6 +16,8 @@ public class PoolManager : MonoBehaviour
     public GameObject inputEBullet_SP1;
     public GameObject inputEBullet_BG1;
 
+    public GameObject inputEBullet_SG1_Homing;
+
     public GameObject inputEffect_EDestroy;
 
     public GameObject inputItem_PowerUp;
@@ -36,6 +38,8 @@ public class PoolManager : MonoBehaviour
     public GameObject[] poolEBullet_SB1;
     public GameObject[] poolEBullet_SP1;
     public GameObject[] poolEBullet_BG1;
+
+    public GameObject[] poolEBullet_SG1_Homing;
 
     public GameObject[] poolEffect_EDestroy;
 
@@ -109,6 +113,15 @@ public class PoolManager : MonoBehaviour
             poolEBullet_BG1[i].SetActive(false);
         }
 
+        poolEBullet_SG1_Homing = new GameObject[500];
+        for (int i = 0; i < poolEBullet_SG1_Homing.Length; i++)
+        {
+            poolEBullet_SG1_Homing[i] = Instantiate(inputEBullet_SG1_Homing);
+            poolEBullet_SG1_Homing[i].SetActive(false);
+        }
+
+
+
         poolEffect_EDestroy = new GameObject[20];
         for (int i = 0; i < poolEffect_EDestroy.Length; i++)
         {
@@ -165,6 +178,8 @@ public class PoolManager : MonoBehaviour
             case "Bullet_SB1": targetPool = poolEBullet_SB1; break;
             case "Bullet_SP1": targetPool = poolEBullet_SP1; break;
             case "Bullet_BG1": targetPool = poolEBullet_BG1; break;
+
+            case "Bullet_SG1_Homing": targetPool = poolEBullet_SG1_Homing; break;
 
             case "PowerUp": targetPool = poolItem_PowerUp; break;
             case "SilverCoin": targetPool = poolItem_SilverCoin; break;
