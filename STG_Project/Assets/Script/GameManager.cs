@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
         DebugTest debugtest = debugObj.GetComponent<DebugTest>();
         debugtest.pool = pool;
 
-        //SpawnEnemy();
+        SpawnEnemy();
 
     }
 

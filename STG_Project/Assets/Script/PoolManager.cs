@@ -6,49 +6,44 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager instance;
 
-    public GameObject inputPBullet_Lv1;
-    public GameObject inputPBullet_Lv2;
-    public GameObject inputPBullet_Lv3;
-    public GameObject inputPBullet_Lv4;
 
-    public GameObject inputEBullet_SG1;
-    public GameObject inputEBullet_SB1;
-    public GameObject inputEBullet_SP1;
-    public GameObject inputEBullet_BG1;
+    public GameObject[] PlayerBullet;
 
-    public GameObject inputEBullet_SG1_Homing;
+    public GameObject[] EBulletSmall;
+    public GameObject[] EBulletMedium;
 
-    public GameObject inputEffect_EDestroy;
+    public GameObject[] Item;
+    public GameObject[] Effect;
 
-    public GameObject inputItem_PowerUp;
-    public GameObject inputItem_SilverCoin;
-    public GameObject inputItem_GoldCoin;
-
-    public GameObject inputEnemy_Zako;
-    public GameObject inputEnemy_Small;
+    public GameObject[] EnemySmall;
+    public GameObject[] EnemyMedium;
+    public GameObject[] EnemyLarge;
+    public GameObject[] EnemyBig;
 
 
 
-    public GameObject[] poolPBullet_Lv1;
-    public GameObject[] poolPBullet_Lv2;
-    public GameObject[] poolPBullet_Lv3;
-    public GameObject[] poolPBullet_Lv4;
+    public GameObject[]
+        poolPBullet_Lv1, poolPBullet_Lv2, poolPBullet_Lv3, poolPBullet_Lv4;
 
-    public GameObject[] poolEBullet_SG1;
-    public GameObject[] poolEBullet_SB1;
-    public GameObject[] poolEBullet_SP1;
-    public GameObject[] poolEBullet_BG1;
-
-    public GameObject[] poolEBullet_SG1_Homing;
-
-    public GameObject[] poolEffect_EDestroy;
+    public GameObject[]
+        poolEBulletSmall_A, poolEBulletSmall_B;
+    public GameObject[]
+        poolEBulletMedium_A, poolEBulletMedium_B;
 
     public GameObject[] poolItem_PowerUp;
     public GameObject[] poolItem_SilverCoin;
     public GameObject[] poolItem_GoldCoin;
 
-    public GameObject[] poolEnemy_Zako;
-    public GameObject[] poolEnemy_Small;
+    public GameObject[] poolEffect_Destroy;
+
+    public GameObject[]
+        poolEnemySmall_A, poolEnemySmall_B, poolEnemySmall_C, poolEnemySmall_D, poolEnemySmall_E;
+    public GameObject[]
+        poolEnemyMedium_A, poolEnemyMedium_B, poolEnemyMedium_C;
+    public GameObject[]
+        poolEnemyLarge_A, poolEnemyLarge_B;
+    public GameObject[]
+        poolEnemyBig_A;
 
     public GameObject[] targetPool;
 
@@ -56,112 +51,44 @@ public class PoolManager : MonoBehaviour
     {
         if (instance == null) instance = this;
 
-        poolPBullet_Lv1 = new GameObject[20];
-        for (int i = 0; i < poolPBullet_Lv1.Length; i++)
+        MakePool(PlayerBullet[0], ref poolPBullet_Lv1, 20);
+        MakePool(PlayerBullet[1], ref poolPBullet_Lv2, 20);
+        MakePool(PlayerBullet[2], ref poolPBullet_Lv3, 20);
+        MakePool(PlayerBullet[3], ref poolPBullet_Lv4, 80);
+
+        MakePool(EBulletSmall[0], ref poolEBulletSmall_A, 200);
+        MakePool(EBulletSmall[1], ref poolEBulletSmall_B, 200);
+        MakePool(EBulletMedium[0], ref poolEBulletMedium_A, 100);
+        MakePool(EBulletMedium[1], ref poolEBulletMedium_B, 100);
+
+        MakePool(Item[0], ref poolItem_PowerUp, 8);
+        MakePool(Item[1], ref poolItem_SilverCoin, 300);
+        MakePool(Item[2], ref poolItem_GoldCoin, 300);
+        MakePool(Effect[0], ref poolEffect_Destroy, 25);
+
+        MakePool(EnemySmall[0], ref poolEnemySmall_A, 15);
+        MakePool(EnemySmall[1], ref poolEnemySmall_B, 15);
+        MakePool(EnemySmall[2], ref poolEnemySmall_C, 15);
+        MakePool(EnemySmall[3], ref poolEnemySmall_D, 15);
+        MakePool(EnemySmall[4], ref poolEnemySmall_E, 15);
+
+        MakePool(EnemyMedium[0], ref poolEnemyMedium_A, 8);
+        MakePool(EnemyMedium[1], ref poolEnemyMedium_B, 8);
+        MakePool(EnemyMedium[2], ref poolEnemyMedium_C, 8);
+
+        MakePool(EnemyLarge[0], ref poolEnemyLarge_A, 5);
+        MakePool(EnemyLarge[1], ref poolEnemyLarge_B, 5);
+
+        MakePool(EnemyBig[0], ref poolEnemyBig_A, 3);
+    }
+
+    public void MakePool(GameObject input, ref GameObject[] pool, int count)
+    {
+        pool = new GameObject[count];
+        for (int i = 0; i < pool.Length; i++)
         {
-            poolPBullet_Lv1[i] = Instantiate(inputPBullet_Lv1);
-            poolPBullet_Lv1[i].SetActive(false);
-        }
-
-        poolPBullet_Lv2 = new GameObject[20];
-        for (int i = 0; i < poolPBullet_Lv2.Length; i++)
-        {
-            poolPBullet_Lv2[i] = Instantiate(inputPBullet_Lv2);
-            poolPBullet_Lv2[i].SetActive(false);
-        }
-
-        poolPBullet_Lv3 = new GameObject[20];
-        for (int i = 0; i < poolPBullet_Lv3.Length; i++)
-        {
-            poolPBullet_Lv3[i] = Instantiate(inputPBullet_Lv3);
-            poolPBullet_Lv3[i].SetActive(false);
-        }
-
-        poolPBullet_Lv4 = new GameObject[80];
-        for (int i = 0; i < poolPBullet_Lv4.Length; i++)
-        {
-            poolPBullet_Lv4[i] = Instantiate(inputPBullet_Lv4);
-            poolPBullet_Lv4[i].SetActive(false);
-        }
-
-
-        poolEBullet_SG1 = new GameObject[500];
-        for (int i = 0; i < poolEBullet_SG1.Length; i++)
-        {
-            poolEBullet_SG1[i] = Instantiate(inputEBullet_SG1);
-            poolEBullet_SG1[i].SetActive(false);
-        }
-
-        poolEBullet_SB1 = new GameObject[300];
-        for (int i = 0; i < poolEBullet_SB1.Length; i++)
-        {
-            poolEBullet_SB1[i] = Instantiate(inputEBullet_SB1);
-            poolEBullet_SB1[i].SetActive(false);
-        }
-
-        poolEBullet_SP1 = new GameObject[500];
-        for (int i = 0; i < poolEBullet_SP1.Length; i++)
-        {
-            poolEBullet_SP1[i] = Instantiate(inputEBullet_SP1);
-            poolEBullet_SP1[i].SetActive(false);
-        }
-
-        poolEBullet_BG1 = new GameObject[50];
-        for (int i = 0; i < poolEBullet_BG1.Length; i++)
-        {
-            poolEBullet_BG1[i] = Instantiate(inputEBullet_BG1);
-            poolEBullet_BG1[i].SetActive(false);
-        }
-
-        poolEBullet_SG1_Homing = new GameObject[500];
-        for (int i = 0; i < poolEBullet_SG1_Homing.Length; i++)
-        {
-            poolEBullet_SG1_Homing[i] = Instantiate(inputEBullet_SG1_Homing);
-            poolEBullet_SG1_Homing[i].SetActive(false);
-        }
-
-
-
-        poolEffect_EDestroy = new GameObject[20];
-        for (int i = 0; i < poolEffect_EDestroy.Length; i++)
-        {
-            poolEffect_EDestroy[i] = Instantiate(inputEffect_EDestroy);
-            poolEffect_EDestroy[i].SetActive(false);
-        }
-
-        poolItem_PowerUp = new GameObject[5];
-        for (int i = 0; i < poolItem_PowerUp.Length; i++)
-        {
-            poolItem_PowerUp[i] = Instantiate(inputItem_PowerUp);
-            poolItem_PowerUp[i].SetActive(false);
-        }
-
-        poolItem_SilverCoin = new GameObject[500];
-        for (int i = 0; i < poolItem_SilverCoin.Length; i++)
-        {
-            poolItem_SilverCoin[i] = Instantiate(inputItem_SilverCoin);
-            poolItem_SilverCoin[i].SetActive(false);
-        }
-
-        poolItem_GoldCoin = new GameObject[500];
-        for (int i = 0; i < poolItem_GoldCoin.Length; i++)
-        {
-            poolItem_GoldCoin[i] = Instantiate(inputItem_GoldCoin);
-            poolItem_GoldCoin[i].SetActive(false);
-        }
-
-        poolEnemy_Zako = new GameObject[20];
-        for (int i = 0; i < poolEnemy_Zako.Length; i++)
-        {
-            poolEnemy_Zako[i] = Instantiate(inputEnemy_Zako);
-            poolEnemy_Zako[i].SetActive(false);
-        }
-
-        poolEnemy_Small = new GameObject[10];
-        for (int i = 0; i < poolEnemy_Small.Length; i++)
-        {
-            poolEnemy_Small[i] = Instantiate(inputEnemy_Small);
-            poolEnemy_Small[i].SetActive(false);
+            pool[i] = Instantiate(input);
+            pool[i].SetActive(false);
         }
     }
 
@@ -174,32 +101,48 @@ public class PoolManager : MonoBehaviour
             case "Bullet_Lv3": targetPool = poolPBullet_Lv3; break;
             case "Bullet_Lv4": targetPool = poolPBullet_Lv4; break;
 
-            case "Bullet_SG1": targetPool = poolEBullet_SG1; break;
-            case "Bullet_SB1": targetPool = poolEBullet_SB1; break;
-            case "Bullet_SP1": targetPool = poolEBullet_SP1; break;
-            case "Bullet_BG1": targetPool = poolEBullet_BG1; break;
-
-            case "Bullet_SG1_Homing": targetPool = poolEBullet_SG1_Homing; break;
+            case "EBS_A": targetPool = poolEBulletSmall_A; break;
+            case "EBS_B": targetPool = poolEBulletSmall_B; break;
+            case "EBM_A": targetPool = poolEBulletMedium_A; break;
+            case "EBM_B": targetPool = poolEBulletMedium_B; break;
 
             case "PowerUp": targetPool = poolItem_PowerUp; break;
             case "SilverCoin": targetPool = poolItem_SilverCoin; break;
             case "GoldCoin": targetPool = poolItem_GoldCoin; break;
 
-            case "EDestroy": targetPool = poolEffect_EDestroy; break;
+            case "EDestroy": targetPool = poolEffect_Destroy; break;
 
-            case "Enemy_Zako": targetPool = poolEnemy_Zako; break;
-            case "Enemy_Small": targetPool = poolEnemy_Small; break;
+            case "EnemyS_A": targetPool = poolEnemySmall_A; break;
+            case "EnemyS_B": targetPool = poolEnemySmall_B; break;
+            case "EnemyS_C": targetPool = poolEnemySmall_C; break;
+            case "EnemyS_D": targetPool = poolEnemySmall_D; break;
+            case "EnemyS_E": targetPool = poolEnemySmall_E; break;
+
+            case "EnemyM_A": targetPool = poolEnemyMedium_A; break;
+            case "EnemyM_B": targetPool = poolEnemyMedium_B; break;
+            case "EnemyM_C": targetPool = poolEnemyMedium_C; break;
+
+            case "EnemyL_A": targetPool = poolEnemyLarge_A; break;
+            case "EnemyL_B": targetPool = poolEnemyLarge_B; break;
+
+            case "EnemyB_A": targetPool = poolEnemyBig_A; break;
+
+            default:         targetPool = null; break;
         }
 
-        for (int i = 0; i < targetPool.Length; i++)
+        if (targetPool != null)
         {
-            if (!targetPool[i].activeSelf)
+            for (int i = 0; i < targetPool.Length; i++)
             {
-                targetPool[i].SetActive(true);
-                return targetPool[i];
+                if (!targetPool[i].activeSelf)
+                {
+                    targetPool[i].SetActive(true);
+                    return targetPool[i];
+                }
             }
         }
 
+        Debug.Log($"\"{obj}\" 오브젝트를 찾을 수 없습니다.");
         return null;
     }
 }

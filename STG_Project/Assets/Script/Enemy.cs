@@ -86,7 +86,7 @@ public class Enemy : MonoBehaviour
             }
 
 
-            foreach (var compareBullet in pool.poolEBullet_SP1)
+            /*foreach (var compareBullet in pool.poolEBullet_SP1)
             {
                 EnemyBullet compareBulletFrom = compareBullet.GetComponent<EnemyBullet>();
 
@@ -100,7 +100,7 @@ public class Enemy : MonoBehaviour
                         coin.SetActive(true);
                     }
                 }
-            }
+            }*/
 
             foreach (var code in temp)
             {
@@ -116,14 +116,20 @@ public class Enemy : MonoBehaviour
     private void Zako()
     {
         shootTime += Time.deltaTime;
-
         playerPos = GameManager.instance.playerPos;
+
+        float subdeg = degree;
+
         degree = Mathf.Atan2
                 (playerPos.y - transform.position.y, playerPos.x - transform.position.x)
                 / Mathf.PI * 180 + 90;
         transform.rotation = Quaternion.Euler(0, 0, degree);
 
-        if (shootTime > 0.1f)
+        subdeg = degree - subdeg;
+
+        Debug.Log(subdeg);
+
+        /*if (shootTime > 0.1f)
         {
             GameObject bullet = pool.MakeObject("Bullet_SP1");
             bullet.transform.position = transform.position;
@@ -133,7 +139,7 @@ public class Enemy : MonoBehaviour
             bulletFrom.enemyFromCode = bulletFromCode;
 
             shootTime = 0;
-        }
+        }*/
     }
 
     private void Small()

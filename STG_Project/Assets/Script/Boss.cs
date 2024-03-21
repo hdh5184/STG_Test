@@ -43,7 +43,7 @@ public class Boss : MonoBehaviour
 
         fieldTime += Time.deltaTime;
 
-        if (fieldTime > 2f)
+        /*if (fieldTime > 2f)
         {
             int pattenB1 = 0;
             int pattenS1 = 0;
@@ -96,7 +96,7 @@ public class Boss : MonoBehaviour
                 }
             }
 
-        }
+        }*/
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

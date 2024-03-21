@@ -23,7 +23,7 @@ public class EBullet_BG1 : MonoBehaviour
     {
         summonTime += Time.deltaTime;
 
-        if (summonTime >= 0.2f)
+        /*if (summonTime >= 0.2f)
         {
             for (int i = 0; i < PoolInstance.poolEBullet_SG1.Length; i++)
             {
@@ -37,6 +37,6 @@ public class EBullet_BG1 : MonoBehaviour
                 }
             }
             summonTime = 0f;
-        }
+        }*/
     }
 }
