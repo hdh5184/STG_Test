@@ -13,7 +13,9 @@ TagManager:
   - EnemyBullet
   - Item
   - PlayerBullet
-  - PlayerBullet_LvMAX
+  - PlayerBullet_LvMAX_A
+  - PlayerBullet_LvMAX_B
+  - PlayerBullet_LvMAX_C
   layers:
   - Default
   - TransparentFX

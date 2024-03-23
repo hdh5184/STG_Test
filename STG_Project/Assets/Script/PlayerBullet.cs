@@ -6,12 +6,9 @@ public class PlayerBullet : MonoBehaviour
 {
     public PlayerBulletType PBType;
 
-
-    float shootTime = 0;
-
     public enum PlayerBulletType
     {
-        Bullet, Missile, Laser
+        Bullet
     }
 
     void Start()
@@ -21,26 +18,18 @@ public class PlayerBullet : MonoBehaviour
 
     private void OnEnable()
     {
-        shootTime = 0;
+        
     }
 
     void Update()
     {
-        shootTime += 0.05f;
         switch (PBType)
         {
-            case PlayerBulletType.Bullet:   transform.Translate(Vector2.up * 20f * Time.deltaTime); break;
-            case PlayerBulletType.Missile:  transform.Translate(Vector2.up * 2f * shootTime * Time.deltaTime); break;
-            case PlayerBulletType.Laser:
-                transform.Translate(Vector2.up * 25f * Time.deltaTime);
-                transform.position =
-                    new Vector2(transform.position.x + GameManager.instance.playerMovingVec.x, transform.position.y);
-                break;
+            case PlayerBulletType.Bullet:   transform.Translate(Vector2.up * 12f * Time.deltaTime); break;
         }
         
 
         if (transform.position.y > GameManager.instance.transform.position.y + 8f) gameObject.SetActive(false);
-        if (Input.GetKeyUp(KeyCode.Z) && PBType == PlayerBulletType.Laser) gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

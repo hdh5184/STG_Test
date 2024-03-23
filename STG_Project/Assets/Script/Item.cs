@@ -26,7 +26,8 @@ public class Item : MonoBehaviour
 
     public enum ItemType
     {
-        PowerUp, SilverCoin, GoldCoin
+        PowerUp, Heal,
+        SilverCoin, GoldCoin
     }
 
     void Awake()

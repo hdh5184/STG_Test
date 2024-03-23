@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 813124863523946573}
   - component: {fileID: 2112297501381993465}
   - component: {fileID: 1779576366377355381}
+  - component: {fileID: 4185007291421671697}
   - component: {fileID: 5642845917835544108}
   m_Layer: 0
   m_Name: Enemy_MediumA
@@ -121,6 +122,33 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 1}
   m_Size: {x: 5.12, y: 1.25}
   m_Direction: 1
+--- !u!50 &4185007291421671697
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3643129782471512763}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &5642845917835544108
 MonoBehaviour:
   m_ObjectHideFlags: 0

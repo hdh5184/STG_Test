@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8846967720123799861}
   - component: {fileID: 4453371795518938815}
   - component: {fileID: 6619700954066474638}
+  - component: {fileID: 1133969925024476388}
   - component: {fileID: 4584119797761700417}
   m_Layer: 0
   m_Name: Enemy_SmallD
@@ -121,6 +122,33 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.6}
   m_Size: {x: 5.12, y: 1.25}
   m_Direction: 1
+--- !u!50 &1133969925024476388
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4812896762256352542}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!114 &4584119797761700417
 MonoBehaviour:
   m_ObjectHideFlags: 0

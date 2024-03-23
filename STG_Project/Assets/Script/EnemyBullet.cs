@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class EnemyBullet : MonoBehaviour
 {
-    public EBulletType bulletType;
+    public EBulletType_Moving bulletType;
 
     public float enemyFromCode = 0;
 
-    public enum EBulletType
+    Vector2 playerPos;
+    float degreeZ = 0f;
+    float fieldTime = 0f;
+    float speed = 0f;
+
+    public enum EBulletType_Moving
     {
-        Big_G1,
-        Small_G1, Small_B1, Small_P1,
-        Homing
+        Straight, Accel, Homing, Bomb
     }
 
-    Vector2 playerPos;
-    float degree = 0f;
 
     void Start()
     {
@@ -25,11 +26,14 @@ public class EnemyBullet : MonoBehaviour
 
     private void OnEnable()
     {
-        
+        speed = 5f;
+        fieldTime = 0.5f;
+        degreeZ = 0f;
     }
 
     void Update()
     {
+        fieldTime += Time.deltaTime;
         MovingBullet();
         //EnemyDestroyCompare();
     }
@@ -38,19 +42,11 @@ public class EnemyBullet : MonoBehaviour
     {
         switch (bulletType)
         {
-            case EBulletType.Big_G1:
-                transform.Translate(Vector2.down * 5f * Time.deltaTime);
-                break;
-            case EBulletType.Small_G1:
-                transform.Translate(Vector2.down * 5f * Time.deltaTime);
-                break;
-            case EBulletType.Small_B1:
-                transform.Translate(Vector2.down * 7f * Time.deltaTime);
-                break;
-            case EBulletType.Small_P1:
-                transform.Translate(Vector2.down * 5f * Time.deltaTime);
-                break;
-            case EBulletType.Homing:
+            case EBulletType_Moving.Straight:
+                transform.Translate(Vector2.down * speed * Time.deltaTime); break;
+            case EBulletType_Moving.Accel:
+                transform.Translate(Vector2.down * speed * Time.deltaTime * fieldTime); break;
+            case EBulletType_Moving.Homing:
                 Homing();
                 transform.Translate(Vector2.down * 3f * Time.deltaTime);
                 break;
@@ -81,12 +77,19 @@ public class EnemyBullet : MonoBehaviour
 
     void Homing()
     {
-        float deg2 = degree;
         playerPos = GameManager.instance.playerPos;
-        degree = (Mathf.Atan2
+        float degTemp = degreeZ;
+        float degLimit = (Mathf.Atan2
                 (playerPos.y - transform.position.y, playerPos.x - transform.position.x)
                 / Mathf.PI * 180 + 90);
-        Debug.Log(degree - deg2);
-        transform.rotation = Quaternion.Euler(0, 0, degree);
+        Debug.Log(degLimit - degTemp);
+        float degTurn = degLimit - degTemp;
+
+        if      (degTurn < -0.5f)   degreeZ -= 0.5f;
+        else if (degTurn > 0.5f)    degreeZ += 0.5f;
+        else                        degreeZ += degTurn;
+
+
+        transform.rotation = Quaternion.Euler(0, 0, degreeZ);
     }
 }

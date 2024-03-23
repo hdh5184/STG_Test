@@ -6,22 +6,24 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager instance;
 
-
+    // 1. bullet Prefab
     public GameObject[] PlayerBullet;
 
     public GameObject[] EBulletSmall;
     public GameObject[] EBulletMedium;
 
+    // 2. Item & Effect Prefab
     public GameObject[] Item;
     public GameObject[] Effect;
 
+    // 3. Enemy Prefab
     public GameObject[] EnemySmall;
     public GameObject[] EnemyMedium;
     public GameObject[] EnemyLarge;
     public GameObject[] EnemyBig;
 
 
-
+    // A. bullet Pool
     public GameObject[]
         poolPBullet_Lv1, poolPBullet_Lv2, poolPBullet_Lv3, poolPBullet_Lv4;
 
@@ -30,12 +32,14 @@ public class PoolManager : MonoBehaviour
     public GameObject[]
         poolEBulletMedium_A, poolEBulletMedium_B;
 
+    // B. Item & Effect Pool
     public GameObject[] poolItem_PowerUp;
     public GameObject[] poolItem_SilverCoin;
     public GameObject[] poolItem_GoldCoin;
 
     public GameObject[] poolEffect_Destroy;
 
+    // C. Enemy Pool
     public GameObject[]
         poolEnemySmall_A, poolEnemySmall_B, poolEnemySmall_C, poolEnemySmall_D, poolEnemySmall_E;
     public GameObject[]
@@ -45,15 +49,16 @@ public class PoolManager : MonoBehaviour
     public GameObject[]
         poolEnemyBig_A;
 
+    // * 생성할 오브젝트에 해당하는 Pool을 target으로 정하기
     public GameObject[] targetPool;
 
     private void Awake()
     {
         if (instance == null) instance = this;
 
-        MakePool(PlayerBullet[0], ref poolPBullet_Lv1, 20);
-        MakePool(PlayerBullet[1], ref poolPBullet_Lv2, 20);
-        MakePool(PlayerBullet[2], ref poolPBullet_Lv3, 20);
+        MakePool(PlayerBullet[0], ref poolPBullet_Lv1, 25);
+        MakePool(PlayerBullet[1], ref poolPBullet_Lv2, 25);
+        MakePool(PlayerBullet[2], ref poolPBullet_Lv3, 25);
         MakePool(PlayerBullet[3], ref poolPBullet_Lv4, 80);
 
         MakePool(EBulletSmall[0], ref poolEBulletSmall_A, 200);
@@ -82,6 +87,7 @@ public class PoolManager : MonoBehaviour
         MakePool(EnemyBig[0], ref poolEnemyBig_A, 3);
     }
 
+    /// <summary> Pool 생성 </summary>
     public void MakePool(GameObject input, ref GameObject[] pool, int count)
     {
         pool = new GameObject[count];
@@ -92,6 +98,7 @@ public class PoolManager : MonoBehaviour
         }
     }
 
+    /// <summary> Pool에서 오브젝트 꺼내기 </summary>
     public GameObject MakeObject(string obj)
     {
         switch (obj)
@@ -142,7 +149,8 @@ public class PoolManager : MonoBehaviour
             }
         }
 
-        Debug.Log($"\"{obj}\" 오브젝트를 찾을 수 없습니다.");
+        Debug.Log($"\"{obj}\" 오브젝트의 여분이 없거나 찾을 수 없습니다.");
         return null;
     }
+    
 }

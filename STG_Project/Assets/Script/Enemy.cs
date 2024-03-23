@@ -28,8 +28,14 @@ public class Enemy : MonoBehaviour
     // 적 타입
     public enum EnemyType
     {
-        Zako, Small
-    }   
+        Small, Medium, Large, Big
+    }
+
+    public enum BulletPattern
+    {
+
+        Straight, n_Way, Random, Spread, 
+    }
 
     private void Awake()
     {
@@ -42,8 +48,10 @@ public class Enemy : MonoBehaviour
     {
         switch (enemyType)
         {
-            case EnemyType.Zako: Health = 5; break;
-            case EnemyType.Small: Health = 20; break;
+            case EnemyType.Small:   Health = 3; break;
+            case EnemyType.Medium:  Health = 30; break;
+            case EnemyType.Large:   Health = 120; break;
+            case EnemyType.Big:     Health = 270; break;
         }
     }
 
@@ -56,7 +64,6 @@ public class Enemy : MonoBehaviour
     {
         switch (enemyType)
         {
-            case EnemyType.Zako: Zako(); break;
             case EnemyType.Small: Small(); break;
         }
         
@@ -67,8 +74,8 @@ public class Enemy : MonoBehaviour
         // 플레이어 공격 충돌 시 체력 감소
         switch (collision.tag)
         {
-            case "PlayerBullet_Lv1": Health--;      collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_Lv2": Health -= 3;   collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv1": Health -= 3;   collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv2": Health -= 4;   collision.gameObject.SetActive(false); break;
             case "PlayerBullet_Lv3": Health -= 5;   collision.gameObject.SetActive(false); break;
             case "PlayerBullet_Lv4": Health--;      collision.gameObject.SetActive(false); break;
         }
@@ -113,7 +120,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void Zako()
+    private void Small()
     {
         shootTime += Time.deltaTime;
         playerPos = GameManager.instance.playerPos;
@@ -129,9 +136,9 @@ public class Enemy : MonoBehaviour
 
         Debug.Log(subdeg);
 
-        /*if (shootTime > 0.1f)
+        if (shootTime > 0.1f)
         {
-            GameObject bullet = pool.MakeObject("Bullet_SP1");
+            GameObject bullet = pool.MakeObject("EBS_A");
             bullet.transform.position = transform.position;
             bullet.transform.rotation = Quaternion.Euler(0, 0, degree);
 
@@ -139,52 +146,6 @@ public class Enemy : MonoBehaviour
             bulletFrom.enemyFromCode = bulletFromCode;
 
             shootTime = 0;
-        }*/
-    }
-
-    private void Small()
-    {
-        shootTime += Time.deltaTime;
-
-        if (!isShoot)
-        {
-            if(shootTime >= 0.5f)
-            {
-                playerPos = GameManager.instance.playerPos;
-                degree = Mathf.Atan2
-                        (playerPos.y - transform.position.y, playerPos.x - transform.position.x)
-                        / Mathf.PI * 180 + 90;
-                isShoot = !isShoot;
-            }
         }
-        else if (isShoot)
-        {
-            if (shootTime >= 0.08f)
-            {
-                int bulletWayCount = 0;
-
-                while (bulletWayCount < 3)
-                {
-                    GameObject bullet = pool.MakeObject("Bullet_SP1");
-
-                    bullet.transform.position = transform.position;
-
-                    if (bulletWayCount == 0) bullet.transform.rotation = Quaternion.Euler(0, 0, degree - 10);
-                    else if (bulletWayCount == 1) bullet.transform.rotation = Quaternion.Euler(0, 0, degree);
-                    else if (bulletWayCount == 2) bullet.transform.rotation = Quaternion.Euler(0, 0, degree + 10);
-
-                    EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
-                    bulletFrom.enemyFromCode = bulletFromCode;
-
-                    bulletWayCount++;
-                }
-
-                shootTime = 0; shootCount++;
-
-                if(shootCount == 10) { shootCount = 0; isShoot = !isShoot; }
-            }
-        }
-
-        
     }
 }

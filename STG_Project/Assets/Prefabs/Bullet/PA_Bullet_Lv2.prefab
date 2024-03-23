@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2769303923483195486}
   - component: {fileID: 4541837481376813029}
+  - component: {fileID: -3502376745689687596}
   m_Layer: 0
   m_Name: PA_Bullet_Lv2
   m_TagString: PlayerBullet_Lv2
@@ -69,6 +70,19 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.1}
   m_Size: {x: 0.4, y: 0.25}
   m_Direction: 1
+--- !u!114 &-3502376745689687596
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1262668088143339717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e110075007c61492f8a014fa9d002b1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PBType: 0
 --- !u!1 &4925689384700270435
 GameObject:
   m_ObjectHideFlags: 0
