@@ -3,7 +3,17 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Field
+  - PoolManager
+  - PlayerBullet_Lv1
+  - PlayerBullet_Lv2
+  - PlayerBullet_Lv3
+  - PlayerBullet_Lv4
+  - EnemyBullet
+  - Item
+  - PlayerBullet
+  - PlayerBullet_LvMAX
   layers:
   - Default
   - TransparentFX

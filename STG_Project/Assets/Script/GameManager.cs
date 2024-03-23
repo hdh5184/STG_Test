@@ -47,11 +47,13 @@ public class GameManager : MonoBehaviour
 
     void SpawnEnemy()
     {
+        /*
         GameObject enemy1 = pool.MakeObject("Enemy_Zako");
         Enemy enemyLogic = enemy1.GetComponent<Enemy>();
         enemyLogic.pool = pool;
         enemyLogic.playerPos = playerPos;
 
         enemy1.transform.position = new Vector2(2, 3);
+        */
     }
 }
