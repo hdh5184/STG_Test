@@ -25,7 +25,7 @@ public class PoolManager : MonoBehaviour
 
     // A. bullet Pool
     public GameObject[]
-        poolPBullet_Lv1, poolPBullet_Lv2, poolPBullet_Lv3, poolPBullet_Lv4;
+        poolPBullet_Lv1, poolPBullet_Lv2, poolPBullet_Lv3, poolPBullet_LvMAX;
 
     public GameObject[]
         poolEBulletSmall_A, poolEBulletSmall_B;
@@ -59,7 +59,7 @@ public class PoolManager : MonoBehaviour
         MakePool(PlayerBullet[0], ref poolPBullet_Lv1, 25);
         MakePool(PlayerBullet[1], ref poolPBullet_Lv2, 25);
         MakePool(PlayerBullet[2], ref poolPBullet_Lv3, 25);
-        MakePool(PlayerBullet[3], ref poolPBullet_Lv4, 80);
+        MakePool(PlayerBullet[3], ref poolPBullet_LvMAX, 30);
 
         MakePool(EBulletSmall[0], ref poolEBulletSmall_A, 200);
         MakePool(EBulletSmall[1], ref poolEBulletSmall_B, 200);
@@ -106,7 +106,7 @@ public class PoolManager : MonoBehaviour
             case "Bullet_Lv1": targetPool = poolPBullet_Lv1; break;
             case "Bullet_Lv2": targetPool = poolPBullet_Lv2; break;
             case "Bullet_Lv3": targetPool = poolPBullet_Lv3; break;
-            case "Bullet_Lv4": targetPool = poolPBullet_Lv4; break;
+            case "Bullet_LvMAX": targetPool = poolPBullet_LvMAX; break;
 
             case "EBS_A": targetPool = poolEBulletSmall_A; break;
             case "EBS_B": targetPool = poolEBulletSmall_B; break;

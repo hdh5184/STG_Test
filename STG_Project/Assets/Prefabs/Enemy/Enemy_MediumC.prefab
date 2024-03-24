@@ -162,7 +162,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
-  enemyType: 0
+  enemyState: 0
+  enemyType: 1
+  bulletPattern: 0
+  BulletType: EBS_A
   Health: 0
   fieldTime: 0
   playerPos: {x: 0, y: 0, z: 0}

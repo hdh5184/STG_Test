@@ -5,13 +5,14 @@ using UnityEngine;
 public class EnemyBullet : MonoBehaviour
 {
     public EBulletType_Moving bulletType;
+    
 
     public float enemyFromCode = 0;
 
     Vector2 playerPos;
     float degreeZ = 0f;
     float fieldTime = 0f;
-    float speed = 0f;
+    public float speed = 0f;
 
     public enum EBulletType_Moving
     {
@@ -92,4 +93,6 @@ public class EnemyBullet : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(0, 0, degreeZ);
     }
+
+    
 }

@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public PoolManager pool;
 
     // 플레이어 샷 위치, 옵션, 무적 스프라이트
+    public PlayerType playerType;
     public GameObject playerShootPos;
     public GameObject playerGuardSprite;
 
@@ -17,8 +18,12 @@ public class Player : MonoBehaviour
     float shootTime = 0, shootTime_Lv2 = 0;
 
     // 플레이어 인게임 상태 (평상시, 파괴됨, 무적 시간)
+    public enum PlayerType { A, B, C }
     enum PlayerState { Play, Dead, Guard }
     PlayerState playerState;
+
+    
+
 
     private void Awake()
     {
@@ -35,7 +40,6 @@ public class Player : MonoBehaviour
     {
         Move();     // 플레이어 이동
         Fire();     // 플레이어 공격
-        Compare();  // 플레이어 레벨 확인
     }
 
 
@@ -61,7 +65,7 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.Z))
         {
             // 플레이어 기본 공격
-            if (shootTime > 0.07f)
+            if (shootTime > 0.12f)
             {
                 GameObject playerBullet = null;
 
@@ -76,33 +80,57 @@ public class Player : MonoBehaviour
                 shootTime = 0f;
             }
 
-            // 플레이어 Lv4일 때 강화탄 공격
-            /*
             if (GameManager.playerLevel >= 4)
             {
-                if (shootTime_Lv2 > 0.2f)
+                switch (playerType)
                 {
-                    int Lv3Count = 0;
-                    while (Lv3Count < 2)
-                    {
-                        GameObject playerBullet = pool.MakeObject("Bullet_Lv3");
-                        playerBullet.transform.position = (Lv3Count == 0) ?
-                                playerShootPos.transform.position + new Vector3(-0.35f, 0f) :
-                                playerShootPos.transform.position + new Vector3(0.35f, 0f);
-                        Lv3Count++;
-                    }
-                    shootTime_Lv2 = 0f;
+                    case PlayerType.A: if (shootTime_Lv2 > 0.6f)    Fire_LvMAX_A(); break;
+                    case PlayerType.B: if (shootTime_Lv2 > 0.3f)    Fire_LvMAX_B(); break;
+                    case PlayerType.C: if (shootTime_Lv2 > 1f)      Fire_LvMAX_C(); break;
                 }
-
             }
-            */
         }
     }
 
-    void Compare()
+    void Fire_LvMAX_A()
     {
-        // 플레이어 평상시 상태, 레벨 4일 때 옵션 표시
-        
+        for (int i = 0; i < 2; i++)
+        {
+            GameObject playerBullet = pool.MakeObject("Bullet_LvMAX");
+            playerBullet.transform.position = (i == 0) ?
+                    playerShootPos.transform.position + new Vector3(-0.35f, 0f) :
+                    playerShootPos.transform.position + new Vector3(0.35f, 0f);
+        }
+        shootTime_Lv2 = 0f;
+    }
+
+    void Fire_LvMAX_B()
+    {
+        for (int i = 1; i < 3; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                GameObject playerBullet = pool.MakeObject("Bullet_LvMAX");
+                playerBullet.transform.position = (j == 0) ?
+                        playerShootPos.transform.position + new Vector3(-0.4f, 0f) :
+                        playerShootPos.transform.position + new Vector3(0.4f, 0f);
+                playerBullet.transform.rotation = Quaternion.Euler(0, 0, (j == 0) ? 5f * i : -5f * i);
+            }
+
+        }
+        shootTime_Lv2 = 0f;
+    }
+
+    void Fire_LvMAX_C()
+    {
+        for (int i = 0; i < 2; i++)
+        {
+            GameObject playerBullet = pool.MakeObject("Bullet_LvMAX");
+            playerBullet.transform.position = (i == 0) ?
+                    playerShootPos.transform.position + new Vector3(-0.25f, 0f) :
+                    playerShootPos.transform.position + new Vector3(0.25f, 0f);
+        }
+        shootTime_Lv2 = 0f;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
