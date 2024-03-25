@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,6 +12,11 @@ public class GameManager : MonoBehaviour
     // 해당 적기가 발사한 탄 소거 및 점수 아이템 전환을 위한 연계용 코드 
     public static List<float> EnemyCode = new List<float>();
     public static List<GameObject> EnemyList = new List<GameObject>();
+
+    public List<Spawn> spawnList;
+    public int spawnIndex;
+    public bool spawnEnd;
+    public float nextSpawnDelay;
 
     
 
@@ -26,10 +32,52 @@ public class GameManager : MonoBehaviour
 
     public static int Score = 0;
 
+
     private void Awake()
     {
         instance = this;
         playerPos = player.transform.position;
+        spawnList = new List<Spawn>();
+        nextSpawnDelay = 0;
+        ReadSpawnFile();
+    }
+
+    void ReadSpawnFile()
+    {
+        spawnList.Clear();
+        spawnIndex = 0;
+        spawnEnd = false;
+
+        TextAsset textFile = Resources.Load("Spawn_Stage1") as TextAsset;
+        StringReader stringReader = new StringReader(textFile.text);
+
+        while (stringReader != null)
+        {
+            string line = stringReader.ReadLine();
+            Debug.Log(line);
+
+            if (line == null) break;
+
+            Spawn spawnData = new Spawn();
+            string[] dataSpilt = line.Split(',');
+
+            spawnData.delay = float.Parse(dataSpilt[0]);
+            spawnData.enemyType = dataSpilt[1];
+            spawnData.posX = float.Parse(dataSpilt[2]);
+            spawnData.posY = float.Parse(dataSpilt[3]);
+            spawnData.movX = float.Parse(dataSpilt[4]);
+            spawnData.movY = float.Parse(dataSpilt[5]);
+            spawnData.speed = float.Parse(dataSpilt[6]);
+            spawnData.patternType = dataSpilt[7];
+            spawnData.bulletType = dataSpilt[8];
+            spawnData.bulletName = dataSpilt[9];
+            spawnData.shootLevel = int.Parse(dataSpilt[10]);
+            spawnData.waitTime = float.Parse(dataSpilt[11]);
+            spawnList.Add(spawnData);
+            Debug.Log(spawnData);
+        }
+        stringReader.Close();
+        nextSpawnDelay = spawnList[0].delay;
     }
 
     void Start()
@@ -54,8 +102,32 @@ public class GameManager : MonoBehaviour
 
     void SpawnEnemy()
     {
-        
+        GameObject enemy = pool.MakeObject(spawnList[spawnIndex].enemyType);
+        enemy.transform.position = new Vector2(
+            spawnList[spawnIndex].posX, spawnList[spawnIndex].posY);
+
+        Enemy enemyLogic = enemy.GetComponent<Enemy>();
+        enemyLogic.moveVec = new Vector2(
+            spawnList[spawnIndex].movX, spawnList[spawnIndex].movY);
+        enemyLogic.speed = spawnList[spawnIndex].speed;
+        enemyLogic.patternType = spawnList[spawnIndex].patternType;
+        enemyLogic.setBulletType = spawnList[spawnIndex].bulletType;
+        enemyLogic.bulletName = spawnList[spawnIndex].bulletName;
+        enemyLogic.shootLimit = spawnList[spawnIndex].shootLevel;
+        enemyLogic.waitTime = spawnList[spawnIndex].waitTime;
+
+
+        /*
+         * public string patternType;
+        public string bulletType;
+        public string bulletName;
+        public int shootLevel;
+        public float waitTime;
+        */
+
+
         //GameObject enemy1 = pool.MakeObject("EnemyS_A");
+        /*
         GameObject enemy2 = pool.MakeObject("EnemyB_A");
         EnemyList.Add(enemy2);
         Enemy enemyLogic = enemy2.GetComponent<Enemy>();
@@ -63,7 +135,7 @@ public class GameManager : MonoBehaviour
         enemyLogic.playerPos = playerPos;
 
         enemy2.transform.position = new Vector2(0, 3);
-
+        */
         /*
         enemy2 = pool.MakeObject("EnemyM_A");
         enemy2.transform.position = new Vector2(2, 1);
@@ -86,5 +158,5 @@ public class GameManager : MonoBehaviour
         */
     }
 
-    
+
 }

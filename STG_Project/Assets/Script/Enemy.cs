@@ -12,17 +12,23 @@ public class Enemy : MonoBehaviour
     public EnemyState enemyState;
     public EnemyType enemyType;
     public BulletPattern bulletPattern;
+    public string patternType;
     public Vector3 playerPos;
-    public string BulletType = "EBS_A";
+    public Vector2 moveVec;
+    public float speed;
+    public string bulletName = "EBS_A";
+
+    public string setBulletType;
+
     public int Health;
 
     // 적 공격
     bool isWait = true;
     float fieldTime = 0;
     float shootTime = 0.1f;
-    float waitTime = 1f;
+    public float waitTime = 1f;
     int shootCount = 0;
-    int shootLimit = 1;
+    public int shootLimit = 1;
 
     // 적기 코드
     float bulletFromCode = 0;
@@ -61,6 +67,15 @@ public class Enemy : MonoBehaviour
             case EnemyType.Large:   Health = 120; break;
             case EnemyType.Big:     Health = 270; break;
         }
+        switch (patternType)
+        {
+            case "str": bulletPattern = BulletPattern.Straight; break;
+            case "way": bulletPattern = BulletPattern.n_Way; break;
+            case "cir": bulletPattern = BulletPattern.Circle; break;
+            case "spr": bulletPattern = BulletPattern.Spread; break;
+            case "sprR": bulletPattern = BulletPattern.Spread_Random; break;
+            case "none": bulletPattern = BulletPattern.None; break;
+        }
 
         bulletPatterns.Enqueue(BulletPattern.Straight);
     }
@@ -89,6 +104,8 @@ public class Enemy : MonoBehaviour
         }
         if (Health <= 0) Dead();
         WaitCompare();
+
+        transform.Translate(moveVec * speed * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -176,7 +193,7 @@ public class Enemy : MonoBehaviour
 
     private void Fire(float deg)
     {
-        GameObject bullet = pool.MakeObject(BulletType);
+        GameObject bullet = pool.MakeObject(bulletName);
         bullet.transform.position = transform.position;
         bullet.transform.rotation = Quaternion.Euler(0, 0, deg);
 
