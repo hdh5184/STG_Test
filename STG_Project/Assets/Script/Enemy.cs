@@ -12,31 +12,25 @@ public class Enemy : MonoBehaviour
     public EnemyState enemyState;
     public EnemyType enemyType;
     public BulletPattern bulletPattern;
+    public Vector3 playerPos;
     public string BulletType = "EBS_A";
     public int Health;
-    public float fieldTime = 0;
-    float shootTime = 0.1f;
 
+    // 적 공격
     bool isWait = true;
+    float fieldTime = 0;
+    float shootTime = 0.1f;
     float waitTime = 1f;
     int shootCount = 0;
-    int shootLimit = 10;
+    int shootLimit = 1;
 
     // 적기 코드
     float bulletFromCode = 0;
-
-    // 플레이어 위치 참조용
-    public Vector3 playerPos;
-
     float degree = 0f;
-    public static float degreeCos = 0f;
 
     // 적 타입
     public enum EnemyState { Play, Dead }
-    public enum EnemyType
-    {
-        Small, Medium, Large, Big
-    }
+    public enum EnemyType { Small, Medium, Large, Big }
 
     public enum BulletPattern
     {
@@ -68,7 +62,7 @@ public class Enemy : MonoBehaviour
             case EnemyType.Big:     Health = 270; break;
         }
 
-        bulletPatterns.Enqueue(BulletPattern.None);
+        bulletPatterns.Enqueue(BulletPattern.Straight);
     }
 
     private void Start()
@@ -188,6 +182,7 @@ public class Enemy : MonoBehaviour
 
         EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
         bulletFrom.enemyFromCode = bulletFromCode;
+        bulletFrom.bulletType = EnemyBullet.EBulletType_Moving.Homing;
 
         fieldTime = 0;
     }

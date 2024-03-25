@@ -2018,10 +2018,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!95 &1381377298442056343
 Animator:
   serializedVersion: 5
@@ -2400,10 +2402,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!4 &2579729362167779186
 Transform:
   m_ObjectHideFlags: 0
@@ -2493,10 +2497,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!70 &3241578669048216095
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2545,10 +2551,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!4 &3424767795597541346
 Transform:
   m_ObjectHideFlags: 0
@@ -2577,10 +2585,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!50 &3476790075586711591
 Rigidbody2D:
   serializedVersion: 4
@@ -2856,10 +2866,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!1 &4381494013068995765
 GameObject:
   m_ObjectHideFlags: 0
@@ -2943,10 +2955,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!1 &5043016403580153366
 GameObject:
   m_ObjectHideFlags: 0
@@ -3090,10 +3104,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!212 &6106525937107242767
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3303,10 +3319,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!212 &6995869681784135474
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3528,10 +3546,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!58 &7452710885942101451
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3908,10 +3928,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  enemyState: 0
   enemyType: 0
-  Health: 0
-  fieldTime: 0
+  bulletPattern: 0
   playerPos: {x: 0, y: 0, z: 0}
+  BulletType: EBS_A
+  Health: 0
 --- !u!70 &9198331368640981272
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

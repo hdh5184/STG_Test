@@ -5,32 +5,28 @@ using UnityEngine;
 public class EnemyBullet : MonoBehaviour
 {
     public EBulletType_Moving bulletType;
-    
 
     public float enemyFromCode = 0;
-
-    Vector2 playerPos;
-    float degreeZ = 0f;
-    float fieldTime = 0f;
     public float speed = 0f;
 
-    public enum EBulletType_Moving
-    {
-        Straight, Accel, Homing, Bomb
-    }
+    Vector3 playerPos;
+    Vector3 ShootVec = Vector2.down;
+    float degreeZ = 0f;
+    float fieldTime = 0f;
 
+    public enum EBulletType_Moving { Straight, Accel, Homing, Bomb }
 
-    void Start()
-    {
-        
-    }
-
-    private void OnEnable()
+    void Init()
     {
         speed = 5f;
-        fieldTime = 0.5f;
+        ShootVec = Vector2.down;
         degreeZ = 0f;
+        fieldTime = 0.5f;
+
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
+
+    private void OnEnable() => Init();
 
     void Update()
     {
@@ -49,7 +45,7 @@ public class EnemyBullet : MonoBehaviour
                 transform.Translate(Vector2.down * speed * Time.deltaTime * fieldTime); break;
             case EBulletType_Moving.Homing:
                 Homing();
-                transform.Translate(Vector2.down * 3f * Time.deltaTime);
+                transform.Translate(Vector2.down * 5f * Time.deltaTime);
                 break;
         }
     }
@@ -79,20 +75,40 @@ public class EnemyBullet : MonoBehaviour
     void Homing()
     {
         playerPos = GameManager.instance.playerPos;
-        float degTemp = degreeZ;
-        float degLimit = (Mathf.Atan2
-                (playerPos.y - transform.position.y, playerPos.x - transform.position.x)
-                / Mathf.PI * 180 + 90);
-        Debug.Log(degLimit - degTemp);
-        float degTurn = degLimit - degTemp;
+        
+        Vector3 v1, v2, v3;
 
-        if      (degTurn < -0.5f)   degreeZ -= 0.5f;
-        else if (degTurn > 0.5f)    degreeZ += 0.5f;
-        else                        degreeZ += degTurn;
+        v1 = (playerPos - transform.position).normalized;
 
+        float radian = Mathf.PI / 180 * 0.5f;
+        v2 = new Vector2(
+            ShootVec.x * Mathf.Cos(radian) - ShootVec.y * Mathf.Sin(radian),
+            ShootVec.x * Mathf.Sin(radian) + ShootVec.y * Mathf.Cos(radian));
 
+        if (Vector2.Dot(ShootVec, v1) >= Vector2.Dot(ShootVec, v2))
+        {
+            degreeZ = Mathf.Atan2(v1.y, v1.x) / Mathf.PI * 180 + 90;
+            ShootVec = v1;
+        }
+        else
+        {
+            v3 = new Vector2(
+                ShootVec.x * Mathf.Cos(radian) + ShootVec.y * Mathf.Sin(radian),
+                -ShootVec.x * Mathf.Sin(radian) + ShootVec.y * Mathf.Cos(radian));
+
+            Vector3 pv = playerPos - transform.position;
+
+            if (Vector2.Dot(pv, v2) >= Vector2.Dot(pv, v3))
+            {
+                degreeZ = Mathf.Atan2(v2.y, v2.x) / Mathf.PI * 180 + 90;
+                ShootVec = v2;
+            }
+            else
+            {
+                degreeZ = Mathf.Atan2(v3.y, v3.x) / Mathf.PI * 180 + 90;
+                ShootVec = v3;
+            }
+        }
         transform.rotation = Quaternion.Euler(0, 0, degreeZ);
     }
-
-    
 }

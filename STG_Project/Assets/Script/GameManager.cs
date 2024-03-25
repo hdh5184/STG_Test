@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
         playerMovingVec = player.transform.position - playerPos;
         playerPos = player.transform.position;
 
-        Debug.Log($"적 기체 수 : {EnemyList.Count}");
+        //Debug.Log($"적 기체 수 : {EnemyList.Count}");
     }
 
     void SpawnEnemy()
@@ -64,6 +64,7 @@ public class GameManager : MonoBehaviour
 
         enemy2.transform.position = new Vector2(0, 3);
 
+        /*
         enemy2 = pool.MakeObject("EnemyM_A");
         enemy2.transform.position = new Vector2(2, 1);
         EnemyList.Add(enemy2);
@@ -82,7 +83,7 @@ public class GameManager : MonoBehaviour
         enemyLogic = enemy2.GetComponent<Enemy>();
         enemyLogic.pool = pool;
         enemyLogic.playerPos = playerPos;
-
+        */
     }
 
     
