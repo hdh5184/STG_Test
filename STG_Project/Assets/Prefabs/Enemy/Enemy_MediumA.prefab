@@ -165,7 +165,12 @@ MonoBehaviour:
   enemyState: 0
   enemyType: 1
   bulletPattern: 0
-  BulletType: EBS_A
-  Health: 0
-  fieldTime: 0
+  patternType: 
   playerPos: {x: 0, y: 0, z: 0}
+  moveVec: {x: 0, y: 0}
+  speed: 0
+  bulletName: EBS_A
+  setBulletType: 
+  Health: 0
+  waitTime: 1
+  shootLimit: 1

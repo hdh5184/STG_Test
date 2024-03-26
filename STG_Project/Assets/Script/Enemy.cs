@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Enemy;
 
 public class Enemy : MonoBehaviour
 {
@@ -23,19 +24,19 @@ public class Enemy : MonoBehaviour
     public int Health;
 
     // 적 공격
-    bool isWait = true;
     float fieldTime = 0;
     float shootTime = 0.1f;
-    public float waitTime = 1f;
+    public float firstWaitTime;
+    public float waitTime;
     int shootCount = 0;
-    public int shootLimit = 1;
+    public int shootLimit;
 
     // 적기 코드
     float bulletFromCode = 0;
     float degree = 0f;
 
     // 적 타입
-    public enum EnemyState { Play, Dead }
+    public enum EnemyState { Idle, Play, Wait, Dead }
     public enum EnemyType { Small, Medium, Large, Big }
 
     public enum BulletPattern
@@ -55,7 +56,7 @@ public class Enemy : MonoBehaviour
 
     private void OnEnable()
     {
-        enemyState = EnemyState.Play;
+        enemyState = EnemyState.Idle;
         fieldTime = 0;
         shootTime = 0.1f;
         shootCount = 0;
@@ -67,6 +68,10 @@ public class Enemy : MonoBehaviour
             case EnemyType.Large:   Health = 120; break;
             case EnemyType.Big:     Health = 270; break;
         }
+    }
+
+    public void Init()
+    {
         switch (patternType)
         {
             case "str": bulletPattern = BulletPattern.Straight; break;
@@ -77,7 +82,8 @@ public class Enemy : MonoBehaviour
             case "none": bulletPattern = BulletPattern.None; break;
         }
 
-        bulletPatterns.Enqueue(BulletPattern.Straight);
+        bulletPatterns.Clear();
+        bulletPatterns.Enqueue(bulletPattern);
     }
 
     private void Start()
@@ -89,23 +95,33 @@ public class Enemy : MonoBehaviour
     {
         fieldTime += Time.deltaTime;
 
-        if (!isWait && fieldTime > shootTime)
+        if (enemyState == EnemyState.Idle && fieldTime >= firstWaitTime)
         {
-            switch (bulletPattern)
-            {
-                case BulletPattern.Straight: Straight(false); break;
-                case BulletPattern.n_Way: n_Way(true); break;
-                case BulletPattern.Circle: Circle(true); break;
-                case BulletPattern.Spread: Spread(true); break;
-                case BulletPattern.Spread_Random: Spread_Random(180); break;
-            }
-
-            if (bulletPattern != BulletPattern.None) shootCount++;
+            enemyState = EnemyState.Play;
+            fieldTime = 0f;
         }
-        if (Health <= 0) Dead();
-        WaitCompare();
 
+        if (enemyState == EnemyState.Play)
+        {
+            if (fieldTime >= shootTime)
+            {
+                switch (bulletPattern)
+                {
+                    case BulletPattern.Straight: Straight(false); break;
+                    case BulletPattern.n_Way: n_Way(true); break;
+                    case BulletPattern.Circle: Circle(true); break;
+                    case BulletPattern.Spread: Spread(true); break;
+                    case BulletPattern.Spread_Random: Spread_Random(180); break;
+                }
+
+                //if (bulletPattern != BulletPattern.None)
+                shootCount++;
+            }
+            if (Health <= 0) Dead();
+        }
         transform.Translate(moveVec * speed * Time.deltaTime);
+
+        WaitCompare();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -129,17 +145,25 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Field_Out"))
+        {
+            Dead();
+        }
+    }
+
 
     void WaitCompare()
     {
-        if (isWait && fieldTime >= waitTime)
+        if (enemyState == EnemyState.Wait && fieldTime >= waitTime)
         {
-            isWait = false; fieldTime = 0f;
+            enemyState = EnemyState.Play; fieldTime = 0f;
             bulletPattern = bulletPatterns.Dequeue();
         }
-        if (shootCount >= shootLimit)
+        if (enemyState == EnemyState.Play && shootCount >= shootLimit)
         {
-            isWait = true; shootCount = 0;
+            enemyState = EnemyState.Wait; shootCount = 0;
             bulletPatterns.Enqueue(bulletPattern);
         }
     }
@@ -185,7 +209,7 @@ public class Enemy : MonoBehaviour
 
     void GetDegree()
     {
-        playerPos = GameManager.instance.playerPos;
+        playerPos = GameManager.playerPos;
         degree = Mathf.Atan2
                 (playerPos.y - transform.position.y, playerPos.x - transform.position.x)
                 / Mathf.PI * 180 + 90;
@@ -199,7 +223,7 @@ public class Enemy : MonoBehaviour
 
         EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
         bulletFrom.enemyFromCode = bulletFromCode;
-        bulletFrom.bulletType = EnemyBullet.EBulletType_Moving.Homing;
+        bulletFrom.getBulletType = setBulletType;
 
         fieldTime = 0;
     }
@@ -216,7 +240,7 @@ public class Enemy : MonoBehaviour
     {
         if (!isLock || shootCount == 0) GetDegree();
 
-        int n_Count = 5;
+        int n_Count = shootLimit;
         float degEach = 10f;
         float setDeg = degree - degEach * (n_Count - 1) / 2;
 

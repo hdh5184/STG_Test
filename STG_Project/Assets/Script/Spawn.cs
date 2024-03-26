@@ -15,5 +15,7 @@ public class Spawn
     public string bulletType;
     public string bulletName;
     public int shootLevel;
+    public float firstWaitTime;
     public float waitTime;
+    public string spawnCode;
 }

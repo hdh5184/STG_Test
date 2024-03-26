@@ -6,6 +6,7 @@ public class EnemyBullet : MonoBehaviour
 {
     public EBulletType_Moving bulletType;
 
+    public string getBulletType;
     public float enemyFromCode = 0;
     public float speed = 0f;
 
@@ -22,6 +23,14 @@ public class EnemyBullet : MonoBehaviour
         ShootVec = Vector2.down;
         degreeZ = 0f;
         fieldTime = 0.5f;
+
+        switch (getBulletType)
+        {
+            case "str": bulletType = EBulletType_Moving.Straight; break;
+            case "acc": bulletType = EBulletType_Moving.Accel; break;
+            case "hom": bulletType = EBulletType_Moving.Homing; break;
+            case "bom": bulletType = EBulletType_Moving.Bomb; break;
+        }
 
         transform.rotation = Quaternion.Euler(0, 0, 0);
     }
@@ -74,7 +83,7 @@ public class EnemyBullet : MonoBehaviour
 
     void Homing()
     {
-        playerPos = GameManager.instance.playerPos;
+        playerPos = GameManager.playerPos;
         
         Vector3 v1, v2, v3;
 
