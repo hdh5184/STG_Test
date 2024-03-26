@@ -12,12 +12,15 @@ public class Enemy : MonoBehaviour
     // 적 타입, 체력, 출현 시간, 공격 쿨타임
     public EnemyState enemyState;
     public EnemyType enemyType;
+    public MovingType movingType;
     public BulletPattern bulletPattern;
-    public string patternType;
+    public string getPatternType;
     public Vector3 playerPos;
     public Vector2 moveVec;
     public float speed;
-    public string bulletName = "EBS_A";
+    public string bulletName;
+    public string getmovingType;
+    public string dropItemName;
 
     public string setBulletType;
 
@@ -33,11 +36,13 @@ public class Enemy : MonoBehaviour
 
     // 적기 코드
     float bulletFromCode = 0;
+    public float degreeZ = 0f;
     float degree = 0f;
 
     // 적 타입
     public enum EnemyState { Idle, Play, Wait, Dead }
     public enum EnemyType { Small, Medium, Large, Big }
+    public enum MovingType { Straight, Accel, SlowDown }
 
     public enum BulletPattern
     {
@@ -72,7 +77,7 @@ public class Enemy : MonoBehaviour
 
     public void Init()
     {
-        switch (patternType)
+        switch (getPatternType)
         {
             case "str": bulletPattern = BulletPattern.Straight; break;
             case "way": bulletPattern = BulletPattern.n_Way; break;
@@ -81,7 +86,12 @@ public class Enemy : MonoBehaviour
             case "sprR": bulletPattern = BulletPattern.Spread_Random; break;
             case "none": bulletPattern = BulletPattern.None; break;
         }
-
+        switch (getmovingType)
+        {
+            case "str": movingType = MovingType.Straight; break;
+            case "acc": movingType = MovingType.Accel; break;
+            case "slow": movingType = MovingType.SlowDown; break;
+        }
         bulletPatterns.Clear();
         bulletPatterns.Enqueue(bulletPattern);
     }
@@ -117,11 +127,25 @@ public class Enemy : MonoBehaviour
                 //if (bulletPattern != BulletPattern.None)
                 shootCount++;
             }
-            if (Health <= 0) Dead();
         }
-        transform.Translate(moveVec * speed * Time.deltaTime);
+        Moving();
+        
 
         WaitCompare();
+    }
+
+    void Moving()
+    {
+        switch (movingType)
+        {
+            case MovingType.Straight:
+                transform.Translate(moveVec * speed * Time.deltaTime); break;
+            case MovingType.Accel:
+                transform.Translate(moveVec * speed * Time.deltaTime * fieldTime * 2); break;
+            case MovingType.SlowDown:
+                transform.position = Vector2.Lerp(transform.position, moveVec, 0.03f); break;
+        }
+        transform.rotation = Quaternion.Euler(0, 0, degreeZ);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -141,6 +165,15 @@ public class Enemy : MonoBehaviour
         if (Health <= 0)
         {
             enemyState = EnemyState.Dead;
+
+            GameObject item;
+            switch (dropItemName)
+            {
+                case "pow": item = pool.MakeObject("PowerUp"); break;
+                case "hp":  item = pool.MakeObject("Heal"); break;
+                default:    item = null; break;
+            }
+            if(item != null) item.transform.position = transform.position;
             Dead();
         }
     }
@@ -241,7 +274,7 @@ public class Enemy : MonoBehaviour
         if (!isLock || shootCount == 0) GetDegree();
 
         int n_Count = shootLimit;
-        float degEach = 10f;
+        float degEach = 16f;
         float setDeg = degree - degEach * (n_Count - 1) / 2;
 
         for (int i = 0; i < n_Count; i++)

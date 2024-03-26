@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4552393681806172104}
   - component: {fileID: 5235558476665058689}
   - component: {fileID: 6327616863483025262}
+  - component: {fileID: -973641492933798103}
   m_Layer: 0
   m_Name: EBulletMedium_A
   m_TagString: EnemyBullet
@@ -170,3 +171,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-973641492933798103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5416483039038280967}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e506ff223e5b34c60b184c05eaabb8bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletType: 0
+  getBulletType: 
+  enemyFromCode: 0
+  speed: 0

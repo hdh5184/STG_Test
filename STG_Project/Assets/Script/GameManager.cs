@@ -77,9 +77,12 @@ public class GameManager : MonoBehaviour
             spawnData.shootLevel = int.Parse(dataSpilt[10]);
             spawnData.firstWaitTime = float.Parse(dataSpilt[11]);
             spawnData.waitTime = float.Parse(dataSpilt[12]);
-            spawnData.spawnCode = dataSpilt[12];
+            spawnData.dropItemName = dataSpilt[13];
+            spawnData.degreeZ = float.Parse(dataSpilt[14]);
+            spawnData.movingType = dataSpilt[15];
+            spawnData.spawnCode = dataSpilt[16];
             spawnList.Add(spawnData);
-            //Debug.Log(spawnData);
+            Debug.Log(spawnData.spawnCode);
         }
         stringReader.Close();
         spawnAmount = spawnList.Count;
@@ -120,14 +123,19 @@ public class GameManager : MonoBehaviour
             Enemy enemyLogic = enemy.GetComponent<Enemy>();
             enemyLogic.pool = pool;
             enemyLogic.moveVec = new Vector2(
-                spawnList[spawnIndex].movX, spawnList[spawnIndex].movY).normalized;
+                spawnList[spawnIndex].movX, spawnList[spawnIndex].movY);
+            //enemyLogic.moveVec = new Vector2(
+            //    spawnList[spawnIndex].movX, spawnList[spawnIndex].movY).normalized;
             enemyLogic.speed = spawnList[spawnIndex].speed;
-            enemyLogic.patternType = spawnList[spawnIndex].patternType;
+            enemyLogic.getPatternType = spawnList[spawnIndex].patternType;
             enemyLogic.setBulletType = spawnList[spawnIndex].bulletType;
             enemyLogic.bulletName = spawnList[spawnIndex].bulletName;
             enemyLogic.shootLimit = spawnList[spawnIndex].shootLevel;
             enemyLogic.firstWaitTime = spawnList[spawnIndex].firstWaitTime;
             enemyLogic.waitTime = spawnList[spawnIndex].waitTime;
+            enemyLogic.dropItemName = spawnList[spawnIndex].dropItemName;
+            enemyLogic.degreeZ = spawnList[spawnIndex].degreeZ;
+            enemyLogic.getmovingType = spawnList[spawnIndex].movingType;
 
             spawnIndex++;
             if (spawnAmount == spawnIndex) spawnEnd = true;

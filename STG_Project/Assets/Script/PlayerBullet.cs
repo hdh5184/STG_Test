@@ -43,7 +43,7 @@ public class PlayerBullet : MonoBehaviour
             gameObject.SetActive(false);
     }
 
-    void Move_Bullet() => transform.Translate(Vector2.up * 10f * Time.deltaTime);
+    void Move_Bullet() => transform.Translate(Vector2.up * 12f * Time.deltaTime);
     void Move_Accel() => transform.Translate(Vector2.up * 15f * Time.deltaTime * fieldTime);
 
     void Move_Homing()

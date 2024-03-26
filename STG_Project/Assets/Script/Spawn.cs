@@ -17,5 +17,8 @@ public class Spawn
     public int shootLevel;
     public float firstWaitTime;
     public float waitTime;
+    public string dropItemName;
+    public float degreeZ;
+    public string movingType;
     public string spawnCode;
 }

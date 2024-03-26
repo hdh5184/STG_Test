@@ -34,6 +34,7 @@ public class PoolManager : MonoBehaviour
 
     // B. Item & Effect Pool
     public GameObject[] poolItem_PowerUp;
+    public GameObject[] poolItem_Heal;
     public GameObject[] poolItem_SilverCoin;
     public GameObject[] poolItem_GoldCoin;
 
@@ -67,8 +68,9 @@ public class PoolManager : MonoBehaviour
         MakePool(EBulletMedium[1], ref poolEBulletMedium_B, 100);
 
         MakePool(Item[0], ref poolItem_PowerUp, 8);
-        MakePool(Item[1], ref poolItem_SilverCoin, 300);
-        MakePool(Item[2], ref poolItem_GoldCoin, 300);
+        MakePool(Item[1], ref poolItem_Heal, 8);
+        MakePool(Item[2], ref poolItem_SilverCoin, 300);
+        MakePool(Item[3], ref poolItem_GoldCoin, 300);
         MakePool(Effect[0], ref poolEffect_Destroy, 25);
 
         MakePool(EnemySmall[0], ref poolEnemySmall_A, 15);
@@ -114,6 +116,7 @@ public class PoolManager : MonoBehaviour
             case "EBM_B": targetPool = poolEBulletMedium_B; break;
 
             case "PowerUp": targetPool = poolItem_PowerUp; break;
+            case "Heal": targetPool = poolItem_Heal; break;
             case "SilverCoin": targetPool = poolItem_SilverCoin; break;
             case "GoldCoin": targetPool = poolItem_GoldCoin; break;
 

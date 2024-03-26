@@ -544,6 +544,7 @@ MonoBehaviour:
   - {fileID: 1213247180876686863, guid: 77826507598304eaf845323c6b692390, type: 3}
   Item:
   - {fileID: 5750233356497935653, guid: f3f11228552ee4195ad3d22e7f815f6d, type: 3}
+  - {fileID: 4036358780111200627, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
   - {fileID: 1548284935227467726, guid: 7e4dbd090ce9d4afd97651e4d618ec4d, type: 3}
   - {fileID: 7264613992857059105, guid: fec150b26879d4d8fa3bc72a6da277af, type: 3}
   Effect:
@@ -572,6 +573,7 @@ MonoBehaviour:
   poolEBulletMedium_A: []
   poolEBulletMedium_B: []
   poolItem_PowerUp: []
+  poolItem_Heal: []
   poolItem_SilverCoin: []
   poolItem_GoldCoin: []
   poolEffect_Destroy: []
@@ -1621,6 +1623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnIndex: 0
+  spawnAmount: 0
   spawnEnd: 0
   currentSpawnTime: 0
   nextSpawnDelay: 0

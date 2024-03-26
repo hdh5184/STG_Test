@@ -45,7 +45,7 @@ public class Item : MonoBehaviour
                 sr.enabled = true;
                 movingisLeft = (Random.Range(-1, 1) == -1) ? true : false;
                 movingisDown = true;
-                ItemMoving = new Vector2(Random.Range(1f, 2f), -Random.Range(1f, 2f));
+                ItemMoving = new Vector2(Random.Range(1f, 2f), -Random.Range(3f, 4f));
                 break;
             case ItemType.SilverCoin:   // 점수 아이템 소형	
             case ItemType.GoldCoin:     // 점수 아이템 대형
