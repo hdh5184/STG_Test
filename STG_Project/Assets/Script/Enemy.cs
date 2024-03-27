@@ -17,22 +17,29 @@ public class Enemy : MonoBehaviour
     public string getPatternType;
     public Vector3 playerPos;
     public Vector2 moveVec;
+    public Vector2 moveDesVec;
+    public Vector2 moveExitVec;
     public float speed;
-    public string bulletName;
+    public float movSpeed;
+    public float bulletSpeed;
+    public string getBulletName;
     public string getmovingType;
-    public string dropItemName;
+    public string getDropItemName;
+    int setScore;
 
-    public string setBulletType;
+    public string getBulletType;
 
     public int Health;
 
     // 적 공격
     float fieldTime = 0;
+    float IdleTime = 0;
     float shootTime = 0.1f;
     public float firstWaitTime;
     public float waitTime;
     int shootCount = 0;
     public int shootLimit;
+    public float fieldTimeLimit;
 
     // 적기 코드
     float bulletFromCode = 0;
@@ -40,7 +47,7 @@ public class Enemy : MonoBehaviour
     float degree = 0f;
 
     // 적 타입
-    public enum EnemyState { Idle, Play, Wait, Dead }
+    public enum EnemyState { Idle, Play, Wait, Exit, Dead }
     public enum EnemyType { Small, Medium, Large, Big }
     public enum MovingType { Straight, Accel, SlowDown }
 
@@ -63,15 +70,16 @@ public class Enemy : MonoBehaviour
     {
         enemyState = EnemyState.Idle;
         fieldTime = 0;
+        IdleTime = 0;
         shootTime = 0.1f;
         shootCount = 0;
 
         switch (enemyType)
         {
-            case EnemyType.Small:   Health = 3; break;
-            case EnemyType.Medium:  Health = 30; break;
-            case EnemyType.Large:   Health = 120; break;
-            case EnemyType.Big:     Health = 270; break;
+            case EnemyType.Small:   Health = 3;     setScore = 100; break;
+            case EnemyType.Medium:  Health = 40;    setScore = 500; break;
+            case EnemyType.Large:   Health = 180;   setScore = 5000; break;
+            case EnemyType.Big:     Health = 350;   setScore = 20000; break;
         }
     }
 
@@ -104,16 +112,17 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         fieldTime += Time.deltaTime;
+        IdleTime += Time.deltaTime;
 
-        if (enemyState == EnemyState.Idle && fieldTime >= firstWaitTime)
+        if (enemyState == EnemyState.Idle && IdleTime >= firstWaitTime)
         {
             enemyState = EnemyState.Play;
-            fieldTime = 0f;
+            IdleTime = 0f;
         }
 
         if (enemyState == EnemyState.Play)
         {
-            if (fieldTime >= shootTime)
+            if (IdleTime >= shootTime)
             {
                 switch (bulletPattern)
                 {
@@ -128,6 +137,12 @@ public class Enemy : MonoBehaviour
                 shootCount++;
             }
         }
+        if (fieldTime >= fieldTimeLimit)
+        {
+            fieldTime = 0;
+            enemyState = EnemyState.Exit;
+            movingType = MovingType.Accel;
+        }
         Moving();
         
 
@@ -139,11 +154,18 @@ public class Enemy : MonoBehaviour
         switch (movingType)
         {
             case MovingType.Straight:
-                transform.Translate(moveVec * speed * Time.deltaTime); break;
+                transform.Translate(moveVec * movSpeed * Time.deltaTime); break;
             case MovingType.Accel:
-                transform.Translate(moveVec * speed * Time.deltaTime * fieldTime * 2); break;
+                if (enemyState == EnemyState.Exit)
+                {
+                    Debug.Log(moveExitVec);
+                    transform.Translate(moveExitVec * movSpeed * Time.deltaTime * fieldTime * 2); break;
+                }
+                transform.Translate(moveVec * movSpeed * Time.deltaTime * fieldTime * 2); break;
             case MovingType.SlowDown:
-                transform.position = Vector2.Lerp(transform.position, moveVec, 0.03f); break;
+                if (fieldTime < 1)
+                transform.position = Vector2.Lerp(transform.position, moveDesVec, 0.03f);
+                else movingType = MovingType.Straight; break;
         }
         transform.rotation = Quaternion.Euler(0, 0, degreeZ);
     }
@@ -167,8 +189,10 @@ public class Enemy : MonoBehaviour
             enemyState = EnemyState.Dead;
 
             GameObject item;
-            switch (dropItemName)
+            switch (getDropItemName)
             {
+                case "silver": item = pool.MakeObject("SilverCoin"); break;
+                case "gold": item = pool.MakeObject("GoldCoin"); break;
                 case "pow": item = pool.MakeObject("PowerUp"); break;
                 case "hp":  item = pool.MakeObject("Heal"); break;
                 default:    item = null; break;
@@ -180,7 +204,7 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Field_Out"))
+        if (collision.CompareTag("Field_Out") && enemyState != EnemyState.Dead)
         {
             Dead();
         }
@@ -189,9 +213,9 @@ public class Enemy : MonoBehaviour
 
     void WaitCompare()
     {
-        if (enemyState == EnemyState.Wait && fieldTime >= waitTime)
+        if (enemyState == EnemyState.Wait && IdleTime >= waitTime)
         {
-            enemyState = EnemyState.Play; fieldTime = 0f;
+            enemyState = EnemyState.Play; IdleTime = 0f;
             bulletPattern = bulletPatterns.Dequeue();
         }
         if (enemyState == EnemyState.Play && shootCount >= shootLimit)
@@ -203,6 +227,7 @@ public class Enemy : MonoBehaviour
 
     public void Dead()
     {
+        if (Health <= 0) GameManager.Score += setScore;
         gameObject.SetActive(false);
 
         List<float> temp = new List<float>();
@@ -250,15 +275,18 @@ public class Enemy : MonoBehaviour
 
     private void Fire(float deg)
     {
-        GameObject bullet = pool.MakeObject(bulletName);
+        GameObject bullet = pool.MakeObject(getBulletName);
         bullet.transform.position = transform.position;
         bullet.transform.rotation = Quaternion.Euler(0, 0, deg);
 
-        EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
-        bulletFrom.enemyFromCode = bulletFromCode;
-        bulletFrom.getBulletType = setBulletType;
 
-        fieldTime = 0;
+        EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
+        //bulletFrom.enemyFromCode = bulletFromCode;
+        bulletFrom.getBulletType = getBulletType;
+        bulletFrom.speed = bulletSpeed;
+        bulletFrom.Init();
+
+        IdleTime = 0;
     }
 
 

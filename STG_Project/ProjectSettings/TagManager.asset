@@ -17,6 +17,7 @@ TagManager:
   - PlayerBullet_LvMAX_B
   - PlayerBullet_LvMAX_C
   - Field_Out
+  - Field_In
   layers:
   - Default
   - TransparentFX

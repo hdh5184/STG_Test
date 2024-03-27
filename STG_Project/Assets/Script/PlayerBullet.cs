@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerBullet : MonoBehaviour
 {
-    //public GameObject Target;
     public GameObject targetEnemy = null;
 
     public PlayerBulletType PBType;

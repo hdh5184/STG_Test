@@ -10,19 +10,10 @@ public class Item : MonoBehaviour
 
     public ItemType itemType;
 
-    //Vector3 playerVec;
-    //bool coinPosLR; // Left : true / Right = false
-    //bool coinPosUD; // Up : true / Down = false
-    //bool isGetCoin = false;
-
     // 아이템 이동 벡터, 방향, 출현 시간
     Vector2 ItemMoving;
     bool movingisLeft, movingisDown;
     float fieldTime = 0f;
-
-    //Vector2 CoinMoving;
-    //float playerCoinDis;
-    //float coinStretch;
 
     public enum ItemType
     {
@@ -49,12 +40,10 @@ public class Item : MonoBehaviour
                 break;
             case ItemType.SilverCoin:   // 점수 아이템 소형	
             case ItemType.GoldCoin:     // 점수 아이템 대형
-                rb.gravityScale = 1f;
-                rb.velocity = Vector2.up * 5f;
+                rb.gravityScale = 0.5f;
+                rb.velocity = Vector2.up * 3f;
                 break;
         }
-
-        
     }
 
     void Update()
@@ -64,8 +53,6 @@ public class Item : MonoBehaviour
         switch (itemType)
         {
             case ItemType.PowerUp:      PowerUp();  break;
-            case ItemType.SilverCoin:   SilverCoin(); break;
-            case ItemType.GoldCoin:     GoldCoin(); break;
         }
     }
 
@@ -83,35 +70,6 @@ public class Item : MonoBehaviour
         if (fieldTime >= 10f) gameObject.SetActive(false);
     }
 
-    void SilverCoin()
-    {
-        //playerVec = GameManager.instance.playerPos;
-        if (fieldTime >= 0.5f)
-        {
-            //if (!isGetCoin)
-            //{
-            //    coinPosLR = (transform.position.x <= GameManager.instance.playerPos.x) ? true : false;
-            //    coinPosUD = (transform.position.y <= GameManager.instance.playerPos.y) ? true : false;
-            //}
-
-            //isGetCoin = true;
-            //CoinMoving = playerVec - transform.position;
-            //playerCoinDis = Vector2.Distance(playerVec, transform.position);
-            //coinStretch = (2 / playerCoinDis);
-            //rb.AddForce(coinStretch * CoinMoving, ForceMode2D.Force);
-            //transform.position = new Vector2(
-            //    Mathf.Clamp(transform.position.x,
-            //    (coinPosLR) ? transform.position.x : playerVec.x, (!coinPosLR) ? transform.position.x : playerVec.x),
-            //    Mathf.Clamp(transform.position.y,
-            //    (coinPosUD) ? transform.position.y : playerVec.y, (!coinPosUD) ? transform.position.y : playerVec.y));
-        }
-    }
-
-    void GoldCoin()
-    {
-
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
@@ -122,15 +80,14 @@ public class Item : MonoBehaviour
                     GameManager.playerLevel = (GameManager.playerLevel == 4) ? 4 : GameManager.playerLevel + 1;
                     break;
                 case ItemType.SilverCoin:
-                    GameManager.Score += 100; break;
+                    GameManager.Score += 50; break;
                 case ItemType.GoldCoin:
-                    GameManager.Score += 300; break;
+                    GameManager.Score += 150; break;
             }
-            
             gameObject.SetActive(false);
         }
 
-        if (collision.CompareTag("Field"))
+        if (collision.CompareTag("Field_In"))
         {
             gameObject.SetActive(false);
         }

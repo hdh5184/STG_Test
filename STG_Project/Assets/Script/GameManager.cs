@@ -25,6 +25,9 @@ public class GameManager : MonoBehaviour
     public PoolManager pool;    // 오브젝트 Pool
 
     public GameObject debugObj;
+    public GameObject background;
+    public Renderer background_ren;
+    float background_offset = 0;
 
     // 플레이어 위치 및 이동 벡터
     public GameObject player;
@@ -42,7 +45,6 @@ public class GameManager : MonoBehaviour
         spawnList = new List<Spawn>();
         currentSpawnTime = 0;
         nextSpawnDelay = 0;
-        
     }
 
     void ReadSpawnFile()
@@ -64,23 +66,33 @@ public class GameManager : MonoBehaviour
             Spawn spawnData = new Spawn();
             string[] dataSpilt = line.Split(',');
 
-            spawnData.delay = float.Parse(dataSpilt[0]);
-            spawnData.enemyType = dataSpilt[1];
-            spawnData.posX = float.Parse(dataSpilt[2]);
-            spawnData.posY = float.Parse(dataSpilt[3]);
-            spawnData.movX = float.Parse(dataSpilt[4]);
-            spawnData.movY = float.Parse(dataSpilt[5]);
-            spawnData.speed = float.Parse(dataSpilt[6]);
-            spawnData.patternType = dataSpilt[7];
-            spawnData.bulletType = dataSpilt[8];
-            spawnData.bulletName = dataSpilt[9];
-            spawnData.shootLevel = int.Parse(dataSpilt[10]);
-            spawnData.firstWaitTime = float.Parse(dataSpilt[11]);
-            spawnData.waitTime = float.Parse(dataSpilt[12]);
-            spawnData.dropItemName = dataSpilt[13];
-            spawnData.degreeZ = float.Parse(dataSpilt[14]);
-            spawnData.movingType = dataSpilt[15];
-            spawnData.spawnCode = dataSpilt[16];
+            spawnData.spawnCode = dataSpilt[0];
+
+            spawnData.delay =           float.Parse(dataSpilt[1]);
+            spawnData.enemyType =       dataSpilt[2];
+            spawnData.posX =            float.Parse(dataSpilt[3]);
+            spawnData.posY =            float.Parse(dataSpilt[4]);
+            spawnData.dropItemName =    dataSpilt[5];
+
+            spawnData.movX =            float.Parse(dataSpilt[6]);
+            spawnData.movY =            float.Parse(dataSpilt[7]);
+            spawnData.degreeZ =         float.Parse(dataSpilt[8]);
+            spawnData.movSpeed =        float.Parse(dataSpilt[9]);
+            spawnData.movingType =      dataSpilt[10];
+            spawnData.movDesX =         float.Parse(dataSpilt[11]);
+            spawnData.movDesY =         float.Parse(dataSpilt[12]);
+            spawnData.movExitX =        float.Parse(dataSpilt[13]);
+            spawnData.movExitY =        float.Parse(dataSpilt[14]);
+            spawnData.fieldTimeLimit =  float.Parse(dataSpilt[15]);
+            
+            spawnData.bulletType =      dataSpilt[16];
+            spawnData.bulletName =      dataSpilt[17];
+            spawnData.patternType =     dataSpilt[18];
+            spawnData.bulletSpeed =     float.Parse(dataSpilt[19]);
+            spawnData.shootLimit =      int.Parse(dataSpilt[20]);
+            spawnData.firstWaitTime =   float.Parse(dataSpilt[21]);
+            spawnData.waitTime =        float.Parse(dataSpilt[22]);
+
             spawnList.Add(spawnData);
             Debug.Log(spawnData.spawnCode);
         }
@@ -91,6 +103,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        background_ren = background.GetComponent<Renderer>();
         Score = 0;
         DebugTest debugtest = debugObj.GetComponent<DebugTest>();
         debugtest.pool = pool;
@@ -109,6 +122,9 @@ public class GameManager : MonoBehaviour
         currentSpawnTime += Time.deltaTime;
         if (!spawnEnd) SpawnEnemy();
 
+        background_offset += 0.02f * Time.deltaTime;
+        background_ren.material.mainTextureOffset = new Vector2(0, background_offset);
+
         //Debug.Log($"적 기체 수 : {EnemyList.Count}");
     }
 
@@ -122,21 +138,31 @@ public class GameManager : MonoBehaviour
 
             Enemy enemyLogic = enemy.GetComponent<Enemy>();
             enemyLogic.pool = pool;
+            enemyLogic.getDropItemName = spawnList[spawnIndex].dropItemName;
+
             enemyLogic.moveVec = new Vector2(
-                spawnList[spawnIndex].movX, spawnList[spawnIndex].movY);
-            //enemyLogic.moveVec = new Vector2(
-            //    spawnList[spawnIndex].movX, spawnList[spawnIndex].movY).normalized;
-            enemyLogic.speed = spawnList[spawnIndex].speed;
+                spawnList[spawnIndex].movX, spawnList[spawnIndex].movY).normalized;
+            enemyLogic.degreeZ = spawnList[spawnIndex].degreeZ;
+            enemyLogic.movSpeed = spawnList[spawnIndex].movSpeed;
+            enemyLogic.getmovingType = spawnList[spawnIndex].movingType;
+            enemyLogic.moveDesVec = new Vector2(
+                spawnList[spawnIndex].movDesX, spawnList[spawnIndex].movDesY);
+            enemyLogic.moveExitVec = new Vector2(
+                spawnList[spawnIndex].movExitX, spawnList[spawnIndex].movExitY).normalized;
+            enemyLogic.fieldTimeLimit = spawnList[spawnIndex].fieldTimeLimit;
+
+            enemyLogic.getBulletType = spawnList[spawnIndex].bulletType;
+            enemyLogic.getBulletName = spawnList[spawnIndex].bulletName;
             enemyLogic.getPatternType = spawnList[spawnIndex].patternType;
-            enemyLogic.setBulletType = spawnList[spawnIndex].bulletType;
-            enemyLogic.bulletName = spawnList[spawnIndex].bulletName;
-            enemyLogic.shootLimit = spawnList[spawnIndex].shootLevel;
+            enemyLogic.bulletSpeed = spawnList[spawnIndex].bulletSpeed;
+            enemyLogic.shootLimit = spawnList[spawnIndex].shootLimit;
             enemyLogic.firstWaitTime = spawnList[spawnIndex].firstWaitTime;
             enemyLogic.waitTime = spawnList[spawnIndex].waitTime;
-            enemyLogic.dropItemName = spawnList[spawnIndex].dropItemName;
-            enemyLogic.degreeZ = spawnList[spawnIndex].degreeZ;
-            enemyLogic.getmovingType = spawnList[spawnIndex].movingType;
 
+
+            Debug.Log(enemyLogic.moveVec);
+            Debug.Log(new Vector2(
+                spawnList[spawnIndex].movX, spawnList[spawnIndex].movY).normalized);
             spawnIndex++;
             if (spawnAmount == spawnIndex) spawnEnd = true;
             else nextSpawnDelay = spawnList[spawnIndex].delay;
@@ -145,51 +171,5 @@ public class GameManager : MonoBehaviour
             EnemyList.Add(enemy);
             enemyLogic.Init();
         }
-        
-
-        /*
-         * public string patternType;
-        public string bulletType;
-        public string bulletName;
-        public int shootLevel;
-        public float waitTime;
-        */
-
-
-        //GameObject enemy1 = pool.MakeObject("EnemyS_A");
-
-        /*
-        GameObject enemy2 = pool.MakeObject("EnemyB_A");
-        EnemyList.Add(enemy2);
-        Enemy enemyLogic1 = enemy2.GetComponent<Enemy>();
-        enemyLogic1.pool = pool;
-        enemyLogic1.playerPos = playerPos;
-        enemyLogic1.setBulletType = "str";
-
-        enemy2.transform.position = new Vector2(0, 3);
-        */
-        
-        /*
-        enemy2 = pool.MakeObject("EnemyM_A");
-        enemy2.transform.position = new Vector2(2, 1);
-        EnemyList.Add(enemy2);
-        enemyLogic = enemy2.GetComponent<Enemy>();
-        enemyLogic.pool = pool;
-        enemyLogic.playerPos = playerPos;
-        enemy2 = pool.MakeObject("EnemyM_A");
-        enemy2.transform.position = new Vector2(2, 2);
-        EnemyList.Add(enemy2);
-        enemyLogic = enemy2.GetComponent<Enemy>();
-        enemyLogic.pool = pool;
-        enemyLogic.playerPos = playerPos;
-        enemy2 = pool.MakeObject("EnemyM_A");
-        enemy2.transform.position = new Vector2(2, 3);
-        EnemyList.Add(enemy2);
-        enemyLogic = enemy2.GetComponent<Enemy>();
-        enemyLogic.pool = pool;
-        enemyLogic.playerPos = playerPos;
-        */
     }
-
-
 }

@@ -17,13 +17,8 @@ public class EnemyBullet : MonoBehaviour
 
     public enum EBulletType_Moving { Straight, Accel, Homing, Bomb }
 
-    void Init()
+    public void Init()
     {
-        speed = 5f;
-        ShootVec = Vector2.down;
-        degreeZ = 0f;
-        fieldTime = 0.5f;
-
         switch (getBulletType)
         {
             case "str": bulletType = EBulletType_Moving.Straight; break;
@@ -31,12 +26,15 @@ public class EnemyBullet : MonoBehaviour
             case "hom": bulletType = EBulletType_Moving.Homing; break;
             case "bom": bulletType = EBulletType_Moving.Bomb; break;
         }
-
-        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
-    private void OnEnable() => Init();
-
+    private void OnEnable()
+    {
+        ShootVec = Vector2.down;
+        degreeZ = 0f;
+        fieldTime = 0.5f;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
     void Update()
     {
         fieldTime += Time.deltaTime;

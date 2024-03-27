@@ -155,14 +155,9 @@ public class Player : MonoBehaviour
         GameObject Explosion = pool.MakeObject("EDestroy");
         Explosion.transform.position = transform.position;
 
-        // PowerUp 아이템 2개 생성
-        int summonItemLimit = 0;
-        while (summonItemLimit < 2)
-        {
-            GameObject Item = pool.MakeObject("PowerUp");
-            Item.transform.position = transform.position;
-            summonItemLimit++;
-        }
+        // PowerUp 아이템 생성
+        GameObject Item = pool.MakeObject("PowerUp");
+        Item.transform.position = transform.position;
 
         // 플레이어 레벨 1로 감소, 옵션 해제
         GameManager.playerLevel = 1;
