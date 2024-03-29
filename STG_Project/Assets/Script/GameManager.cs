@@ -9,8 +9,6 @@ public class GameManager : MonoBehaviour
 
 
     // 적기 코드 저장
-    // 해당 적기가 발사한 탄 소거 및 점수 아이템 전환을 위한 연계용 코드 
-    public static List<float> EnemyCode = new List<float>();
     public static List<GameObject> EnemyList = new List<GameObject>();
 
     public List<Spawn> spawnList;
@@ -94,16 +92,68 @@ public class GameManager : MonoBehaviour
             spawnData.waitTime =        float.Parse(dataSpilt[22]);
 
             spawnList.Add(spawnData);
-            Debug.Log(spawnData.spawnCode);
         }
         stringReader.Close();
         spawnAmount = spawnList.Count;
         nextSpawnDelay = spawnList[0].delay;
     }
 
+    public void BossInit(GameObject boss)
+    {
+        Enemy bossLogic = boss.GetComponent<Enemy>();
+        bossLogic.bossLogics.Clear();
+
+        TextAsset textFile = Resources.Load("BossLogic_A") as TextAsset;
+        StringReader stringReader = new StringReader(textFile.text);
+
+        while (stringReader != null)
+        {
+            string line = stringReader.ReadLine();
+            if (line == null) break;
+
+            BossLogic bossLogicData = new BossLogic();
+            string[] dataSpilt = line.Split(',');
+
+            bossLogicData.BossLogicCode = dataSpilt[0];
+
+            bossLogicData.delay = float.Parse(dataSpilt[1]);
+            bossLogicData.posX = float.Parse(dataSpilt[2]);
+            bossLogicData.posY = float.Parse(dataSpilt[3]);
+
+            bossLogicData.movX = float.Parse(dataSpilt[4]);
+            bossLogicData.movY = float.Parse(dataSpilt[5]);
+            bossLogicData.degreeZ = float.Parse(dataSpilt[6]);
+            bossLogicData.movSpeed = float.Parse(dataSpilt[7]);
+            bossLogicData.movingType = dataSpilt[8];
+            bossLogicData.movDesX = float.Parse(dataSpilt[9]);
+            bossLogicData.movDesY = float.Parse(dataSpilt[10]);
+            bossLogicData.movExitX = float.Parse(dataSpilt[11]);
+            bossLogicData.movExitY = float.Parse(dataSpilt[12]);
+
+            bossLogicData.shootPos1 = dataSpilt[13];
+            bossLogicData.shootPos2 = dataSpilt[14];
+            bossLogicData.shootPos3 = dataSpilt[15];
+            bossLogicData.shootPos4 = dataSpilt[16];
+            bossLogicData.shootPos5 = dataSpilt[17];
+
+            bossLogicData.bulletType = dataSpilt[18];
+            bossLogicData.bulletName = dataSpilt[19];
+            bossLogicData.patternType = dataSpilt[20];
+            bossLogicData.bulletSpeed = float.Parse(dataSpilt[21]);
+            bossLogicData.shootLimit = int.Parse(dataSpilt[22]);
+            bossLogicData.firstWaitTime = float.Parse(dataSpilt[23]);
+            bossLogicData.waitTime = float.Parse(dataSpilt[24]);
+
+            bossLogic.bossLogics.Enqueue(bossLogicData);
+        }
+        stringReader.Close();
+        bossLogic.firstWaitTime = bossLogic.bossLogics.Peek().delay;
+    }
+
     void Start()
     {
         background_ren = background.GetComponent<Renderer>();
+        background_offset = 0.65f;
         Score = 0;
         DebugTest debugtest = debugObj.GetComponent<DebugTest>();
         debugtest.pool = pool;
@@ -132,6 +182,8 @@ public class GameManager : MonoBehaviour
     {
         if (currentSpawnTime >= nextSpawnDelay)
         {
+            Debug.Log($"편대 {spawnList[spawnIndex].spawnCode}번");
+
             GameObject enemy = pool.MakeObject(spawnList[spawnIndex].enemyType);
             enemy.transform.position = new Vector2(
                 spawnList[spawnIndex].posX, spawnList[spawnIndex].posY);
@@ -144,7 +196,7 @@ public class GameManager : MonoBehaviour
                 spawnList[spawnIndex].movX, spawnList[spawnIndex].movY).normalized;
             enemyLogic.degreeZ = spawnList[spawnIndex].degreeZ;
             enemyLogic.movSpeed = spawnList[spawnIndex].movSpeed;
-            enemyLogic.getmovingType = spawnList[spawnIndex].movingType;
+            enemyLogic.getMovingType = spawnList[spawnIndex].movingType;
             enemyLogic.moveDesVec = new Vector2(
                 spawnList[spawnIndex].movDesX, spawnList[spawnIndex].movDesY);
             enemyLogic.moveExitVec = new Vector2(
@@ -159,16 +211,18 @@ public class GameManager : MonoBehaviour
             enemyLogic.firstWaitTime = spawnList[spawnIndex].firstWaitTime;
             enemyLogic.waitTime = spawnList[spawnIndex].waitTime;
 
-
-            Debug.Log(enemyLogic.moveVec);
-            Debug.Log(new Vector2(
-                spawnList[spawnIndex].movX, spawnList[spawnIndex].movY).normalized);
             spawnIndex++;
             if (spawnAmount == spawnIndex) spawnEnd = true;
             else nextSpawnDelay = spawnList[spawnIndex].delay;
             currentSpawnTime = 0;
 
             EnemyList.Add(enemy);
+
+            if (enemy.GetComponent<Enemy>().enemyType == Enemy.EnemyType.Boss)
+            {
+                BossInit(enemy);
+
+            }
             enemyLogic.Init();
         }
     }

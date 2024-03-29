@@ -21,6 +21,7 @@ public class PoolManager : MonoBehaviour
     public GameObject[] EnemyMedium;
     public GameObject[] EnemyLarge;
     public GameObject[] EnemyBig;
+    public GameObject[] EnemyBoss;
 
 
     // A. bullet Pool
@@ -49,6 +50,8 @@ public class PoolManager : MonoBehaviour
         poolEnemyLarge_A, poolEnemyLarge_B;
     public GameObject[]
         poolEnemyBig_A;
+    public GameObject[]
+        poolEnemyBoss_A, poolEnemyBoss_B, poolEnemyBoss_C, poolEnemyBoss_D;
 
     // * 생성할 오브젝트에 해당하는 Pool을 target으로 정하기
     public GameObject[] targetPool;
@@ -73,11 +76,11 @@ public class PoolManager : MonoBehaviour
         MakePool(Item[3], ref poolItem_GoldCoin, 300);
         MakePool(Effect[0], ref poolEffect_Destroy, 25);
 
-        MakePool(EnemySmall[0], ref poolEnemySmall_A, 15);
-        MakePool(EnemySmall[1], ref poolEnemySmall_B, 15);
-        MakePool(EnemySmall[2], ref poolEnemySmall_C, 15);
-        MakePool(EnemySmall[3], ref poolEnemySmall_D, 15);
-        MakePool(EnemySmall[4], ref poolEnemySmall_E, 15);
+        MakePool(EnemySmall[0], ref poolEnemySmall_A, 30);
+        MakePool(EnemySmall[1], ref poolEnemySmall_B, 30);
+        MakePool(EnemySmall[2], ref poolEnemySmall_C, 30);
+        MakePool(EnemySmall[3], ref poolEnemySmall_D, 30);
+        MakePool(EnemySmall[4], ref poolEnemySmall_E, 30);
 
         MakePool(EnemyMedium[0], ref poolEnemyMedium_A, 8);
         MakePool(EnemyMedium[1], ref poolEnemyMedium_B, 8);
@@ -87,6 +90,11 @@ public class PoolManager : MonoBehaviour
         MakePool(EnemyLarge[1], ref poolEnemyLarge_B, 5);
 
         MakePool(EnemyBig[0], ref poolEnemyBig_A, 3);
+
+        MakePool(EnemyBoss[0], ref poolEnemyBoss_A, 1);
+        //MakePool(EnemyBoss[1], ref poolEnemyBoss_B, 1);
+        //MakePool(EnemyBoss[2], ref poolEnemyBoss_C, 1);
+        //MakePool(EnemyBoss[3], ref poolEnemyBoss_D, 1);
     }
 
     /// <summary> Pool 생성 </summary>
@@ -105,39 +113,44 @@ public class PoolManager : MonoBehaviour
     {
         switch (obj)
         {
-            case "Bullet_Lv1": targetPool = poolPBullet_Lv1; break;
-            case "Bullet_Lv2": targetPool = poolPBullet_Lv2; break;
-            case "Bullet_Lv3": targetPool = poolPBullet_Lv3; break;
-            case "Bullet_LvMAX": targetPool = poolPBullet_LvMAX; break;
+            case "Bullet_Lv1":  targetPool = poolPBullet_Lv1; break;
+            case "Bullet_Lv2":  targetPool = poolPBullet_Lv2; break;
+            case "Bullet_Lv3":  targetPool = poolPBullet_Lv3; break;
+            case "Bullet_LvMAX":targetPool = poolPBullet_LvMAX; break;
 
-            case "EBS_A": targetPool = poolEBulletSmall_A; break;
-            case "EBS_B": targetPool = poolEBulletSmall_B; break;
-            case "EBM_A": targetPool = poolEBulletMedium_A; break;
-            case "EBM_B": targetPool = poolEBulletMedium_B; break;
+            case "EBS_A":       targetPool = poolEBulletSmall_A; break;
+            case "EBS_B":       targetPool = poolEBulletSmall_B; break;
+            case "EBM_A":       targetPool = poolEBulletMedium_A; break;
+            case "EBM_B":       targetPool = poolEBulletMedium_B; break;
 
-            case "PowerUp": targetPool = poolItem_PowerUp; break;
-            case "Heal": targetPool = poolItem_Heal; break;
-            case "SilverCoin": targetPool = poolItem_SilverCoin; break;
-            case "GoldCoin": targetPool = poolItem_GoldCoin; break;
+            case "PowerUp":     targetPool = poolItem_PowerUp; break;
+            case "Heal":        targetPool = poolItem_Heal; break;
+            case "SilverCoin":  targetPool = poolItem_SilverCoin; break;
+            case "GoldCoin":    targetPool = poolItem_GoldCoin; break;
 
-            case "EDestroy": targetPool = poolEffect_Destroy; break;
+            case "EDestroy":    targetPool = poolEffect_Destroy; break;
 
-            case "EnemyS_A": targetPool = poolEnemySmall_A; break;
-            case "EnemyS_B": targetPool = poolEnemySmall_B; break;
-            case "EnemyS_C": targetPool = poolEnemySmall_C; break;
-            case "EnemyS_D": targetPool = poolEnemySmall_D; break;
-            case "EnemyS_E": targetPool = poolEnemySmall_E; break;
+            case "EnemyS_A":    targetPool = poolEnemySmall_A; break;
+            case "EnemyS_B":    targetPool = poolEnemySmall_B; break;
+            case "EnemyS_C":    targetPool = poolEnemySmall_C; break;
+            case "EnemyS_D":    targetPool = poolEnemySmall_D; break;
+            case "EnemyS_E":    targetPool = poolEnemySmall_E; break;
 
-            case "EnemyM_A": targetPool = poolEnemyMedium_A; break;
-            case "EnemyM_B": targetPool = poolEnemyMedium_B; break;
-            case "EnemyM_C": targetPool = poolEnemyMedium_C; break;
+            case "EnemyM_A":    targetPool = poolEnemyMedium_A; break;
+            case "EnemyM_B":    targetPool = poolEnemyMedium_B; break;
+            case "EnemyM_C":    targetPool = poolEnemyMedium_C; break;
 
-            case "EnemyL_A": targetPool = poolEnemyLarge_A; break;
-            case "EnemyL_B": targetPool = poolEnemyLarge_B; break;
+            case "EnemyL_A":    targetPool = poolEnemyLarge_A; break;
+            case "EnemyL_B":    targetPool = poolEnemyLarge_B; break;
 
-            case "EnemyB_A": targetPool = poolEnemyBig_A; break;
+            case "EnemyB_A":    targetPool = poolEnemyBig_A; break;
 
-            default:         targetPool = null; break;
+            case "Boss_A":      targetPool = poolEnemyBoss_A; break;
+            case "Boss_B":      targetPool = poolEnemyBoss_B; break;
+            case "Boss_C":      targetPool = poolEnemyBoss_C; break;
+            case "Boss_D":      targetPool = poolEnemyBoss_D; break;
+
+            default:            targetPool = null; break;
         }
 
         if (targetPool != null)

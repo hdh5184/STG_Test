@@ -60,10 +60,6 @@ public class EnemyBullet : MonoBehaviour
     void EnemyDestroyCompare()
     {
         bool findEnemy = false;
-        foreach (var code in GameManager.EnemyCode)
-        {
-            if (code == enemyFromCode) { findEnemy = true; break; }
-        }
 
         if (!findEnemy)
         {

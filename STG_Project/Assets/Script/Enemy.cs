@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using static Enemy;
 
@@ -8,6 +9,7 @@ public class Enemy : MonoBehaviour
     public PoolManager pool;
 
     public Queue<BulletPattern> bulletPatterns = new Queue<BulletPattern>();
+    public Queue<BossLogic> bossLogics = new Queue<BossLogic>();
 
     // 적 타입, 체력, 출현 시간, 공격 쿨타임
     public EnemyState enemyState;
@@ -23,7 +25,7 @@ public class Enemy : MonoBehaviour
     public float movSpeed;
     public float bulletSpeed;
     public string getBulletName;
-    public string getmovingType;
+    public string getMovingType;
     public string getDropItemName;
     int setScore;
 
@@ -41,30 +43,24 @@ public class Enemy : MonoBehaviour
     public int shootLimit;
     public float fieldTimeLimit;
 
-    // 적기 코드
-    float bulletFromCode = 0;
     public float degreeZ = 0f;
     float degree = 0f;
 
+    bool shoot1, shoot2, shoot3, shoot4, shoot5;
+
     // 적 타입
     public enum EnemyState { Idle, Play, Wait, Exit, Dead }
-    public enum EnemyType { Small, Medium, Large, Big }
+    public enum EnemyType { Small, Medium, Large, Big, Boss }
     public enum MovingType { Straight, Accel, SlowDown }
-
     public enum BulletPattern
     {
-        Straight, n_Way, Circle, Spread, Spread_Random,
+        Straight, n_Way, Circle, Spread, Spread_Random, Vortex, Down,
         None
     }
 
-    
-
-    private void Awake()
-    {
-        // 적기 코드 생성 후 기록
-        bulletFromCode = Random.Range(0f, 1f) * Random.Range(0f, 1f);
-        GameManager.EnemyCode.Add(bulletFromCode);
-    }
+    public GameObject
+        BossShootPos1, BossShootPos2, BossShootPos3,
+        BossShootPos4, BossShootPos5;
 
     private void OnEnable()
     {
@@ -80,33 +76,37 @@ public class Enemy : MonoBehaviour
             case EnemyType.Medium:  Health = 40;    setScore = 500; break;
             case EnemyType.Large:   Health = 180;   setScore = 5000; break;
             case EnemyType.Big:     Health = 350;   setScore = 20000; break;
+            case EnemyType.Boss:    Health = 1200;  setScore = 80000; break;
         }
+        bulletPatterns.Clear();
     }
 
     public void Init()
     {
         switch (getPatternType)
         {
-            case "str": bulletPattern = BulletPattern.Straight; break;
-            case "way": bulletPattern = BulletPattern.n_Way; break;
-            case "cir": bulletPattern = BulletPattern.Circle; break;
-            case "spr": bulletPattern = BulletPattern.Spread; break;
-            case "sprR": bulletPattern = BulletPattern.Spread_Random; break;
-            case "none": bulletPattern = BulletPattern.None; break;
+            case "str":     bulletPattern = BulletPattern.Straight; break;
+            case "way":     bulletPattern = BulletPattern.n_Way; break;
+            case "cir":     bulletPattern = BulletPattern.Circle; break;
+            case "spr":     bulletPattern = BulletPattern.Spread; break;
+            case "sprR":    bulletPattern = BulletPattern.Spread_Random; break;
+            case "vtx":     bulletPattern = BulletPattern.Vortex; break;
+            case "down":    bulletPattern = BulletPattern.Down; break;
+            case "none":    bulletPattern = BulletPattern.None; break;
         }
-        switch (getmovingType)
+        switch (getMovingType)
         {
-            case "str": movingType = MovingType.Straight; break;
-            case "acc": movingType = MovingType.Accel; break;
-            case "slow": movingType = MovingType.SlowDown; break;
+            case "str":     movingType = MovingType.Straight; break;
+            case "acc":     movingType = MovingType.Accel; break;
+            case "slow":    movingType = MovingType.SlowDown; break;
         }
-        bulletPatterns.Clear();
-        bulletPatterns.Enqueue(bulletPattern);
+        if (enemyType != EnemyType.Boss)
+            bulletPatterns.Enqueue(bulletPattern);
     }
 
     private void Start()
     {
-        GetDegree();
+        GetDegree(null);
     }
 
     void Update()
@@ -116,37 +116,73 @@ public class Enemy : MonoBehaviour
 
         if (enemyState == EnemyState.Idle && IdleTime >= firstWaitTime)
         {
-            enemyState = EnemyState.Play;
-            IdleTime = 0f;
+            enemyState = EnemyState.Play; IdleTime = 0f;
         }
 
-        if (enemyState == EnemyState.Play)
+        if (enemyState == EnemyState.Play && IdleTime >= shootTime)
         {
-            if (IdleTime >= shootTime)
-            {
-                switch (bulletPattern)
-                {
-                    case BulletPattern.Straight: Straight(false); break;
-                    case BulletPattern.n_Way: n_Way(true); break;
-                    case BulletPattern.Circle: Circle(true); break;
-                    case BulletPattern.Spread: Spread(true); break;
-                    case BulletPattern.Spread_Random: Spread_Random(180); break;
-                }
-
-                //if (bulletPattern != BulletPattern.None)
-                shootCount++;
-            }
+            if (enemyType == EnemyType.Boss)    BossPattern();
+            else                                SelectPattern(null);
+            shootCount++;
         }
-        if (fieldTime >= fieldTimeLimit)
-        {
-            fieldTime = 0;
-            enemyState = EnemyState.Exit;
-            movingType = MovingType.Accel;
-        }
-        Moving();
         
-
+        Moving();
         WaitCompare();
+        ExitCompare();
+
+        Debug.Log(waitTime);
+    }
+
+    void SelectPattern(GameObject shootPos)
+    {
+        switch (bulletPattern)
+        {
+            case BulletPattern.Straight: Straight(false, shootPos); break;
+            case BulletPattern.n_Way: n_Way(true, shootPos); break;
+            case BulletPattern.Circle: Circle(true, shootPos); break;
+            case BulletPattern.Spread: Spread(true, shootPos); break;
+            case BulletPattern.Spread_Random: Spread_Random(180, shootPos); break;
+            case BulletPattern.Vortex: Vortex(); break;
+            case BulletPattern.Down: Down(shootPos); break;
+        }
+    }
+
+    void BossPattern()
+    {
+        if (shoot1) SelectPattern(BossShootPos1);
+        if (shoot2) SelectPattern(BossShootPos2);
+        if (shoot3) SelectPattern(BossShootPos3);
+        if (shoot4) SelectPattern(BossShootPos4);
+        if (shoot5) SelectPattern(BossShootPos5);
+    }
+
+    void setBossLogic(BossLogic bossLogic)
+    {
+        waitTime = bossLogic.delay;
+        // posX, posY
+        // movX, movY
+        // degreeZ, movSpeed
+        getMovingType = bossLogic.movingType;
+        // movDesX, movDesY
+        // movExitX, movExitY
+
+        shoot1 = (bossLogic.shootPos1 == "1") ? true : false;
+        shoot2 = (bossLogic.shootPos2 == "1") ? true : false;
+        shoot3 = (bossLogic.shootPos3 == "1") ? true : false;
+        shoot4 = (bossLogic.shootPos4 == "1") ? true : false;
+        shoot5 = (bossLogic.shootPos5 == "1") ? true : false;
+
+        getBulletType = bossLogic.bulletType;
+        getBulletName = bossLogic.bulletName;
+        getPatternType = bossLogic.patternType;
+        bulletSpeed = bossLogic.bulletSpeed;
+        shootLimit = bossLogic.shootLimit;
+        //waitTime = bossLogic.waitTime;
+
+        Init();
+
+        Debug.Log($"보스 공격 {bossLogic.BossLogicCode}");
+        bossLogics.Enqueue(bossLogic);
     }
 
     void Moving()
@@ -158,7 +194,6 @@ public class Enemy : MonoBehaviour
             case MovingType.Accel:
                 if (enemyState == EnemyState.Exit)
                 {
-                    Debug.Log(moveExitVec);
                     transform.Translate(moveExitVec * movSpeed * Time.deltaTime * fieldTime * 2); break;
                 }
                 transform.Translate(moveVec * movSpeed * Time.deltaTime * fieldTime * 2); break;
@@ -170,17 +205,170 @@ public class Enemy : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, degreeZ);
     }
 
+
+    void WaitCompare()
+    {
+        if (enemyState == EnemyState.Wait && IdleTime >= waitTime)
+        {
+            enemyState = EnemyState.Play; IdleTime = 0f;
+            if (enemyType == EnemyType.Boss)
+                setBossLogic(bossLogics.Dequeue());
+            else bulletPattern = bulletPatterns.Dequeue();
+        }
+        if (enemyState == EnemyState.Play && shootCount >= shootLimit)
+        {
+            enemyState = EnemyState.Wait; shootCount = 0;
+            bulletPatterns.Enqueue(bulletPattern);
+        }
+    }
+
+    void ExitCompare()
+    {
+        if (fieldTime >= fieldTimeLimit)
+        {
+            fieldTime = 0;
+            enemyState = EnemyState.Exit;
+            movingType = MovingType.Accel;
+        }
+    }
+
+    void GetDegree(GameObject shootPos)
+    {
+        playerPos = GameManager.playerPos;
+        if (enemyType == EnemyType.Boss && shootPos != null)
+        {
+            degree = Mathf.Atan2
+                (playerPos.y - shootPos.transform.position.y,
+                playerPos.x - shootPos.transform.position.x)
+                / Mathf.PI * 180 + 90;
+        }
+        else
+        {
+            degree = Mathf.Atan2
+                (playerPos.y - transform.position.y,
+                playerPos.x - transform.position.x)
+                / Mathf.PI * 180 + 90;
+        }
+    }
+
+    private void Fire(float deg, GameObject shootPos)
+    {
+        GameObject bullet = pool.MakeObject(getBulletName);
+
+        if (shootPos == null)
+            bullet.transform.position = transform.position;
+        else
+            bullet.transform.position = shootPos.transform.position;
+
+        bullet.transform.rotation = Quaternion.Euler(0, 0, deg);
+
+
+        EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
+        bulletFrom.getBulletType = getBulletType;
+        bulletFrom.speed = bulletSpeed;
+        bulletFrom.Init();
+
+        IdleTime = 0;
+    }
+
+
+    // 공격 패턴 모음
+    private void Straight(bool isLock, GameObject shootPos)
+    {
+        if (!isLock || shootCount == 0) GetDegree(shootPos);
+        Fire(degree, shootPos);
+    }
+
+    private void n_Way(bool isLock, GameObject shootPos)
+    {
+        if (!isLock || shootCount == 0) GetDegree(shootPos);
+
+        int n_Count = shootLimit;
+        float degEach = 16f;
+        float setDeg = degree - degEach * (n_Count - 1) / 2;
+
+        for (int i = 0; i < n_Count; i++)
+        {
+            Fire(setDeg, shootPos);
+            setDeg += degEach;
+        }
+    }
+
+    private void Circle(bool isLock, GameObject shootPos)
+    {
+        if (!isLock || shootCount == 0) GetDegree(shootPos);
+
+        int n_Count = 20;
+        float degEach = 360 / n_Count;
+        float setDeg = degree;
+
+        for (int i = 0; i < n_Count; i++)
+        {
+            Fire(setDeg, shootPos);
+            setDeg += degEach;
+        }
+    }
+
+    //역삼각형 모양처럼 흩뿌리기
+    private void Spread(bool isLock, GameObject shootPos)
+    {
+        if (!isLock || shootCount == 0) GetDegree(shootPos);
+
+        float degEach = 10f;
+
+        for (int i = 0; i < 2; i++)
+        {
+            float setDeg = (i == 0) ? 
+                degree - degEach * (shootCount % 4) : degree + degEach * (shootCount % 4);
+            Fire(setDeg, shootPos);
+            if (shootCount % 4 == 0) break;
+        }
+    }
+
+    private void Spread_Random(float degLimit, GameObject shootPos)
+    {
+        int n_Count = 4;
+
+        for (int i = 0; i < n_Count; i++)
+        {
+            float setDeg = degree + Random.Range(-degLimit / 2, degLimit / 2);
+            Fire(setDeg, shootPos);
+        }
+    }
+
+    private void Vortex()
+    {
+
+    }
+
+    private void Down(GameObject shootPos) => Fire(0, shootPos);
+
+
+
+
+    public void Dead()
+    {
+        if (Health <= 0) GameManager.Score += setScore;
+        gameObject.SetActive(false);
+
+        GameManager.EnemyList.Remove(gameObject);
+
+        GameObject Explosion = pool.MakeObject("EDestroy");
+        Explosion.transform.position = transform.position;
+        Explosion.SetActive(true);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         // 플레이어 공격 충돌 시 체력 감소
         switch (collision.tag)
         {
-            case "PlayerBullet_Lv1":    Health -= 3;    collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_Lv2":    Health -= 4;    collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_Lv3":    Health -= 5;    collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_A":Health -= 10;   collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_B": Health -= 4;   collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_C": Health -= 6;   collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv1": Health -= 3; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv2": Health -= 4; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv3": Health -= 5; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_LvMAX_A": Health -= 10; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_LvMAX_B": Health -= 4; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_LvMAX_C": Health -= 6; collision.gameObject.SetActive(false); break;
         }
 
         // 적기 파괴
@@ -194,10 +382,10 @@ public class Enemy : MonoBehaviour
                 case "silver": item = pool.MakeObject("SilverCoin"); break;
                 case "gold": item = pool.MakeObject("GoldCoin"); break;
                 case "pow": item = pool.MakeObject("PowerUp"); break;
-                case "hp":  item = pool.MakeObject("Heal"); break;
-                default:    item = null; break;
+                case "hp": item = pool.MakeObject("Heal"); break;
+                default: item = null; break;
             }
-            if(item != null) item.transform.position = transform.position;
+            if (item != null) item.transform.position = transform.position;
             Dead();
         }
     }
@@ -207,150 +395,6 @@ public class Enemy : MonoBehaviour
         if (collision.CompareTag("Field_Out") && enemyState != EnemyState.Dead)
         {
             Dead();
-        }
-    }
-
-
-    void WaitCompare()
-    {
-        if (enemyState == EnemyState.Wait && IdleTime >= waitTime)
-        {
-            enemyState = EnemyState.Play; IdleTime = 0f;
-            bulletPattern = bulletPatterns.Dequeue();
-        }
-        if (enemyState == EnemyState.Play && shootCount >= shootLimit)
-        {
-            enemyState = EnemyState.Wait; shootCount = 0;
-            bulletPatterns.Enqueue(bulletPattern);
-        }
-    }
-
-    public void Dead()
-    {
-        if (Health <= 0) GameManager.Score += setScore;
-        gameObject.SetActive(false);
-
-        List<float> temp = new List<float>();
-
-        foreach (var code in GameManager.EnemyCode)
-        {
-            if (code == bulletFromCode) temp.Add(bulletFromCode);
-        }
-
-
-        /*foreach (var compareBullet in pool.poolEBullet_SP1)
-        {
-            EnemyBullet compareBulletFrom = compareBullet.GetComponent<EnemyBullet>();
-
-            if (compareBullet.activeSelf && compareBulletFrom.enemyFromCode == bulletFromCode)
-            {
-                compareBullet.SetActive(false);
-                if (compareBulletFrom.enemyFromCode == bulletFromCode)
-                {
-                    GameObject coin = pool.MakeObject("SilverCoin");
-                    coin.transform.position = compareBullet.transform.position;
-                    coin.SetActive(true);
-                }
-            }
-        }*/
-        GameManager.EnemyList.Remove(gameObject);
-
-        foreach (var code in temp)
-        {
-            GameManager.EnemyCode.Remove(code);
-        }
-
-        GameObject Explosion = pool.MakeObject("EDestroy");
-        Explosion.transform.position = transform.position;
-        Explosion.SetActive(true);
-    }
-
-    void GetDegree()
-    {
-        playerPos = GameManager.playerPos;
-        degree = Mathf.Atan2
-                (playerPos.y - transform.position.y, playerPos.x - transform.position.x)
-                / Mathf.PI * 180 + 90;
-    }
-
-    private void Fire(float deg)
-    {
-        GameObject bullet = pool.MakeObject(getBulletName);
-        bullet.transform.position = transform.position;
-        bullet.transform.rotation = Quaternion.Euler(0, 0, deg);
-
-
-        EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
-        //bulletFrom.enemyFromCode = bulletFromCode;
-        bulletFrom.getBulletType = getBulletType;
-        bulletFrom.speed = bulletSpeed;
-        bulletFrom.Init();
-
-        IdleTime = 0;
-    }
-
-
-    // 공격 패턴 모음
-    private void Straight(bool isLock)
-    {
-        if (!isLock || shootCount == 0) GetDegree();
-        Fire(degree);
-    }
-
-    private void n_Way(bool isLock)
-    {
-        if (!isLock || shootCount == 0) GetDegree();
-
-        int n_Count = shootLimit;
-        float degEach = 16f;
-        float setDeg = degree - degEach * (n_Count - 1) / 2;
-
-        for (int i = 0; i < n_Count; i++)
-        {
-            Fire(setDeg);
-            setDeg += degEach;
-        }
-    }
-
-    private void Circle(bool isLock)
-    {
-        if (!isLock || shootCount == 0) GetDegree();
-
-        int n_Count = 20;
-        float degEach = 360 / n_Count;
-        float setDeg = degree;
-
-        for (int i = 0; i < n_Count; i++)
-        {
-            Fire(setDeg);
-            setDeg += degEach;
-        }
-    }
-
-    //역삼각형 모양처럼 흩뿌리기
-    private void Spread(bool isLock)
-    {
-        if (!isLock || shootCount == 0) GetDegree();
-
-        float degEach = 10f;
-
-        for (int i = 0; i < 2; i++)
-        {
-            float setDeg = (i == 0) ? 
-                degree - degEach * (shootCount % 4) : degree + degEach * (shootCount % 4);
-            Fire(setDeg);
-            if (shootCount % 4 == 0) break;
-        }
-    }
-
-    private void Spread_Random(float degLimit)
-    {
-        int n_Count = 10;
-
-        for (int i = 0; i < n_Count; i++)
-        {
-            float setDeg = degree + Random.Range(-degLimit / 2, degLimit / 2);
-            Fire(setDeg);
         }
     }
 }

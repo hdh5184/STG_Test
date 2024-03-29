@@ -40,8 +40,8 @@ public class Item : MonoBehaviour
                 break;
             case ItemType.SilverCoin:   // 점수 아이템 소형	
             case ItemType.GoldCoin:     // 점수 아이템 대형
-                rb.gravityScale = 0.5f;
-                rb.velocity = Vector2.up * 3f;
+                rb.gravityScale = 0.25f;
+                rb.velocity = Vector2.up * 2f;
                 break;
         }
     }
