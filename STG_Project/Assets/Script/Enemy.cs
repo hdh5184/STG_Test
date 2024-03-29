@@ -7,6 +7,11 @@ using static Enemy;
 public class Enemy : MonoBehaviour
 {
     public PoolManager pool;
+    public AudioManager audioManager;
+
+    // 오디오 따로 클래스 생성
+    public AudioSource audio;
+    SpriteRenderer sr;
 
     public Queue<BulletPattern> bulletPatterns = new Queue<BulletPattern>();
     public Queue<BossLogic> bossLogics = new Queue<BossLogic>();
@@ -62,8 +67,16 @@ public class Enemy : MonoBehaviour
         BossShootPos1, BossShootPos2, BossShootPos3,
         BossShootPos4, BossShootPos5;
 
+    private void Awake()
+    {
+        audio = GetComponent<AudioSource>();
+        sr = GetComponent<SpriteRenderer>();
+    }
+
     private void OnEnable()
     {
+        audio.Stop();
+        sr.enabled = true;
         enemyState = EnemyState.Idle;
         fieldTime = 0;
         IdleTime = 0;
@@ -111,6 +124,8 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        if (enemyState == EnemyState.Dead) return;
+
         fieldTime += Time.deltaTime;
         IdleTime += Time.deltaTime;
 
@@ -129,8 +144,6 @@ public class Enemy : MonoBehaviour
         Moving();
         WaitCompare();
         ExitCompare();
-
-        Debug.Log(waitTime);
     }
 
     void SelectPattern(GameObject shootPos)
@@ -211,14 +224,15 @@ public class Enemy : MonoBehaviour
         if (enemyState == EnemyState.Wait && IdleTime >= waitTime)
         {
             enemyState = EnemyState.Play; IdleTime = 0f;
-            if (enemyType == EnemyType.Boss)
-                setBossLogic(bossLogics.Dequeue());
-            else bulletPattern = bulletPatterns.Dequeue();
+            if (enemyType != EnemyType.Boss)
+                bulletPattern = bulletPatterns.Dequeue();
         }
         if (enemyState == EnemyState.Play && shootCount >= shootLimit)
         {
             enemyState = EnemyState.Wait; shootCount = 0;
-            bulletPatterns.Enqueue(bulletPattern);
+            if (enemyType == EnemyType.Boss)
+                setBossLogic(bossLogics.Dequeue());
+            else bulletPatterns.Enqueue(bulletPattern);
         }
     }
 
@@ -348,18 +362,30 @@ public class Enemy : MonoBehaviour
 
     public void Dead()
     {
+        enemyState = EnemyState.Dead;
         if (Health <= 0) GameManager.Score += setScore;
-        gameObject.SetActive(false);
+
+        sr.enabled = false;
+
 
         GameManager.EnemyList.Remove(gameObject);
+        StartCoroutine("SetActiveOff");
 
-        GameObject Explosion = pool.MakeObject("EDestroy");
+        GameObject Explosion = pool.MakeObject("ExplodeB");
         Explosion.transform.position = transform.position;
         Explosion.SetActive(true);
     }
 
+    IEnumerator SetActiveOff()
+    {
+        yield return new WaitForSeconds(1);
+        gameObject.SetActive(false);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (enemyState == EnemyState.Dead) return;
+
         // 플레이어 공격 충돌 시 체력 감소
         switch (collision.tag)
         {
@@ -374,8 +400,6 @@ public class Enemy : MonoBehaviour
         // 적기 파괴
         if (Health <= 0)
         {
-            enemyState = EnemyState.Dead;
-
             GameObject item;
             switch (getDropItemName)
             {
@@ -385,7 +409,25 @@ public class Enemy : MonoBehaviour
                 case "hp": item = pool.MakeObject("Heal"); break;
                 default: item = null; break;
             }
-            if (item != null) item.transform.position = transform.position;
+
+            switch (enemyType)
+            {
+                case EnemyType.Large:
+                case EnemyType.Big:
+                    audio.clip = audioManager.getAudioClip("Explode"); break;
+                case EnemyType.Boss:
+                    audio.clip = audioManager.getAudioClip("ExplodeBoss"); break;
+                default:
+                    audio.clip = audioManager.getAudioClip("EShotL"); break;
+            }
+            audio.loop = false;
+            audio.Play();
+
+            if (item != null)
+            {
+                item.transform.position = transform.position;
+            }
+
             Dead();
         }
     }
@@ -394,7 +436,8 @@ public class Enemy : MonoBehaviour
     {
         if (collision.CompareTag("Field_Out") && enemyState != EnemyState.Dead)
         {
-            Dead();
+            GameManager.EnemyList.Remove(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

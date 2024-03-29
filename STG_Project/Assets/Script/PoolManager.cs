@@ -39,7 +39,10 @@ public class PoolManager : MonoBehaviour
     public GameObject[] poolItem_SilverCoin;
     public GameObject[] poolItem_GoldCoin;
 
-    public GameObject[] poolEffect_Destroy;
+    public GameObject[]
+        poolEffect_Explode_A, poolEffect_Explode_B, poolEffect_Explode_C;
+    public GameObject[]
+        poolEffect_Explode_Short, poolEffect_Smoke;
 
     // C. Enemy Pool
     public GameObject[]
@@ -74,7 +77,12 @@ public class PoolManager : MonoBehaviour
         MakePool(Item[1], ref poolItem_Heal, 8);
         MakePool(Item[2], ref poolItem_SilverCoin, 300);
         MakePool(Item[3], ref poolItem_GoldCoin, 300);
-        MakePool(Effect[0], ref poolEffect_Destroy, 25);
+
+        MakePool(Effect[0], ref poolEffect_Explode_A, 20);
+        MakePool(Effect[1], ref poolEffect_Explode_B, 20);
+        MakePool(Effect[2], ref poolEffect_Explode_C, 20);
+        MakePool(Effect[3], ref poolEffect_Explode_Short, 20);
+        MakePool(Effect[4], ref poolEffect_Smoke, 20);
 
         MakePool(EnemySmall[0], ref poolEnemySmall_A, 30);
         MakePool(EnemySmall[1], ref poolEnemySmall_B, 30);
@@ -128,7 +136,11 @@ public class PoolManager : MonoBehaviour
             case "SilverCoin":  targetPool = poolItem_SilverCoin; break;
             case "GoldCoin":    targetPool = poolItem_GoldCoin; break;
 
-            case "EDestroy":    targetPool = poolEffect_Destroy; break;
+            case "ExplodeA":    targetPool = poolEffect_Explode_A; break;
+            case "ExplodeB":    targetPool = poolEffect_Explode_B; break;
+            case "ExplodeC":    targetPool = poolEffect_Explode_C; break;
+            case "ExplodeShort":targetPool = poolEffect_Explode_Short; break;
+            case "Smoke":       targetPool = poolEffect_Smoke; break;
 
             case "EnemyS_A":    targetPool = poolEnemySmall_A; break;
             case "EnemyS_B":    targetPool = poolEnemySmall_B; break;

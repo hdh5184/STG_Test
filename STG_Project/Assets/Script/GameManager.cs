@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     
 
     public PoolManager pool;    // 오브젝트 Pool
+    public AudioManager audioManager;
 
     public GameObject debugObj;
     public GameObject background;
@@ -147,7 +148,7 @@ public class GameManager : MonoBehaviour
             bossLogic.bossLogics.Enqueue(bossLogicData);
         }
         stringReader.Close();
-        bossLogic.firstWaitTime = bossLogic.bossLogics.Peek().delay;
+        bossLogic.firstWaitTime = 1.5f;
     }
 
     void Start()
@@ -158,6 +159,7 @@ public class GameManager : MonoBehaviour
         DebugTest debugtest = debugObj.GetComponent<DebugTest>();
         debugtest.pool = pool;
         player.GetComponent<Player>().pool = pool;
+        player.GetComponent<Player>().audioManager = audioManager;
 
         ReadSpawnFile();
         SpawnEnemy();
@@ -185,6 +187,8 @@ public class GameManager : MonoBehaviour
             Debug.Log($"편대 {spawnList[spawnIndex].spawnCode}번");
 
             GameObject enemy = pool.MakeObject(spawnList[spawnIndex].enemyType);
+            enemy.GetComponent<Enemy>().audioManager = audioManager;
+
             enemy.transform.position = new Vector2(
                 spawnList[spawnIndex].posX, spawnList[spawnIndex].posY);
 

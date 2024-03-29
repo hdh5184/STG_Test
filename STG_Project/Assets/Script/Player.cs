@@ -1,16 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Item;
 
 public class Player : MonoBehaviour
 {
     // 오브젝트 pool (탄, 아이템 등)
     public PoolManager pool;
+    public AudioManager audioManager;
+
+    public AudioSource audioMain;
+    public AudioSource audioSub;
 
     // 플레이어 샷 위치, 옵션, 무적 스프라이트
     public PlayerType playerType;
     public GameObject playerShootPos;
     public GameObject playerGuardSprite;
+    public GameObject playerAudio;
 
     // 플레이어 이동 벡터
     Vector2 PlayerMovingVec;
@@ -21,13 +27,17 @@ public class Player : MonoBehaviour
     public enum PlayerType { A, B, C }
     enum PlayerState { Play, Dead, Guard }
     PlayerState playerState;
-
-    
-
+    bool isShoot;
 
     private void Awake()
     {
+        audioMain = GetComponent<AudioSource>();
+        audioSub = playerAudio.GetComponent<AudioSource>();
+    }
 
+    private void OnEnable()
+    {
+        isShoot = false;
     }
 
     void Start()
@@ -64,6 +74,14 @@ public class Player : MonoBehaviour
         // 공격
         if (Input.GetKey(KeyCode.Z))
         {
+            if (!isShoot)
+            {
+                isShoot = true;
+                audioMain.clip = audioManager.getAudioClip("PShoot");
+                audioMain.loop = true;
+                audioMain.Play();
+            }
+            
             // 플레이어 기본 공격
             if (shootTime > 0.12f)
             {
@@ -89,6 +107,12 @@ public class Player : MonoBehaviour
                     case PlayerType.C: if (shootTime_Lv2 > 1f)      Fire_LvMAX_C(); break;
                 }
             }
+        }
+        else
+        {
+            isShoot = false;
+            audioMain.loop = true;
+            audioMain.Stop();
         }
     }
 
@@ -135,13 +159,33 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // 적 탄알에 피탄 시 플레이어 기체 파괴, 1.5초 후 무적 상태로 재생성
-        if (collision.CompareTag("EnemyBullet") && playerState == PlayerState.Play)
+        if (playerState == PlayerState.Play && collision.CompareTag("EnemyBullet"))
         {
+            Debug.Log("플레이어 파괴");
             //Debug.Log("Player Destroyed");
             StartCoroutine("DestroyPlayer");
             Invoke("ReloadPlayer", 1.5f);
         }
+            
+        if (playerState != PlayerState.Dead && collision.CompareTag("Item"))
+        {
+            Item item = collision.GetComponent<Item>();
+
+            switch (item.itemType)
+            {
+                case ItemType.PowerUp:
+                    GameManager.playerLevel = (GameManager.playerLevel == 4) ? 4 : GameManager.playerLevel + 1;
+                    audioSub.clip = audioManager.getAudioClip("GetItem"); break;
+                case ItemType.SilverCoin:
+                    GameManager.Score += 50;
+                    audioSub.clip = audioManager.getAudioClip("GetCoin"); break;
+                case ItemType.GoldCoin:
+                    GameManager.Score += 250;
+                    audioSub.clip = audioManager.getAudioClip("GetCoin"); break;
+            }
+            audioSub.Play();
+        }
+        collision.gameObject.SetActive(false);
     }
 
     // 플레이어 기체 파괴
@@ -152,7 +196,7 @@ public class Player : MonoBehaviour
         gameObject.SetActive(false);
 
         // 폭발 연출 생성
-        GameObject Explosion = pool.MakeObject("EDestroy");
+        GameObject Explosion = pool.MakeObject("ExplodeA");
         Explosion.transform.position = transform.position;
 
         // PowerUp 아이템 생성
@@ -178,6 +222,7 @@ public class Player : MonoBehaviour
 
         // 2.5초 후 무적 해제
         Invoke("Unguard", 2.5f);
+        Debug.Log("플레이어 재출격");
     }
 
     // 무적 해제
