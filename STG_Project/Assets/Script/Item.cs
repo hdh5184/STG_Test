@@ -72,27 +72,6 @@ public class Item : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        /*
-        if (collision.CompareTag("Player"))
-        {
-            AudioSource playerAudio = collision.GetComponent<Player>().audio;
-            switch (itemType)
-            {
-                case ItemType.PowerUp:
-                    GameManager.playerLevel = (GameManager.playerLevel == 4) ? 4 : GameManager.playerLevel + 1;
-                    playerAudio.clip = audioManager.getAudioClip("GetItem"); break;
-                case ItemType.SilverCoin:
-                    GameManager.Score += 50;
-                    playerAudio.clip = audioManager.getAudioClip("GetCoin"); break;
-                case ItemType.GoldCoin:
-                    GameManager.Score += 250;
-                    playerAudio.clip = audioManager.getAudioClip("GetCoin"); break;
-            }
-            gameObject.SetActive(false);
-            playerAudio.Play();
-        }
-        */
-
         if (collision.CompareTag("Field_In"))
         {
             gameObject.SetActive(false);

@@ -52,6 +52,8 @@ public class Enemy : MonoBehaviour
     float degree = 0f;
 
     bool shoot1, shoot2, shoot3, shoot4, shoot5;
+    float degree1, degree2, degree3, degree4, degree5;
+    int setBossPos = 0;
 
     // 적 타입
     public enum EnemyState { Idle, Play, Wait, Exit, Dead }
@@ -136,9 +138,13 @@ public class Enemy : MonoBehaviour
 
         if (enemyState == EnemyState.Play && IdleTime >= shootTime)
         {
-            if (enemyType == EnemyType.Boss)    BossPattern();
-            else                                SelectPattern(null);
-            shootCount++;
+            if (enemyType == EnemyType.Boss) BossPattern();
+            else
+            {
+                SelectPattern(null, 0);
+                shootCount++;
+            }
+            
         }
         
         Moving();
@@ -146,8 +152,10 @@ public class Enemy : MonoBehaviour
         ExitCompare();
     }
 
-    void SelectPattern(GameObject shootPos)
+    void SelectPattern(GameObject shootPos, int pos)
     {
+        if (enemyType == EnemyType.Boss) setBossPos = pos;
+
         switch (bulletPattern)
         {
             case BulletPattern.Straight: Straight(false, shootPos); break;
@@ -162,11 +170,12 @@ public class Enemy : MonoBehaviour
 
     void BossPattern()
     {
-        if (shoot1) SelectPattern(BossShootPos1);
-        if (shoot2) SelectPattern(BossShootPos2);
-        if (shoot3) SelectPattern(BossShootPos3);
-        if (shoot4) SelectPattern(BossShootPos4);
-        if (shoot5) SelectPattern(BossShootPos5);
+        if (shoot1) SelectPattern(BossShootPos1, 1);
+        if (shoot2) SelectPattern(BossShootPos2, 2);
+        if (shoot3) SelectPattern(BossShootPos3, 3);
+        if (shoot4) SelectPattern(BossShootPos4, 4);
+        if (shoot5) SelectPattern(BossShootPos5, 5);
+        shootCount++;
     }
 
     void setBossLogic(BossLogic bossLogic)
@@ -251,10 +260,19 @@ public class Enemy : MonoBehaviour
         playerPos = GameManager.playerPos;
         if (enemyType == EnemyType.Boss && shootPos != null)
         {
-            degree = Mathf.Atan2
+            float deg = Mathf.Atan2
                 (playerPos.y - shootPos.transform.position.y,
                 playerPos.x - shootPos.transform.position.x)
                 / Mathf.PI * 180 + 90;
+
+            switch (setBossPos)
+            {
+                case 1: degree1 = deg; break;
+                case 2: degree2 = deg; break;
+                case 3: degree3 = deg; break;
+                case 4: degree4 = deg; break;
+                case 5: degree5 = deg; break;
+            }
         }
         else
         {
@@ -262,6 +280,21 @@ public class Enemy : MonoBehaviour
                 (playerPos.y - transform.position.y,
                 playerPos.x - transform.position.x)
                 / Mathf.PI * 180 + 90;
+        }
+    }
+
+    void setBossDegree()
+    {
+        if (enemyType == EnemyType.Boss)
+        {
+            switch (setBossPos)
+            {
+                case 1: degree = degree1; break;
+                case 2: degree = degree2; break;
+                case 3: degree = degree3; break;
+                case 4: degree = degree4; break;
+                case 5: degree = degree5; break;
+            }
         }
     }
 
@@ -290,12 +323,18 @@ public class Enemy : MonoBehaviour
     private void Straight(bool isLock, GameObject shootPos)
     {
         if (!isLock || shootCount == 0) GetDegree(shootPos);
+        setBossDegree();
         Fire(degree, shootPos);
     }
 
     private void n_Way(bool isLock, GameObject shootPos)
     {
-        if (!isLock || shootCount == 0) GetDegree(shootPos);
+        if (!isLock || shootCount == 0)
+        {
+            GetDegree(shootPos);
+        }
+
+        setBossDegree();
 
         int n_Count = shootLimit;
         float degEach = 16f;
@@ -311,6 +350,8 @@ public class Enemy : MonoBehaviour
     private void Circle(bool isLock, GameObject shootPos)
     {
         if (!isLock || shootCount == 0) GetDegree(shootPos);
+
+        setBossDegree();
 
         int n_Count = 20;
         float degEach = 360 / n_Count;
@@ -328,6 +369,8 @@ public class Enemy : MonoBehaviour
     {
         if (!isLock || shootCount == 0) GetDegree(shootPos);
 
+        setBossDegree();
+
         float degEach = 10f;
 
         for (int i = 0; i < 2; i++)
@@ -342,6 +385,8 @@ public class Enemy : MonoBehaviour
     private void Spread_Random(float degLimit, GameObject shootPos)
     {
         int n_Count = 4;
+
+        setBossDegree();
 
         for (int i = 0; i < n_Count; i++)
         {
@@ -369,16 +414,30 @@ public class Enemy : MonoBehaviour
 
 
         GameManager.EnemyList.Remove(gameObject);
-        StartCoroutine("SetActiveOff");
 
-        GameObject Explosion = pool.MakeObject("ExplodeB");
+        GameObject Explosion;
+        AudioSource effectAudio;
+
+        switch (enemyType)
+        {
+            case EnemyType.Large:
+            case EnemyType.Big:
+                Explosion = pool.MakeObject("ExplodeC");
+                Explosion.GetComponent<Effect>().audio.clip =
+                    audioManager.getAudioClip("Explode"); break;
+            case EnemyType.Boss:
+                Explosion = pool.MakeObject("Explode???");
+                Explosion.GetComponent<Effect>().audio.clip =
+                    audioManager.getAudioClip("ExplodeBoss"); break;
+            default:
+                Explosion = pool.MakeObject("ExplodeB");
+                Explosion.GetComponent<Effect>().audio.clip =
+                    audioManager.getAudioClip("EShotL"); break;
+        }
+
         Explosion.transform.position = transform.position;
         Explosion.SetActive(true);
-    }
 
-    IEnumerator SetActiveOff()
-    {
-        yield return new WaitForSeconds(1);
         gameObject.SetActive(false);
     }
 
@@ -409,19 +468,6 @@ public class Enemy : MonoBehaviour
                 case "hp": item = pool.MakeObject("Heal"); break;
                 default: item = null; break;
             }
-
-            switch (enemyType)
-            {
-                case EnemyType.Large:
-                case EnemyType.Big:
-                    audio.clip = audioManager.getAudioClip("Explode"); break;
-                case EnemyType.Boss:
-                    audio.clip = audioManager.getAudioClip("ExplodeBoss"); break;
-                default:
-                    audio.clip = audioManager.getAudioClip("EShotL"); break;
-            }
-            audio.loop = false;
-            audio.Play();
 
             if (item != null)
             {

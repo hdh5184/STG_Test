@@ -161,10 +161,17 @@ public class Player : MonoBehaviour
     {
         if (playerState == PlayerState.Play && collision.CompareTag("EnemyBullet"))
         {
-            Debug.Log("플레이어 파괴");
-            //Debug.Log("Player Destroyed");
-            StartCoroutine("DestroyPlayer");
-            Invoke("ReloadPlayer", 1.5f);
+            Debug.Log("플레이어 파괴됨");
+
+            DestroyPlayer();
+
+            if (GameManager.playerHealth < 0)
+            {
+                Debug.Log("게임 끝");
+                Time.timeScale = 0f;
+            }
+            else Invoke("ReloadPlayer", 1.5f);
+            collision.gameObject.SetActive(false);
         }
             
         if (playerState != PlayerState.Dead && collision.CompareTag("Item"))
@@ -184,30 +191,36 @@ public class Player : MonoBehaviour
                     audioSub.clip = audioManager.getAudioClip("GetCoin"); break;
             }
             audioSub.Play();
+            collision.gameObject.SetActive(false);
         }
-        collision.gameObject.SetActive(false);
     }
 
     // 플레이어 기체 파괴
-    private IEnumerator DestroyPlayer()
+    private void DestroyPlayer()
     {
         playerState = PlayerState.Dead;
-        //GetComponent<Collider2D>().isTrigger = false;
+        audioMain.Stop();
+        audioSub.Stop();
+        audioMain.clip = null;
+        audioSub.clip = null;
+
         gameObject.SetActive(false);
 
         // 폭발 연출 생성
         GameObject Explosion = pool.MakeObject("ExplodeA");
         Explosion.transform.position = transform.position;
 
+        AudioSource effectAudio = Explosion.GetComponent<Effect>().audio;
+        effectAudio.clip = audioManager.getAudioClip("ExplodePlayer");
+
         // PowerUp 아이템 생성
         GameObject Item = pool.MakeObject("PowerUp");
         Item.transform.position = transform.position;
 
         // 플레이어 레벨 1로 감소, 옵션 해제
-        GameManager.playerLevel = 1;
-
-        // 부활 쿨타임 1.5초
-        yield return new WaitForSeconds(1.5f);
+        GameManager.playerLevel = (GameManager.playerLevel <= 2) ?
+            1 : GameManager.playerLevel - 2;
+        GameManager.playerHealth--;
     }
 
     // 무적 상태로 재생성
@@ -216,7 +229,6 @@ public class Player : MonoBehaviour
         playerState = PlayerState.Guard;
 
         transform.position = GameManager.instance.transform.position + new Vector3(0, -3f);
-        //GetComponent<Collider2D>().isTrigger = true;
         playerGuardSprite.SetActive(true);
         gameObject.SetActive(true);
 
@@ -237,7 +249,7 @@ public class Player : MonoBehaviour
     {
         if(playerState == PlayerState.Play)
         {
-            StartCoroutine("DestroyPlayer");
+            DestroyPlayer();
             Invoke("ReloadPlayer", 1.5f);
         }
     }

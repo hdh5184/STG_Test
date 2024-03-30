@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     public static Vector3 playerPos;
     public Vector3 playerMovingVec;
     public static int playerLevel = 1;
+    public static int playerHealth = 2;
 
     public static int Score = 0;
 
@@ -44,6 +45,13 @@ public class GameManager : MonoBehaviour
         spawnList = new List<Spawn>();
         currentSpawnTime = 0;
         nextSpawnDelay = 0;
+    }
+
+    public void GameInit()
+    {
+        playerLevel = 1;
+        playerHealth = 2;
+        Score = 0;
     }
 
     void ReadSpawnFile()
@@ -176,8 +184,6 @@ public class GameManager : MonoBehaviour
 
         background_offset += 0.02f * Time.deltaTime;
         background_ren.material.mainTextureOffset = new Vector2(0, background_offset);
-
-        //Debug.Log($"적 기체 수 : {EnemyList.Count}");
     }
 
     void SpawnEnemy()
@@ -225,7 +231,7 @@ public class GameManager : MonoBehaviour
             if (enemy.GetComponent<Enemy>().enemyType == Enemy.EnemyType.Boss)
             {
                 BossInit(enemy);
-
+                debugObj.GetComponent<DebugTest>().bossExist = true;
             }
             enemyLogic.Init();
         }
