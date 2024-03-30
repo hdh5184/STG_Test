@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4860256689796392915}
   - component: {fileID: 2304283519917233556}
   - component: {fileID: -6019363907110306298}
+  - component: {fileID: 1209088612506833686}
   m_Layer: 0
   m_Name: Explode_B
   m_TagString: Untagged
@@ -217,3 +218,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!210 &1209088612506833686
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2184231737793421062}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 6
+  m_SortAtRoot: 0

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1133969925024476388}
   - component: {fileID: -2497003135525820364}
   - component: {fileID: 4584119797761700417}
+  - component: {fileID: -8008521966928223731}
   m_Layer: 0
   m_Name: Enemy_SmallD
   m_TagString: Untagged
@@ -260,7 +261,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
-  audio: {fileID: 0}
   enemyState: 0
   enemyType: 0
   movingType: 0
@@ -288,3 +288,15 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
+--- !u!210 &-8008521966928223731
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4812896762256352542}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
+  m_SortAtRoot: 0

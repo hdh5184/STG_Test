@@ -25,6 +25,12 @@ public class GameManager : MonoBehaviour
 
     public GameObject debugObj;
     public GameObject background;
+
+    public GameObject gameResultPanel;
+    public GameObject gameOverPanel;
+
+    public GameObject playerRemain1, playerRemain2;
+
     public Renderer background_ren;
     float background_offset = 0;
 
@@ -111,6 +117,7 @@ public class GameManager : MonoBehaviour
     {
         Enemy bossLogic = boss.GetComponent<Enemy>();
         bossLogic.bossLogics.Clear();
+        bossLogic.bossLogicsFinal.Clear();
 
         TextAsset textFile = Resources.Load("BossLogic_A") as TextAsset;
         StringReader stringReader = new StringReader(textFile.text);
@@ -153,6 +160,11 @@ public class GameManager : MonoBehaviour
             bossLogicData.firstWaitTime = float.Parse(dataSpilt[23]);
             bossLogicData.waitTime = float.Parse(dataSpilt[24]);
 
+            if (dataSpilt[0] == "Final")
+            {
+                bossLogic.bossLogicsFinal.Enqueue(bossLogicData);
+                break;
+            }
             bossLogic.bossLogics.Enqueue(bossLogicData);
         }
         stringReader.Close();
@@ -161,6 +173,9 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        gameResultPanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+
         background_ren = background.GetComponent<Renderer>();
         background_offset = 0.65f;
         Score = 0;
@@ -175,6 +190,9 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        if (playerHealth == 1) playerRemain2.SetActive(false);
+        if (playerHealth == 0) playerRemain1.SetActive(false);
+
         // 플레이어 이동 벡터 및 위치 저장
         playerMovingVec = player.transform.position - playerPos;
         playerPos = player.transform.position;
@@ -235,5 +253,30 @@ public class GameManager : MonoBehaviour
             }
             enemyLogic.Init();
         }
+    }
+
+    public void GameClear()
+    {
+        spawnEnd = true;
+        debugObj.GetComponent<DebugTest>().bossExist = false;
+        StartCoroutine("GameResult");
+    }
+
+    public void GameDefeat()
+    {
+        StartCoroutine("GameOver");
+    }
+
+    public IEnumerator GameResult()
+    {
+        yield return new WaitForSeconds(5f);
+        gameResultPanel.SetActive(true);
+    }
+
+    public IEnumerator GameOver()
+    {
+        yield return new WaitForSeconds(1.5f);
+        Time.timeScale = 0f;
+        gameOverPanel.SetActive(true);
     }
 }

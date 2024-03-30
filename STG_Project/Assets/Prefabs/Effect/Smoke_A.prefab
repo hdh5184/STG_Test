@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6923310019491374647}
   - component: {fileID: 1303203450970726633}
   - component: {fileID: -8130844797922457454}
+  - component: {fileID: 2923155186378095030}
   m_Layer: 0
   m_Name: Smoke_A
   m_TagString: Untagged
@@ -217,3 +218,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!210 &2923155186378095030
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6037422497662435310}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 6
+  m_SortAtRoot: 0

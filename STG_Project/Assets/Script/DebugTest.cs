@@ -34,8 +34,17 @@ public class DebugTest : MonoBehaviour
         if (bossExist)
         {
             BossFieldLimitTime -= Time.deltaTime;
-            bossFieldLimitText.text =
-                $"{Mathf.FloorToInt(BossFieldLimitTime)}<size=80>.{BossFieldLimitTime * 100 % 100:#,#00}</size>";
+            if (BossFieldLimitTime <= 0)
+            {
+                bossExist = false;
+                bossFieldLimitText.text =
+                $"0<size=80>.00</size>";
+            }
+            else
+            {
+                bossFieldLimitText.text =
+                    $"{Mathf.FloorToInt(BossFieldLimitTime)}<size=80>.{BossFieldLimitTime * 100 % 100:#,#00}</size>";
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.LeftBracket)) LevelUp();       // [ : 플레이어 레벨 증가

@@ -168,7 +168,7 @@ public class Player : MonoBehaviour
             if (GameManager.playerHealth < 0)
             {
                 Debug.Log("게임 끝");
-                Time.timeScale = 0f;
+                GameManager.instance.GameDefeat();
             }
             else Invoke("ReloadPlayer", 1.5f);
             collision.gameObject.SetActive(false);

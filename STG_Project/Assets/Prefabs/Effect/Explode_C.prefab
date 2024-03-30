@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5559533583174458508}
   - component: {fileID: 6010712311307132905}
   - component: {fileID: 1102591552598528998}
+  - component: {fileID: -6321924747894548879}
   m_Layer: 0
   m_Name: Explode_C
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalScale: {x: 7, y: 7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -133,7 +134,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.75
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -217,3 +218,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!210 &-6321924747894548879
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4949979510129088372}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 6
+  m_SortAtRoot: 0

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5235558476665058689}
   - component: {fileID: 6327616863483025262}
   - component: {fileID: -973641492933798103}
+  - component: {fileID: -4365831241797987609}
   m_Layer: 0
   m_Name: EBulletMedium_A
   m_TagString: EnemyBullet
@@ -187,3 +188,15 @@ MonoBehaviour:
   getBulletType: 
   enemyFromCode: 0
   speed: 0
+--- !u!210 &-4365831241797987609
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5416483039038280967}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 11
+  m_SortAtRoot: 0

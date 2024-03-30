@@ -435,6 +435,7 @@ GameObject:
   - component: {fileID: 1100779609629340860}
   - component: {fileID: 536554464901593718}
   - component: {fileID: 5544984265858046534}
+  - component: {fileID: 3351447881482307880}
   m_Layer: 0
   m_Name: PB_Bullet_Lv2
   m_TagString: PlayerBullet_Lv2
@@ -508,4 +509,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e110075007c61492f8a014fa9d002b1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetEnemy: {fileID: 0}
   PBType: 0
+--- !u!210 &3351447881482307880
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7820452081857691443}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 10
+  m_SortAtRoot: 0

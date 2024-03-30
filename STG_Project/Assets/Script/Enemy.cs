@@ -10,11 +10,11 @@ public class Enemy : MonoBehaviour
     public AudioManager audioManager;
 
     // 오디오 따로 클래스 생성
-    public AudioSource audio;
-    SpriteRenderer sr;
+    //SpriteRenderer sr;
 
     public Queue<BulletPattern> bulletPatterns = new Queue<BulletPattern>();
     public Queue<BossLogic> bossLogics = new Queue<BossLogic>();
+    public Queue<BossLogic> bossLogicsFinal = new Queue<BossLogic>();
 
     // 적 타입, 체력, 출현 시간, 공격 쿨타임
     public EnemyState enemyState;
@@ -50,6 +50,7 @@ public class Enemy : MonoBehaviour
 
     public float degreeZ = 0f;
     float degree = 0f;
+    bool isBossFinal = false;
 
     bool shoot1, shoot2, shoot3, shoot4, shoot5;
     float degree1, degree2, degree3, degree4, degree5;
@@ -71,14 +72,12 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
-        audio = GetComponent<AudioSource>();
-        sr = GetComponent<SpriteRenderer>();
+        //sr = GetComponent<SpriteRenderer>();
     }
 
     private void OnEnable()
     {
-        audio.Stop();
-        sr.enabled = true;
+        //sr.enabled = true;
         enemyState = EnemyState.Idle;
         fieldTime = 0;
         IdleTime = 0;
@@ -136,6 +135,14 @@ public class Enemy : MonoBehaviour
             enemyState = EnemyState.Play; IdleTime = 0f;
         }
 
+        if (!isBossFinal && fieldTime >= fieldTimeLimit && enemyType == EnemyType.Boss)
+        {
+            isBossFinal = true;
+            setBossLogic(bossLogicsFinal.Peek());
+            bossLogics.Clear();
+            bossLogics = bossLogicsFinal;
+        }
+
         if (enemyState == EnemyState.Play && IdleTime >= shootTime)
         {
             if (enemyType == EnemyType.Boss) BossPattern();
@@ -183,10 +190,11 @@ public class Enemy : MonoBehaviour
         waitTime = bossLogic.delay;
         // posX, posY
         // movX, movY
-        // degreeZ, movSpeed
+        // degreeZ,
+        movSpeed = bossLogic.movSpeed;
         getMovingType = bossLogic.movingType;
         // movDesX, movDesY
-        // movExitX, movExitY
+        moveExitVec = new Vector2(bossLogic.movExitX, bossLogic.movExitY).normalized;
 
         shoot1 = (bossLogic.shootPos1 == "1") ? true : false;
         shoot2 = (bossLogic.shootPos2 == "1") ? true : false;
@@ -247,6 +255,7 @@ public class Enemy : MonoBehaviour
 
     void ExitCompare()
     {
+        if (enemyType == EnemyType.Boss) return;
         if (fieldTime >= fieldTimeLimit)
         {
             fieldTime = 0;
@@ -337,7 +346,7 @@ public class Enemy : MonoBehaviour
         setBossDegree();
 
         int n_Count = shootLimit;
-        float degEach = 16f;
+        float degEach = 20f;
         float setDeg = degree - degEach * (n_Count - 1) / 2;
 
         for (int i = 0; i < n_Count; i++)
@@ -408,38 +417,82 @@ public class Enemy : MonoBehaviour
     public void Dead()
     {
         enemyState = EnemyState.Dead;
-        if (Health <= 0) GameManager.Score += setScore;
+        fieldTime = 0;
 
-        sr.enabled = false;
+        if (Health <= 0)
+        {
+            GameManager.Score += setScore;
+        }
+
+        //sr.enabled = false;
 
 
         GameManager.EnemyList.Remove(gameObject);
 
         GameObject Explosion;
-        AudioSource effectAudio;
 
-        switch (enemyType)
+        if (enemyType == EnemyType.Boss && Health <= 0)
         {
-            case EnemyType.Large:
-            case EnemyType.Big:
-                Explosion = pool.MakeObject("ExplodeC");
-                Explosion.GetComponent<Effect>().audio.clip =
-                    audioManager.getAudioClip("Explode"); break;
-            case EnemyType.Boss:
-                Explosion = pool.MakeObject("Explode???");
-                Explosion.GetComponent<Effect>().audio.clip =
-                    audioManager.getAudioClip("ExplodeBoss"); break;
-            default:
-                Explosion = pool.MakeObject("ExplodeB");
-                Explosion.GetComponent<Effect>().audio.clip =
-                    audioManager.getAudioClip("EShotL"); break;
+            StartCoroutine("BossDead");
         }
+        else
+        {
+            switch (enemyType)
+            {
+                case EnemyType.Large:
+                case EnemyType.Big:
+                    Explosion = pool.MakeObject("ExplodeC");
+                    Explosion.GetComponent<Effect>().audio.clip =
+                        audioManager.getAudioClip("Explode"); break;
+                default:
+                    Explosion = pool.MakeObject("ExplodeB");
+                    Explosion.GetComponent<Effect>().audio.clip =
+                        audioManager.getAudioClip("EShotL"); break;
+            }
+            Explosion.transform.position = transform.position;
+            //Explosion.SetActive(true);
+            gameObject.SetActive(false);
+        }
+    }
 
+    IEnumerator BossDead()
+    {
+        GameManager.instance.GameClear();
+        InvokeRepeating("BossExplosion", 0f, 0.16f);
+
+        yield return new WaitForSeconds(1.5f);
+
+        CancelInvoke("BossExplosion");
+        StartCoroutine("BossDestroyed");
+
+    }
+
+    IEnumerator BossDestroyed()
+    {
+        InvokeRepeating("BossExplosion", 0f, 0.1f);
+
+        yield return new WaitForSeconds(1.5f);
+
+        CancelInvoke("BossExplosion");
+        GameObject Explosion = pool.MakeObject("ExplodeA");
+        Explosion.transform.localScale = new Vector3(10, 10, 1);
+        Explosion.GetComponent<Effect>().audio.clip =
+                        audioManager.getAudioClip("ExplodeBoss");
         Explosion.transform.position = transform.position;
-        Explosion.SetActive(true);
-
         gameObject.SetActive(false);
     }
+
+    void BossExplosion()
+    {
+        GameObject Explosion = pool.MakeObject("ExplodeB");
+        Explosion.GetComponent<Effect>().audio.clip =
+                        audioManager.getAudioClip("EShotL");
+        Vector2 bossPos = transform.position;
+        Explosion.transform.position = new Vector2(
+            Random.Range(bossPos.x - 2, bossPos.x + 2),
+            Random.Range(bossPos.y - 1, bossPos.y + 1));
+    }
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -451,9 +504,9 @@ public class Enemy : MonoBehaviour
             case "PlayerBullet_Lv1": Health -= 3; collision.gameObject.SetActive(false); break;
             case "PlayerBullet_Lv2": Health -= 4; collision.gameObject.SetActive(false); break;
             case "PlayerBullet_Lv3": Health -= 5; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_A": Health -= 10; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_LvMAX_A": Health -= 8; collision.gameObject.SetActive(false); break;
             case "PlayerBullet_LvMAX_B": Health -= 4; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_C": Health -= 6; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_LvMAX_C": Health -= 5; collision.gameObject.SetActive(false); break;
         }
 
         // 적기 파괴

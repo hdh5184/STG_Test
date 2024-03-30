@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1302237927449306082}
   - component: {fileID: 1465888969640661937}
   - component: {fileID: -8344782383592103019}
+  - component: {fileID: -6269523115769091593}
   m_Layer: 0
   m_Name: EBulletSmall_B
   m_TagString: EnemyBullet
@@ -184,4 +185,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletType: 0
+  getBulletType: 
   enemyFromCode: 0
+  speed: 0
+--- !u!210 &-6269523115769091593
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6887903937321011447}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 11
+  m_SortAtRoot: 0

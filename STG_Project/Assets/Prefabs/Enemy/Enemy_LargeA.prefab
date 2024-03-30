@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -5144938577152703873}
   - component: {fileID: 4400717754844109523}
   - component: {fileID: 8346800370099803383}
+  - component: {fileID: -7213716132862616091}
   m_Layer: 0
   m_Name: Enemy_LargeA
   m_TagString: Untagged
@@ -260,7 +261,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
-  audio: {fileID: 0}
   enemyState: 0
   enemyType: 2
   movingType: 0
@@ -288,3 +288,15 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
+--- !u!210 &-7213716132862616091
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5844421105796570900}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
+  m_SortAtRoot: 0

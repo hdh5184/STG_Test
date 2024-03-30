@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: -4593337215841549032}
   - component: {fileID: 3506536478604280536}
   - component: {fileID: 3560221560928244296}
+  - component: {fileID: -834924626404360449}
   m_Layer: 0
   m_Name: BossA
   m_TagString: Untagged
@@ -405,7 +406,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
-  audio: {fileID: 0}
   enemyState: 0
   enemyType: 4
   movingType: 0
@@ -433,6 +433,18 @@ MonoBehaviour:
   BossShootPos3: {fileID: 2978666539493228857}
   BossShootPos4: {fileID: 993973211868008804}
   BossShootPos5: {fileID: 7016438172287397772}
+--- !u!210 &-834924626404360449
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6800352218390604158}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 5
+  m_SortAtRoot: 0
 --- !u!1 &7016438172287397772
 GameObject:
   m_ObjectHideFlags: 0
