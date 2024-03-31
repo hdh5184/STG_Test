@@ -6,6 +6,21 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager instance;
 
+    private void Awake()
+    {
+        if (instance != this && instance != null)
+        {
+            Destroy(gameObject); return;
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
+        InitPool();
+    }
+
     // 1. bullet Prefab
     public GameObject[] PlayerBullet;
 
@@ -15,6 +30,8 @@ public class PoolManager : MonoBehaviour
     // 2. Item & Effect Prefab
     public GameObject[] Item;
     public GameObject[] Effect;
+
+    public GameObject[] Player;
 
     // 3. Enemy Prefab
     public GameObject[] EnemySmall;
@@ -44,6 +61,9 @@ public class PoolManager : MonoBehaviour
     public GameObject[]
         poolEffect_Explode_Short, poolEffect_Smoke;
 
+    public GameObject[]
+        poolPlayer_A, poolPlayer_B, poolPlayer_C;
+
     // C. Enemy Pool
     public GameObject[]
         poolEnemySmall_A, poolEnemySmall_B, poolEnemySmall_C, poolEnemySmall_D, poolEnemySmall_E;
@@ -59,7 +79,7 @@ public class PoolManager : MonoBehaviour
     // * 생성할 오브젝트에 해당하는 Pool을 target으로 정하기
     public GameObject[] targetPool;
 
-    private void Awake()
+    private void InitPool()
     {
         if (instance == null) instance = this;
 
@@ -83,6 +103,10 @@ public class PoolManager : MonoBehaviour
         MakePool(Effect[2], ref poolEffect_Explode_C, 20);
         MakePool(Effect[3], ref poolEffect_Explode_Short, 20);
         MakePool(Effect[4], ref poolEffect_Smoke, 20);
+
+        MakePool(Player[0], ref poolPlayer_A, 1);
+        MakePool(Player[1], ref poolPlayer_B, 1);
+        MakePool(Player[2], ref poolPlayer_C, 1);
 
         MakePool(EnemySmall[0], ref poolEnemySmall_A, 30);
         MakePool(EnemySmall[1], ref poolEnemySmall_B, 30);
@@ -111,7 +135,7 @@ public class PoolManager : MonoBehaviour
         pool = new GameObject[count];
         for (int i = 0; i < pool.Length; i++)
         {
-            pool[i] = Instantiate(input);
+            pool[i] = Instantiate(input, transform);
             pool[i].SetActive(false);
         }
     }
@@ -141,6 +165,10 @@ public class PoolManager : MonoBehaviour
             case "ExplodeC":    targetPool = poolEffect_Explode_C; break;
             case "ExplodeShort":targetPool = poolEffect_Explode_Short; break;
             case "Smoke":       targetPool = poolEffect_Smoke; break;
+
+            case "Player_A": targetPool = poolPlayer_A; break;
+            case "Player_B": targetPool = poolPlayer_B; break;
+            case "Player_C": targetPool = poolPlayer_C; break;
 
             case "EnemyS_A":    targetPool = poolEnemySmall_A; break;
             case "EnemyS_B":    targetPool = poolEnemySmall_B; break;

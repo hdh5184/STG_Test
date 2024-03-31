@@ -4,7 +4,22 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    public AudioManager instance;
+
     public AudioClip[] audioClip;
+
+    private void Awake()
+    {
+        if (instance != this && instance != null)
+        {
+            Destroy(gameObject); return;
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
 
     public AudioClip getAudioClip(string clipName)
     {
@@ -24,7 +39,6 @@ public class AudioManager : MonoBehaviour
             default:
                 Debug.Log($"\"{clipName}\" 오디오를 찾을 수 없습니다.");
                 return null;
-
         }
     }
 }

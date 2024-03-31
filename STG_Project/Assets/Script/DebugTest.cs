@@ -72,13 +72,13 @@ public class DebugTest : MonoBehaviour
         }
         else onMouseTime = 0f;
 
-        scoreText.text = GameManager.Score.ToString();
+        scoreText.text = StageManager.Score.ToString();
     }
 
     public void LevelUp() =>
-        GameManager.playerLevel = (GameManager.playerLevel == 4) ? 4 : GameManager.playerLevel + 1;
+        StageManager.playerLevel = (StageManager.playerLevel == 4) ? 4 : StageManager.playerLevel + 1;
     public void LevelDown() =>
-        GameManager.playerLevel = (GameManager.playerLevel == 1) ? 1 : GameManager.playerLevel - 1;
+        StageManager.playerLevel = (StageManager.playerLevel == 1) ? 1 : StageManager.playerLevel - 1;
 
 
     Vector2 MousePos;   // 마우스 위치 저장

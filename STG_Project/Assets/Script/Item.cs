@@ -58,10 +58,10 @@ public class Item : MonoBehaviour
 
     void PowerUp()
     {
-        if (transform.position.x >= GameManager.instance.transform.position.x + 2.5f) movingisLeft = true;
-        else if (transform.position.x <= GameManager.instance.transform.position.x - 2.5f) movingisLeft = false;
-        if (transform.position.y >= GameManager.instance.transform.position.x + 4.5f) movingisDown = true;
-        else if (transform.position.y <= GameManager.instance.transform.position.x - 4.5f) movingisDown = false;
+        if (transform.position.x >= 2.5f) movingisLeft = true;
+        else if (transform.position.x <= -2.5f) movingisLeft = false;
+        if (transform.position.y >= 4.5f) movingisDown = true;
+        else if (transform.position.y <= -4.5f) movingisDown = false;
 
         transform.Translate(
             new Vector2(ItemMoving.x * ((movingisLeft) ? -1 : 1), ItemMoving.y * ((movingisDown) ? 1 : -1)) * Time.deltaTime);

@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     // 오브젝트 pool (탄, 아이템 등)
     public PoolManager pool;
     public AudioManager audioManager;
+    public StageManager stageManager;
 
     public AudioSource audioMain;
     public AudioSource audioSub;
@@ -37,6 +38,13 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
+        
+    }
+
+    void PlayerInit()
+    {
+        audioMain.clip = null; audioSub.clip = null;
+        shootTime = 0; shootTime_Lv2 = 0;
         isShoot = false;
     }
 
@@ -87,7 +95,7 @@ public class Player : MonoBehaviour
             {
                 GameObject playerBullet = null;
 
-                switch (GameManager.playerLevel)
+                switch (StageManager.playerLevel)
                 {
                     case 1: playerBullet = pool.MakeObject("Bullet_Lv1"); break;
                     case 2: playerBullet = pool.MakeObject("Bullet_Lv2"); break;
@@ -98,7 +106,7 @@ public class Player : MonoBehaviour
                 shootTime = 0f;
             }
 
-            if (GameManager.playerLevel >= 4)
+            if (StageManager.playerLevel >= 4)
             {
                 switch (playerType)
                 {
@@ -165,10 +173,10 @@ public class Player : MonoBehaviour
 
             DestroyPlayer();
 
-            if (GameManager.playerHealth < 0)
+            if (StageManager.playerHealth < 0)
             {
                 Debug.Log("게임 끝");
-                GameManager.instance.GameDefeat();
+                StageManager.instance.GameDefeat();
             }
             else Invoke("ReloadPlayer", 1.5f);
             collision.gameObject.SetActive(false);
@@ -181,13 +189,13 @@ public class Player : MonoBehaviour
             switch (item.itemType)
             {
                 case ItemType.PowerUp:
-                    GameManager.playerLevel = (GameManager.playerLevel == 4) ? 4 : GameManager.playerLevel + 1;
+                    StageManager.playerLevel = (StageManager.playerLevel == 4) ? 4 : StageManager.playerLevel + 1;
                     audioSub.clip = audioManager.getAudioClip("GetItem"); break;
                 case ItemType.SilverCoin:
-                    GameManager.Score += 50;
+                    StageManager.Score += 50;
                     audioSub.clip = audioManager.getAudioClip("GetCoin"); break;
                 case ItemType.GoldCoin:
-                    GameManager.Score += 250;
+                    StageManager.Score += 250;
                     audioSub.clip = audioManager.getAudioClip("GetCoin"); break;
             }
             audioSub.Play();
@@ -218,9 +226,9 @@ public class Player : MonoBehaviour
         Item.transform.position = transform.position;
 
         // 플레이어 레벨 1로 감소, 옵션 해제
-        GameManager.playerLevel = (GameManager.playerLevel <= 2) ?
-            1 : GameManager.playerLevel - 2;
-        GameManager.playerHealth--;
+        StageManager.playerLevel = (StageManager.playerLevel <= 2) ?
+            1 : StageManager.playerLevel - 2;
+        StageManager.playerHealth--;
     }
 
     // 무적 상태로 재생성

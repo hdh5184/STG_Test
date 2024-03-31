@@ -266,7 +266,7 @@ public class Enemy : MonoBehaviour
 
     void GetDegree(GameObject shootPos)
     {
-        playerPos = GameManager.playerPos;
+        playerPos = StageManager.playerPos;
         if (enemyType == EnemyType.Boss && shootPos != null)
         {
             float deg = Mathf.Atan2
@@ -421,13 +421,13 @@ public class Enemy : MonoBehaviour
 
         if (Health <= 0)
         {
-            GameManager.Score += setScore;
+            StageManager.Score += setScore;
         }
 
         //sr.enabled = false;
 
 
-        GameManager.EnemyList.Remove(gameObject);
+        StageManager.EnemyList.Remove(gameObject);
 
         GameObject Explosion;
 
@@ -457,7 +457,7 @@ public class Enemy : MonoBehaviour
 
     IEnumerator BossDead()
     {
-        GameManager.instance.GameClear();
+        StageManager.instance.GameClear();
         InvokeRepeating("BossExplosion", 0f, 0.16f);
 
         yield return new WaitForSeconds(1.5f);
@@ -535,7 +535,7 @@ public class Enemy : MonoBehaviour
     {
         if (collision.CompareTag("Field_Out") && enemyState != EnemyState.Dead)
         {
-            GameManager.EnemyList.Remove(gameObject);
+            StageManager.EnemyList.Remove(gameObject);
             gameObject.SetActive(false);
         }
     }

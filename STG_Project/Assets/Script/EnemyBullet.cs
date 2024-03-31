@@ -77,7 +77,7 @@ public class EnemyBullet : MonoBehaviour
 
     void Homing()
     {
-        playerPos = GameManager.playerPos;
+        playerPos = StageManager.playerPos;
         
         Vector3 v1, v2, v3;
 

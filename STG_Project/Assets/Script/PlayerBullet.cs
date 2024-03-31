@@ -100,7 +100,7 @@ public class PlayerBullet : MonoBehaviour
         if (targetEnemy == null)
         {
             float targetDis = 100;
-            foreach (var enemy in GameManager.EnemyList)
+            foreach (var enemy in StageManager.EnemyList)
             {
                 Vector2 distanceVec = enemy.gameObject.transform.position - transform.position;
                 float distance =
