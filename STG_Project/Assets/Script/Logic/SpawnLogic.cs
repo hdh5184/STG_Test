@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawn
+public class SpawnLogic
 {
     public float delay;
     public string enemyType;

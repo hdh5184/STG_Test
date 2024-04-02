@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using static Enemy;
+using static StageManager;
 
 public class Enemy : MonoBehaviour
 {
@@ -16,11 +17,13 @@ public class Enemy : MonoBehaviour
     public Queue<BossLogic> bossLogics = new Queue<BossLogic>();
     public Queue<BossLogic> bossLogicsFinal = new Queue<BossLogic>();
 
+
     // 적 타입, 체력, 출현 시간, 공격 쿨타임
     public EnemyState enemyState;
     public EnemyType enemyType;
     public MovingType movingType;
     public BulletPattern bulletPattern;
+
     public string getPatternType;
     public Vector3 playerPos;
     public Vector2 moveVec;
@@ -126,6 +129,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         if (enemyState == EnemyState.Dead) return;
+        if (StageManager.stageState == StageState.End) return;
 
         fieldTime += Time.deltaTime;
         IdleTime += Time.deltaTime;
@@ -434,6 +438,7 @@ public class Enemy : MonoBehaviour
         if (enemyType == EnemyType.Boss && Health <= 0)
         {
             StartCoroutine("BossDead");
+            StageManager.bossExist = false;
         }
         else
         {
@@ -474,7 +479,7 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(1.5f);
 
         CancelInvoke("BossExplosion");
-        GameObject Explosion = pool.MakeObject("ExplodeA");
+        GameObject Explosion = pool.MakeObject("ExplodeBoss");
         Explosion.transform.localScale = new Vector3(10, 10, 1);
         Explosion.GetComponent<Effect>().audio.clip =
                         audioManager.getAudioClip("ExplodeBoss");

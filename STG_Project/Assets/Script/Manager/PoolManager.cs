@@ -56,6 +56,8 @@ public class PoolManager : MonoBehaviour
     public GameObject[] poolItem_SilverCoin;
     public GameObject[] poolItem_GoldCoin;
 
+    public GameObject[] poolEffect_Explode_A_Boss;
+
     public GameObject[]
         poolEffect_Explode_A, poolEffect_Explode_B, poolEffect_Explode_C;
     public GameObject[]
@@ -97,6 +99,8 @@ public class PoolManager : MonoBehaviour
         MakePool(Item[1], ref poolItem_Heal, 8);
         MakePool(Item[2], ref poolItem_SilverCoin, 300);
         MakePool(Item[3], ref poolItem_GoldCoin, 300);
+
+        MakePool(Effect[0], ref poolEffect_Explode_A_Boss, 1);
 
         MakePool(Effect[0], ref poolEffect_Explode_A, 20);
         MakePool(Effect[1], ref poolEffect_Explode_B, 20);
@@ -165,6 +169,8 @@ public class PoolManager : MonoBehaviour
             case "ExplodeC":    targetPool = poolEffect_Explode_C; break;
             case "ExplodeShort":targetPool = poolEffect_Explode_Short; break;
             case "Smoke":       targetPool = poolEffect_Smoke; break;
+
+            case "ExplodeBoss": targetPool = poolEffect_Explode_A_Boss; break;
 
             case "Player_A": targetPool = poolPlayer_A; break;
             case "Player_B": targetPool = poolPlayer_B; break;

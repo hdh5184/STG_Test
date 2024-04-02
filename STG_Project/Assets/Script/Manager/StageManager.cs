@@ -14,23 +14,27 @@ public class StageManager : MonoBehaviour
     public PoolManager pool;    // 오브젝트 Pool
     public AudioManager audioManager;
 
+    public GameObject InGameUI;
+
     public TextMeshProUGUI scoreText, bossFieldLimitText;
+    public TextMeshProUGUI
+        Result_Score, Result_BossTime, Result_Remaining, Result_TotalScore;
+    public GameObject Back_Button;
 
     public static List<GameObject> EnemyList;
 
-    public enum GameState { Lobby, Ready, Play, End }
+    public enum StageState { Lobby, Ready, Play, End }
 
-    public GameState gameState = GameState.Lobby;
+    public static StageState stageState = StageState.Lobby;
 
-    public List<Spawn> spawnList;
+    public List<SpawnLogic> spawnList;
     public int spawnIndex;
     public int spawnAmount;
     public bool spawnEnd;
 
     public float currentSpawnTime;
     public float nextSpawnDelay;
-
-
+    
     public GameObject debugObj;
     public GameObject Ui_Stage;
     public GameObject background;
@@ -57,10 +61,16 @@ public class StageManager : MonoBehaviour
     public char getPlayerType;
 
     public float BossFieldLimitTime = 0;
-    public bool bossExist;
+    public static bool bossExist;
+
+    float ShowResultTime = 0;
+    int ShowResultCount = 0;
+    int ResultScore, BossTimeScore, RemainingScore;
 
     private void Awake()
     {
+        instance = this;
+        /*
         if (instance != this && instance != null)
         {
             Destroy(gameObject); return;
@@ -70,15 +80,28 @@ public class StageManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
         }
+        */
+    }
+
+    private void OnEnable()
+    {
+        pool = PoolManager.instance;
+        audioManager = AudioManager.instance;
+        
+        StageInit();
     }
 
     public void StageInit()
     {
-        getStageNum = GameManager.instance.setStageNum;
-        gameState = GameState.Ready;
+        InGameUI.SetActive(true);
+
+        getPlayerType = 'A';
+
+        getStageNum = LobbyManager.instance.setStageNum;
+        stageState = StageState.Ready;
 
         EnemyList = new List<GameObject>();
-        spawnList = new List<Spawn>();
+        spawnList = new List<SpawnLogic>();
 
         playerLevel = 1;
         playerHealth = 2;
@@ -102,6 +125,9 @@ public class StageManager : MonoBehaviour
 
         Ui_Stage.SetActive(true);
         gameResultPanel.SetActive(false);
+        Result_Score.text = Result_BossTime.text =
+            Result_Remaining.text = Result_TotalScore.text = "";
+        Back_Button.SetActive(false);
         gameOverPanel.SetActive(false);
 
         background_ren = background.GetComponent<Renderer>();
@@ -124,19 +150,22 @@ public class StageManager : MonoBehaviour
         Invoke("GameStart", 2f);
     }
 
-    public void GameStart() => gameState = GameState.Play;
+    public void GameStart() => stageState = StageState.Play;
 
     void Update()
     {
         if (playerHealth == 1) playerRemain2.SetActive(false);
         if (playerHealth == 0) playerRemain1.SetActive(false);
 
-
-        if (gameState == GameState.Play)
+        if (stageState == StageState.Ready || stageState == StageState.Play)
         {
             background_offset += 0.02f * Time.deltaTime;
             background_ren.material.mainTextureOffset = new Vector2(0, background_offset);
+        }
 
+
+        if (stageState == StageState.Play)
+        {
             // 플레이어 이동 벡터 및 위치 저장
             playerMovingVec = player.transform.position - playerPos;
             playerPos = player.transform.position;
@@ -162,6 +191,12 @@ public class StageManager : MonoBehaviour
         }
 
         scoreText.text = Score.ToString();
+
+        if (stageState == StageState.End && ShowResultCount < 5)
+        {
+            ShowResultTime += Time.deltaTime;
+            ShowResult();
+        }
     }
 
     void ReadSpawnFile()
@@ -190,7 +225,7 @@ public class StageManager : MonoBehaviour
 
             if (line == null) break;
 
-            Spawn spawnData = new Spawn();
+            SpawnLogic spawnData = new SpawnLogic();
             string[] dataSpilt = line.Split(',');
 
             spawnData.spawnCode = dataSpilt[0];
@@ -363,13 +398,56 @@ public class StageManager : MonoBehaviour
     public IEnumerator GameResult()
     {
         yield return new WaitForSeconds(5f);
+        InGameUI.SetActive(false);
+
+        BossTimeScore = (int)(BossFieldLimitTime * 100) * 10;
+        RemainingScore = playerHealth * 40000;
+        ResultScore += Score + BossTimeScore + RemainingScore;
+
+        stageState = StageState.End;
         gameResultPanel.SetActive(true);
+    }
+
+    public void ShowResult()
+    {
+        if (ShowResultTime >= 0.5f)
+        {
+            switch (ShowResultCount)
+            {
+                case 0:
+                    Result_Score.text =
+                $"<size=64>Score</size> {Score.ToString()}"; break;
+                case 1:
+                    Result_BossTime.text =
+                $"<size=64>Boss-time</size> {BossTimeScore.ToString()}"; break;
+                case 2:
+                    Result_Remaining.text =
+                $"<size=64>Remaining</size> {RemainingScore.ToString()}"; break;
+                case 3:
+                    Result_TotalScore.text =
+                $"<size=80>Total Score</size>\n{ResultScore.ToString()}"; break;
+                case 4: Back_Button.SetActive(true); break;
+            }
+            ShowResultTime = 0; ShowResultCount++;
+        }
     }
 
     public IEnumerator GameOver()
     {
         yield return new WaitForSeconds(1.5f);
+        InGameUI.SetActive(false);
+
+        stageState = StageState.End;
         Time.timeScale = 0f;
         gameOverPanel.SetActive(true);
     }
+
+    public void GameEnd()
+    {
+        gameResultPanel.SetActive(false);
+        player.SetActive(false);
+
+        LobbyManager.instance.EndStage();
+    }
+
 }
