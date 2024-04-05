@@ -20,7 +20,8 @@ public class Player : MonoBehaviour
     public GameObject playerAudio;
 
     // 플레이어 이동 벡터
-    Vector2 PlayerMovingVec;
+    //Vector3 CurrentTouchPos;
+    Vector3 PlayerMovingVec;
 
     float shootTime = 0, shootTime_Lv2 = 0;
 
@@ -63,24 +64,41 @@ public class Player : MonoBehaviour
 
     void Move()
     {
-        // 방향키 입력에 따른 플레이어 이동
-        PlayerMovingVec = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-        transform.Translate(PlayerMovingVec * Time.deltaTime * 4f);
+        if (StageManager.stageState == StageManager.StageState.End) return;
 
-        // 필드 외에 나가지 않도록 이동 범위 제한
-        transform.position = new Vector2(
-            Mathf.Clamp(transform.position.x, -2.3f, 2.3f),
-            Mathf.Clamp(transform.position.y, -4.5f, 4.5f));
+        if (Input.GetMouseButton(0))
+        {
+            Vector3 TouchPos = Camera.main.ScreenToWorldPoint(new Vector3(
+                    Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+
+            PlayerMovingVec = TouchPos - transform.position;
+            //PlayerMovingVec = (Vector3.Distance(TouchPos, transform.position) <= 1f) ?
+            //    PlayerMovingVec : PlayerMovingVec.normalized;
+
+            transform.position += PlayerMovingVec.normalized * 7f * Time.deltaTime;
+        }
+        else
+        {
+            // 방향키 입력에 따른 플레이어 이동
+            PlayerMovingVec = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+            transform.Translate(PlayerMovingVec * Time.deltaTime * 4f);
+
+            // 필드 외에 나가지 않도록 이동 범위 제한
+            transform.position = new Vector2(
+                Mathf.Clamp(transform.position.x, -2.3f, 2.3f),
+                Mathf.Clamp(transform.position.y, -4.5f, 4.5f));
+        }
     }
 
     void Fire()
     {
+        if (StageManager.stageState == StageManager.StageState.End) return;
         // 기본탄(Lv1~3), 강화탄(Lv4)
         shootTime += Time.deltaTime;
         shootTime_Lv2 += Time.deltaTime;
 
         // 공격
-        if (Input.GetKey(KeyCode.Z))
+        if (Input.GetKey(KeyCode.Z) || Input.GetMouseButton(0))
         {
             if (!isShoot)
             {

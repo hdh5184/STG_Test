@@ -7,6 +7,7 @@ using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using TMPro;
+using static LobbyManager;
 
 public class StageManager : MonoBehaviour
 {
@@ -87,7 +88,7 @@ public class StageManager : MonoBehaviour
     {
         pool = PoolManager.instance;
         audioManager = AudioManager.instance;
-        
+        Debug.Log("게임 시작");
         StageInit();
     }
 
@@ -444,8 +445,11 @@ public class StageManager : MonoBehaviour
 
     public void GameEnd()
     {
+        LobbyManager.menuSelected = MenuSelected.Main;
         gameResultPanel.SetActive(false);
+        gameOverPanel.SetActive(false);
         player.SetActive(false);
+        Time.timeScale = 1f;
 
         LobbyManager.instance.EndStage();
     }

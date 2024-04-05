@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Item;
+using static LobbyManager;
 
 public class Item : MonoBehaviour
 {
@@ -48,6 +49,8 @@ public class Item : MonoBehaviour
 
     void Update()
     {
+        if (LobbyManager.menuSelected == MenuSelected.Main)
+            gameObject.SetActive(false);
         fieldTime += Time.deltaTime;
 
         switch (itemType)

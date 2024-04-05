@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using static Enemy;
+using static LobbyManager;
 using static StageManager;
 
 public class Enemy : MonoBehaviour
@@ -96,6 +97,7 @@ public class Enemy : MonoBehaviour
             case EnemyType.Boss:    Health = 1200;  setScore = 80000; break;
         }
         bulletPatterns.Clear();
+        bossLogicsFinal.Clear();
     }
 
     public void Init()
@@ -128,6 +130,9 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        if (LobbyManager.menuSelected == MenuSelected.Main)
+            gameObject.SetActive(false);
+
         if (enemyState == EnemyState.Dead) return;
         if (StageManager.stageState == StageState.End) return;
 

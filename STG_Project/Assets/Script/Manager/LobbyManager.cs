@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static GameManager;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -23,13 +23,20 @@ public class LobbyManager : MonoBehaviour
     public GameObject LoadScene_EffectL;
     public GameObject LoadScene_EffectR;
 
+    public TextMeshProUGUI Text_Credit;
+
     public string setPlayerType;
     public int setStageNum;
 
     float LoadSceneTime = 10;
     bool isLoadScene = false;
 
-    public MenuSelected menuSelected;
+    int FontColorCode = 0xFF8000; // 0xFF2400
+    byte FontColorGreen = 220;
+    float FontEffectTime = 0;
+    bool FontEffectTrigger = true;
+
+    public static MenuSelected menuSelected;
 
     public enum MenuSelected
     {
@@ -99,8 +106,6 @@ public class LobbyManager : MonoBehaviour
 
         selectPanelNow.SetActive(false);
 
-        //StageManager.instance.getPlayerType = 'A';
-
         switch (Stage)
         {
             case "InGame_Stage1": setStageNum = 1; break;
@@ -126,14 +131,12 @@ public class LobbyManager : MonoBehaviour
 
         SceneManager.LoadScene(Stage);
         isLoadScene = false;
-
-        
-        //StageManager.instance.StageInit();
     }
 
     void Update()
     {
         LoadSceneEffect();
+        FontEffect();
     }
 
     void LoadSceneEffect()
@@ -160,5 +163,24 @@ public class LobbyManager : MonoBehaviour
         {
             LoadScene_EffectL.SetActive(false); LoadScene_EffectR.SetActive(false);
         }
+    }
+
+    void FontEffect()
+    {
+        if (menuSelected != MenuSelected.Credit) return;
+
+        FontEffectTime += Time.deltaTime;
+        
+        if (FontEffectTime >= 0.001f)
+        {
+            if (FontEffectTrigger) FontColorGreen -= 2;
+            else FontColorGreen += 2;
+            FontEffectTime = 0;
+        }
+
+        Text_Credit.color = new Color32(255, FontColorGreen, 0, 255);
+
+        if (FontColorGreen == 128) FontEffectTrigger = false;
+        if (FontColorGreen == 228) FontEffectTrigger = true;
     }
 }

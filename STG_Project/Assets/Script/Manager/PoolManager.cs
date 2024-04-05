@@ -6,6 +6,8 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager instance;
 
+    //List<GameObject> isSetActive = new List<GameObject>();
+
     private void Awake()
     {
         if (instance != this && instance != null)
@@ -205,6 +207,7 @@ public class PoolManager : MonoBehaviour
             {
                 if (!targetPool[i].activeSelf)
                 {
+                    //isSetActive.Add(targetPool[i]);
                     targetPool[i].SetActive(true);
                     return targetPool[i];
                 }
