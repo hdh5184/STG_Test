@@ -24,7 +24,7 @@ public class StageManager : MonoBehaviour
 
     public static List<GameObject> EnemyList;
 
-    public enum StageState { Lobby, Ready, Play, End }
+    public enum StageState { Lobby, Ready, Play, End, Pause }
 
     public static StageState stageState = StageState.Lobby;
 
@@ -40,14 +40,15 @@ public class StageManager : MonoBehaviour
     public GameObject Ui_Stage;
     public GameObject background;
 
-    public Material[] backgroundSprite;
+    public Sprite[] backgroundSprite;
 
     public GameObject gameResultPanel;
     public GameObject gameOverPanel;
+    public GameObject gamePausePanel;
 
     public GameObject playerRemain1, playerRemain2;
 
-    public Renderer background_ren;
+    public SpriteRenderer background_sr;
     float background_offset = 0;
 
     public GameObject player;
@@ -129,10 +130,11 @@ public class StageManager : MonoBehaviour
         Result_Score.text = Result_BossTime.text =
             Result_Remaining.text = Result_TotalScore.text = "";
         Back_Button.SetActive(false);
+        gamePausePanel.SetActive(false);
         gameOverPanel.SetActive(false);
 
-        background_ren = background.GetComponent<Renderer>();
-        background_offset = 0.65f;
+        background_sr = background.GetComponent<SpriteRenderer>();
+        background_sr.sprite = backgroundSprite[getStageNum - 1];
 
         /*
         DebugTest debugtest = debugObj.GetComponent<DebugTest>();
@@ -155,15 +157,10 @@ public class StageManager : MonoBehaviour
 
     void Update()
     {
+        if (stageState == StageState.Pause) return;
+
         if (playerHealth == 1) playerRemain2.SetActive(false);
         if (playerHealth == 0) playerRemain1.SetActive(false);
-
-        if (stageState == StageState.Ready || stageState == StageState.Play)
-        {
-            background_offset += 0.02f * Time.deltaTime;
-            background_ren.material.mainTextureOffset = new Vector2(0, background_offset);
-        }
-
 
         if (stageState == StageState.Play)
         {
@@ -180,14 +177,15 @@ public class StageManager : MonoBehaviour
             BossFieldLimitTime -= Time.deltaTime;
             if (BossFieldLimitTime <= 0)
             {
+                BossFieldLimitTime = 0;
                 bossExist = false;
                 bossFieldLimitText.text =
-                $"0<size=80>.00</size>";
+                $"0<size=96>.00</size>";
             }
             else
             {
                 bossFieldLimitText.text =
-                    $"{Mathf.FloorToInt(BossFieldLimitTime)}<size=80>.{BossFieldLimitTime * 100 % 100:#,#00}</size>";
+                    $"{Mathf.FloorToInt(BossFieldLimitTime):D2}<size=96>.{(int)(BossFieldLimitTime * 100 % 100):D2}</size>";
             }
         }
 
@@ -452,6 +450,23 @@ public class StageManager : MonoBehaviour
         Time.timeScale = 1f;
 
         LobbyManager.instance.EndStage();
+    }
+
+    public void GamePause()
+    {
+        if (stageState == StageState.Play)
+        {
+            Time.timeScale = 0f;
+            stageState = StageState.Pause;
+            gamePausePanel.SetActive(true);
+        }
+    }
+
+    public void GameResume()
+    {
+        Time.timeScale = 1f;
+        stageState = StageState.Play;
+        gamePausePanel.SetActive(false);
     }
 
 }

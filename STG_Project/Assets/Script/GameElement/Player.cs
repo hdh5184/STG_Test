@@ -22,6 +22,7 @@ public class Player : MonoBehaviour
     // 플레이어 이동 벡터
     //Vector3 CurrentTouchPos;
     Vector3 PlayerMovingVec;
+    Vector3 TouchPos;
 
     float shootTime = 0, shootTime_Lv2 = 0;
 
@@ -57,9 +58,22 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetMouseButton(0)) if (TouchScreenPos()) return;
+
         Move();     // 플레이어 이동
         Fire();     // 플레이어 공격
     }
+
+    bool TouchScreenPos()
+    {
+        TouchPos = Camera.main.ScreenToWorldPoint(new Vector3(
+                    Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
+
+        if (TouchPos.x < -2.8f || TouchPos.x > 2.8f ||
+            TouchPos.y < -5 || TouchPos.y > 4f) return true;
+        else return false;
+    }
+
 
 
     void Move()
@@ -68,9 +82,6 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            Vector3 TouchPos = Camera.main.ScreenToWorldPoint(new Vector3(
-                    Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
-
             PlayerMovingVec = TouchPos - transform.position;
             //PlayerMovingVec = (Vector3.Distance(TouchPos, transform.position) <= 1f) ?
             //    PlayerMovingVec : PlayerMovingVec.normalized;
@@ -82,17 +93,25 @@ public class Player : MonoBehaviour
             // 방향키 입력에 따른 플레이어 이동
             PlayerMovingVec = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             transform.Translate(PlayerMovingVec * Time.deltaTime * 4f);
-
-            // 필드 외에 나가지 않도록 이동 범위 제한
-            transform.position = new Vector2(
-                Mathf.Clamp(transform.position.x, -2.3f, 2.3f),
-                Mathf.Clamp(transform.position.y, -4.5f, 4.5f));
         }
+
+        // 필드 외에 나가지 않도록 이동 범위 제한
+        transform.position = new Vector2(
+            Mathf.Clamp(transform.position.x, -2.3f, 2.3f),
+            Mathf.Clamp(transform.position.y, -4.5f, 3.75f));
     }
 
     void Fire()
     {
-        if (StageManager.stageState == StageManager.StageState.End) return;
+        if (StageManager.stageState == StageManager.StageState.End ||
+            StageManager.stageState == StageManager.StageState.Pause)
+        {
+            isShoot = false;
+            audioMain.loop = false;
+            audioMain.Stop();
+            return;
+        }
+
         // 기본탄(Lv1~3), 강화탄(Lv4)
         shootTime += Time.deltaTime;
         shootTime_Lv2 += Time.deltaTime;
@@ -137,7 +156,7 @@ public class Player : MonoBehaviour
         else
         {
             isShoot = false;
-            audioMain.loop = true;
+            audioMain.loop = false;
             audioMain.Stop();
         }
     }

@@ -134,7 +134,8 @@ public class Enemy : MonoBehaviour
             gameObject.SetActive(false);
 
         if (enemyState == EnemyState.Dead) return;
-        if (StageManager.stageState == StageState.End) return;
+        if (StageManager.stageState == StageState.End ||
+            StageManager.stageState == StageState.Pause) return;
 
         fieldTime += Time.deltaTime;
         IdleTime += Time.deltaTime;

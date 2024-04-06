@@ -20,8 +20,11 @@ public class LobbyManager : MonoBehaviour
 
     public GameObject selectPanelNow;
 
-    public GameObject LoadScene_EffectL;
-    public GameObject LoadScene_EffectR;
+    //public GameObject LoadScene_EffectL;
+    //public GameObject LoadScene_EffectR;
+
+    public RectTransform LoadScene_EffectL;
+    public RectTransform LoadScene_EffectR;
 
     public TextMeshProUGUI Text_Credit;
 
@@ -56,8 +59,15 @@ public class LobbyManager : MonoBehaviour
         }
 
         audio = GetComponent<AudioSource>();
-        LoadScene_EffectL.transform.position = new Vector2(-5, 0);
-        LoadScene_EffectR.transform.position = new Vector2(5, 0);
+
+        //LoadScene_EffectL = GetComponent<RectTransform>();
+        //LoadScene_EffectR = GetComponent<RectTransform>();
+
+        //LoadScene_EffectL.transform.position = new Vector2(-5, 0);
+        //LoadScene_EffectR.transform.position = new Vector2(5, 0);
+
+        LoadScene_EffectL.anchoredPosition = new Vector3(-1000, 0);
+        LoadScene_EffectR.anchoredPosition = new Vector3(1000, 0);
 
         LobbyInit();
     }
@@ -93,25 +103,21 @@ public class LobbyManager : MonoBehaviour
     }
 
 
-    public void SelectStage1() => StartCoroutine("LoadScene", "InGame_Stage1");
-    public void SelectStage2() => StartCoroutine("LoadScene", "InGame_Stage2");
-    public void SelectStage3() => StartCoroutine("LoadScene", "InGame_Stage3");
-    public void SelectStage4() => StartCoroutine("LoadScene", "InGame_Stage4");
+    public void SelectStage1() => StartCoroutine("LoadScene", 1);
+    public void SelectStage2() => StartCoroutine("LoadScene", 2);
+    public void SelectStage3() => StartCoroutine("LoadScene", 3);
+    public void SelectStage4() => StartCoroutine("LoadScene", 4);
 
-    public void EndStage() => StartCoroutine("LoadScene", "Lobby");
+    public void EndStage() => StartCoroutine("LoadScene", 0);
 
-    public IEnumerator LoadScene(string Stage)
+    public IEnumerator LoadScene(int StageNum)
     {
         isLoadScene = true;
 
         selectPanelNow.SetActive(false);
 
-        switch (Stage)
-        {
-            case "InGame_Stage1": setStageNum = 1; break;
-            //case "InGame_Stage2": setStageNum = 2; break;
-            case "Lobby": setStageNum = 0; break;
-        }
+
+        setStageNum = StageNum;
 
         audio.clip = AudioManager.instance.getAudioClip("Trigger");
         audio.Play();
@@ -129,7 +135,12 @@ public class LobbyManager : MonoBehaviour
             LobbyInit();
         }
 
-        SceneManager.LoadScene(Stage);
+        switch (StageNum)
+        {
+            case 0: SceneManager.LoadScene("Lobby"); break;
+            default: SceneManager.LoadScene("InGame_Stage"); break;
+        }
+
         isLoadScene = false;
     }
 
@@ -143,25 +154,27 @@ public class LobbyManager : MonoBehaviour
     {
         if (isLoadScene)
         {
-            LoadScene_EffectL.SetActive(true); LoadScene_EffectR.SetActive(true);
+            LoadScene_EffectL.gameObject.SetActive(true);
+            LoadScene_EffectR.gameObject.SetActive(true);
 
             LoadSceneTime = 0;
-            LoadScene_EffectL.transform.position =
-                Vector2.Lerp(LoadScene_EffectL.transform.position, new Vector2(-1.44f, 0), 0.1f);
-            LoadScene_EffectR.transform.position =
-                Vector2.Lerp(LoadScene_EffectR.transform.position, new Vector2(1.44f, 0), 0.1f);
+            LoadScene_EffectL.anchoredPosition =
+                Vector2.Lerp(LoadScene_EffectL.anchoredPosition, new Vector3(-270, 0), 0.1f);
+            LoadScene_EffectR.anchoredPosition =
+                Vector2.Lerp(LoadScene_EffectR.anchoredPosition, new Vector3(270, 0), 0.1f);
         }
         else if (!isLoadScene && LoadSceneTime <= 0.5f)
         {
             LoadSceneTime += Time.deltaTime;
-            LoadScene_EffectL.transform.position =
-                Vector2.Lerp(LoadScene_EffectL.transform.position, new Vector2(-5, 0), 0.05f);
-            LoadScene_EffectR.transform.position =
-                Vector2.Lerp(LoadScene_EffectR.transform.position, new Vector2(5, 0), 0.05f);
+            LoadScene_EffectL.anchoredPosition =
+                Vector2.Lerp(LoadScene_EffectL.anchoredPosition, new Vector3(-1000, 0), 0.05f);
+            LoadScene_EffectR.anchoredPosition =
+                Vector2.Lerp(LoadScene_EffectR.anchoredPosition, new Vector3(1000, 0), 0.05f);
         }
         else
         {
-            LoadScene_EffectL.SetActive(false); LoadScene_EffectR.SetActive(false);
+            LoadScene_EffectL.gameObject.SetActive(false);
+            LoadScene_EffectR.gameObject.SetActive(false);
         }
     }
 
