@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using Unity.VisualScripting;
 
 public class LobbyManager : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class LobbyManager : MonoBehaviour
     public GameObject selectStagePanel;
     public GameObject selectSettingPanel;
     public GameObject selectCreditPanel;
+    public GameObject selectExitPanel;
 
     public GameObject selectPanelNow;
 
@@ -43,7 +45,7 @@ public class LobbyManager : MonoBehaviour
 
     public enum MenuSelected
     {
-        Main, Stage, Setting, Credit
+        Main, Stage, Setting, Credit, Exit
     }
 
     private void Awake()
@@ -83,6 +85,7 @@ public class LobbyManager : MonoBehaviour
     public void SelectStart() { menuSelected = MenuSelected.Stage; ShowPanel(); }
     public void SelectSetting() { menuSelected = MenuSelected.Setting; ShowPanel(); }
     public void SelectCredit() { menuSelected = MenuSelected.Credit; ShowPanel(); }
+    public void SelectExit() { menuSelected = MenuSelected.Exit; ShowPanel(); }
 
     public void ShowPanel()
     {
@@ -97,6 +100,7 @@ public class LobbyManager : MonoBehaviour
             case MenuSelected.Stage: selectPanelNow = selectStagePanel; break;
             case MenuSelected.Setting: selectPanelNow = selectSettingPanel; break;
             case MenuSelected.Credit: selectPanelNow = selectCreditPanel; break;
+            case MenuSelected.Exit: selectPanelNow = selectExitPanel; break;
         }
 
         selectPanelNow.SetActive(true);
@@ -195,5 +199,14 @@ public class LobbyManager : MonoBehaviour
 
         if (FontColorGreen == 128) FontEffectTrigger = false;
         if (FontColorGreen == 228) FontEffectTrigger = true;
+    }
+
+    public void GameExit()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }

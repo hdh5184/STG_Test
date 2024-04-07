@@ -45,6 +45,7 @@ public class StageManager : MonoBehaviour
     public GameObject gameResultPanel;
     public GameObject gameOverPanel;
     public GameObject gamePausePanel;
+    public GameObject gameQuitPanel;
 
     public GameObject playerRemain1, playerRemain2;
 
@@ -454,7 +455,7 @@ public class StageManager : MonoBehaviour
 
     public void GamePause()
     {
-        if (stageState == StageState.Play)
+        if (stageState == StageState.Ready || stageState == StageState.Play)
         {
             Time.timeScale = 0f;
             stageState = StageState.Pause;
@@ -468,5 +469,10 @@ public class StageManager : MonoBehaviour
         stageState = StageState.Play;
         gamePausePanel.SetActive(false);
     }
+
+    public void GameQuitYN() { gamePausePanel.SetActive(false); gameQuitPanel.SetActive(true); }
+
+    public void GameQuitN() { gamePausePanel.SetActive(true); gameQuitPanel.SetActive(false); }
+    public void GameQuitY() { stageState = StageState.End; GameEnd(); }
 
 }
