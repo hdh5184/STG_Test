@@ -61,7 +61,7 @@ public class StageManager : MonoBehaviour
     public static int Score = 0;
 
     public int getStageNum = 0;
-    public char getPlayerType;
+    public int getPlayerType;
 
     public float BossFieldLimitTime = 0;
     public static bool bossExist;
@@ -98,7 +98,7 @@ public class StageManager : MonoBehaviour
     {
         InGameUI.SetActive(true);
 
-        getPlayerType = 'A';
+        getPlayerType = GameManager.instance.setPlayerUnit;
 
         getStageNum = LobbyManager.instance.setStageNum;
         stageState = StageState.Ready;
@@ -115,9 +115,9 @@ public class StageManager : MonoBehaviour
 
         switch (getPlayerType)
         {
-            case 'A':   player = pool.MakeObject("Player_A"); break;
-            case 'B':   player = pool.MakeObject("Player_B"); break;
-            case 'C':   player = pool.MakeObject("Player_C"); break;
+            case 0:   player = pool.MakeObject("Player_A"); break;
+            case 1:   player = pool.MakeObject("Player_B"); break;
+            case 2:   player = pool.MakeObject("Player_C"); break;
         }
 
         player.transform.position = new Vector2(0, -3);
@@ -125,6 +125,7 @@ public class StageManager : MonoBehaviour
         player.GetComponent<Player>().pool = pool;
         player.GetComponent<Player>().audioManager = audioManager;
         player.GetComponent<Player>().stageManager = instance;
+        player.GetComponent<Player>().PlayerInit();
 
         Ui_Stage.SetActive(true);
         gameResultPanel.SetActive(false);
@@ -205,59 +206,52 @@ public class StageManager : MonoBehaviour
         spawnIndex = 0;
         spawnEnd = false;
 
-        TextAsset textFile;
+        string textFile;
 
         switch (getStageNum)
         {
-            case 1: textFile = Resources.Load("Spawn_Stage1") as TextAsset; break;
-            case 2: textFile = Resources.Load("Spawn_Stage2") as TextAsset; break;
+            case 1: textFile = "Spawn_Stage1"; break;
+            case 2: textFile = "Spawn_Stage2"; break;
             default:
                 Debug.Log("스테이지 정보를 불러올 수 없습니다.");
                 textFile = null; break;
         }
 
-        StringReader stringReader = new StringReader(textFile.text);
+        List<Dictionary<string, object>> data_Dialog = CSVReader.Read(textFile);
 
-        while (stringReader != null)
+        for (int i = 0; i < data_Dialog.Count; i++)
         {
-            string line = stringReader.ReadLine();
-            //Debug.Log(line);
-
-            if (line == null) break;
-
             SpawnLogic spawnData = new SpawnLogic();
-            string[] dataSpilt = line.Split(',');
 
-            spawnData.spawnCode = dataSpilt[0];
+            spawnData.spawnCode =       data_Dialog[i]["spawnCode"].ToString();
 
-            spawnData.delay = float.Parse(dataSpilt[1]);
-            spawnData.enemyType = dataSpilt[2];
-            spawnData.posX = float.Parse(dataSpilt[3]);
-            spawnData.posY = float.Parse(dataSpilt[4]);
-            spawnData.dropItemName = dataSpilt[5];
+            spawnData.delay =           float.Parse(data_Dialog[i]["delay"].ToString());
+            spawnData.enemyType =       data_Dialog[i]["enemyType"].ToString();
+            spawnData.posX =            float.Parse(data_Dialog[i]["posX"].ToString());
+            spawnData.posY =            float.Parse(data_Dialog[i]["posY"].ToString());
+            spawnData.dropItemName =    data_Dialog[i]["dropItemName"].ToString();
 
-            spawnData.movX = float.Parse(dataSpilt[6]);
-            spawnData.movY = float.Parse(dataSpilt[7]);
-            spawnData.degreeZ = float.Parse(dataSpilt[8]);
-            spawnData.movSpeed = float.Parse(dataSpilt[9]);
-            spawnData.movingType = dataSpilt[10];
-            spawnData.movDesX = float.Parse(dataSpilt[11]);
-            spawnData.movDesY = float.Parse(dataSpilt[12]);
-            spawnData.movExitX = float.Parse(dataSpilt[13]);
-            spawnData.movExitY = float.Parse(dataSpilt[14]);
-            spawnData.fieldTimeLimit = float.Parse(dataSpilt[15]);
+            spawnData.movX =            float.Parse(data_Dialog[i]["movX"].ToString());
+            spawnData.movY =            float.Parse(data_Dialog[i]["movY"].ToString());
+            spawnData.degreeZ =         float.Parse(data_Dialog[i]["degreeZ"].ToString());
+            spawnData.movSpeed =        float.Parse(data_Dialog[i]["movSpeed"].ToString());
+            spawnData.movingType =      data_Dialog[i]["movingType"].ToString();
+            spawnData.movDesX =         float.Parse(data_Dialog[i]["movDesX"].ToString());
+            spawnData.movDesY =         float.Parse(data_Dialog[i]["movDesY"].ToString());
+            spawnData.movExitX =        float.Parse(data_Dialog[i]["movExitX"].ToString());
+            spawnData.movExitY =        float.Parse(data_Dialog[i]["movExitY"].ToString());
+            spawnData.fieldTimeLimit =  float.Parse(data_Dialog[i]["fieldTimeLimit"].ToString());
 
-            spawnData.bulletType = dataSpilt[16];
-            spawnData.bulletName = dataSpilt[17];
-            spawnData.patternType = dataSpilt[18];
-            spawnData.bulletSpeed = float.Parse(dataSpilt[19]);
-            spawnData.shootLimit = int.Parse(dataSpilt[20]);
-            spawnData.firstWaitTime = float.Parse(dataSpilt[21]);
-            spawnData.waitTime = float.Parse(dataSpilt[22]);
+            spawnData.bulletType =      data_Dialog[i]["bulletType"].ToString();
+            spawnData.bulletName =      data_Dialog[i]["bulletName"].ToString();
+            spawnData.patternType =     data_Dialog[i]["patternType"].ToString();
+            spawnData.bulletSpeed =     float.Parse(data_Dialog[i]["bulletSpeed"].ToString());
+            spawnData.shootLimit =      int.Parse(data_Dialog[i]["shootLimit"].ToString());
+            spawnData.firstWaitTime =   float.Parse(data_Dialog[i]["firstWaitTime"].ToString());
+            spawnData.waitTime =        float.Parse(data_Dialog[i]["waitTime"].ToString());
 
             spawnList.Add(spawnData);
         }
-        stringReader.Close();
         spawnAmount = spawnList.Count;
         nextSpawnDelay = spawnList[0].delay;
     }
@@ -268,65 +262,61 @@ public class StageManager : MonoBehaviour
         bossLogic.bossLogics.Clear();
         bossLogic.bossLogicsFinal.Clear();
 
-        TextAsset textFile;
+        string textFile;
 
         switch (getStageNum)
         {
-            case 1: textFile = Resources.Load("BossLogic_A") as TextAsset; break;
-            case 2: textFile = Resources.Load("BossLogic_B") as TextAsset; break;
+            case 1: textFile = "BossLogic_A"; break;
+            case 2: textFile = "BossLogic_A"; break;
             default:
                 Debug.Log("스테이지 정보를 불러올 수 없습니다.");
                 textFile = null; break;
         }
 
-        StringReader stringReader = new StringReader(textFile.text);
+        List<Dictionary<string, object>> data_Dialog = CSVReader.Read(textFile);
 
-        while (stringReader != null)
+        for (int i = 0; i < data_Dialog.Count; i++)
         {
-            string line = stringReader.ReadLine();
-            if (line == null) break;
-
             BossLogic bossLogicData = new BossLogic();
-            string[] dataSpilt = line.Split(',');
 
-            bossLogicData.BossLogicCode = dataSpilt[0];
+            bossLogicData.BossLogicCode = data_Dialog[i]["BossLogicCode"].ToString();
 
-            bossLogicData.delay = float.Parse(dataSpilt[1]);
-            bossLogicData.posX = float.Parse(dataSpilt[2]);
-            bossLogicData.posY = float.Parse(dataSpilt[3]);
+            bossLogicData.delay =       float.Parse(data_Dialog[i]["delay"].ToString());
+            bossLogicData.posX =        float.Parse(data_Dialog[i]["posX"].ToString());
+            bossLogicData.posY =        float.Parse(data_Dialog[i]["posY"].ToString());
 
-            bossLogicData.movX = float.Parse(dataSpilt[4]);
-            bossLogicData.movY = float.Parse(dataSpilt[5]);
-            bossLogicData.degreeZ = float.Parse(dataSpilt[6]);
-            bossLogicData.movSpeed = float.Parse(dataSpilt[7]);
-            bossLogicData.movingType = dataSpilt[8];
-            bossLogicData.movDesX = float.Parse(dataSpilt[9]);
-            bossLogicData.movDesY = float.Parse(dataSpilt[10]);
-            bossLogicData.movExitX = float.Parse(dataSpilt[11]);
-            bossLogicData.movExitY = float.Parse(dataSpilt[12]);
+            bossLogicData.movX =        float.Parse(data_Dialog[i]["movX"].ToString());
+            bossLogicData.movY =        float.Parse(data_Dialog[i]["movY"].ToString());
+            bossLogicData.degreeZ =     float.Parse(data_Dialog[i]["degreeZ"].ToString());
+            bossLogicData.movSpeed =    float.Parse(data_Dialog[i]["movSpeed"].ToString());
+            bossLogicData.movingType =  data_Dialog[i]["movingType"].ToString();
+            bossLogicData.movDesX =     float.Parse(data_Dialog[i]["movDesX"].ToString());
+            bossLogicData.movDesY =     float.Parse(data_Dialog[i]["movDesY"].ToString());
+            bossLogicData.movExitX =    float.Parse(data_Dialog[i]["movExitX"].ToString());
+            bossLogicData.movExitY =    float.Parse(data_Dialog[i]["movExitY"].ToString());
 
-            bossLogicData.shootPos1 = dataSpilt[13];
-            bossLogicData.shootPos2 = dataSpilt[14];
-            bossLogicData.shootPos3 = dataSpilt[15];
-            bossLogicData.shootPos4 = dataSpilt[16];
-            bossLogicData.shootPos5 = dataSpilt[17];
+            bossLogicData.shootPos1 =   data_Dialog[i]["pos1"].ToString();
+            bossLogicData.shootPos2 =   data_Dialog[i]["pos2"].ToString();
+            bossLogicData.shootPos3 =   data_Dialog[i]["pos3"].ToString();
+            bossLogicData.shootPos4 =   data_Dialog[i]["pos4"].ToString();
+            bossLogicData.shootPos5 =   data_Dialog[i]["pos5"].ToString();
 
-            bossLogicData.bulletType = dataSpilt[18];
-            bossLogicData.bulletName = dataSpilt[19];
-            bossLogicData.patternType = dataSpilt[20];
-            bossLogicData.bulletSpeed = float.Parse(dataSpilt[21]);
-            bossLogicData.shootLimit = int.Parse(dataSpilt[22]);
-            bossLogicData.firstWaitTime = float.Parse(dataSpilt[23]);
-            bossLogicData.waitTime = float.Parse(dataSpilt[24]);
+            bossLogicData.bulletType =  data_Dialog[i]["bulletType"].ToString();
+            bossLogicData.bulletName =  data_Dialog[i]["bulletName"].ToString();
+            bossLogicData.patternType = data_Dialog[i]["patternType"].ToString();
+            bossLogicData.bulletSpeed = float.Parse(data_Dialog[i]["bulletSpeed"].ToString());
+            bossLogicData.shootLimit =  int.Parse(data_Dialog[i]["shootLimit"].ToString());
+            bossLogicData.firstWaitTime = float.Parse(data_Dialog[i]["firstWaitTime"].ToString());
+            bossLogicData.waitTime =    float.Parse(data_Dialog[i]["waitTime"].ToString());
 
-            if (dataSpilt[0] == "Final")
+            if (data_Dialog[i]["BossLogicCode"].ToString() == "Final")
             {
                 bossLogic.bossLogicsFinal.Enqueue(bossLogicData);
                 break;
             }
             bossLogic.bossLogics.Enqueue(bossLogicData);
         }
-        stringReader.Close();
+
         bossLogic.firstWaitTime = 1.5f;
     }
 

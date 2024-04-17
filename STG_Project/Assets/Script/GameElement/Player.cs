@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Item;
 
@@ -32,28 +33,31 @@ public class Player : MonoBehaviour
     PlayerState playerState;
     bool isShoot;
 
+    string[] playerBulletNameA = { "BulletA_Lv1", "BulletA_Lv2", "BulletA_Lv3", "BulletA_LvMAX" };
+    string[] playerBulletNameB = { "BulletB_Lv1", "BulletB_Lv2", "BulletB_Lv3", "BulletB_LvMAX" };
+    string[] playerBulletNameC = { "BulletC_Lv1", "BulletC_Lv2", "BulletC_Lv3", "BulletC_LvMAX" };
+
+    string[] setplayerBulletName;
+
     private void Awake()
     {
         audioMain = GetComponent<AudioSource>();
         audioSub = playerAudio.GetComponent<AudioSource>();
+
+        switch (playerType)
+        {
+            case PlayerType.A: setplayerBulletName = playerBulletNameA; break;
+            case PlayerType.B: setplayerBulletName = playerBulletNameB; break;
+            case PlayerType.C: setplayerBulletName = playerBulletNameC; break;
+        }
     }
 
-    private void OnEnable()
+    public void PlayerInit()
     {
-        
-    }
-
-    void PlayerInit()
-    {
+        playerState = PlayerState.Play;
         audioMain.clip = null; audioSub.clip = null;
         shootTime = 0; shootTime_Lv2 = 0;
         isShoot = false;
-    }
-
-    void Start()
-    {
-        // 플레이어 평상시 상태, 레벨 4일 때 옵션 표시
-        playerState = PlayerState.Play;
     }
 
     void Update()
@@ -69,8 +73,7 @@ public class Player : MonoBehaviour
         TouchPos = Camera.main.ScreenToWorldPoint(new Vector3(
                     Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
 
-        if (TouchPos.x < -2.8f || TouchPos.x > 2.8f ||
-            TouchPos.y < -5 || TouchPos.y > 4f) return true;
+        if (TouchPos.y > 4f) return true;
         else return false;
     }
 
@@ -134,10 +137,10 @@ public class Player : MonoBehaviour
 
                 switch (StageManager.playerLevel)
                 {
-                    case 1: playerBullet = pool.MakeObject("Bullet_Lv1"); break;
-                    case 2: playerBullet = pool.MakeObject("Bullet_Lv2"); break;
+                    case 1: playerBullet = pool.MakeObject(setplayerBulletName[0]); break;
+                    case 2: playerBullet = pool.MakeObject(setplayerBulletName[1]); break;
                     case 3:
-                    case 4: playerBullet = pool.MakeObject("Bullet_Lv3"); break;
+                    case 4: playerBullet = pool.MakeObject(setplayerBulletName[2]); break;
                 }
                 playerBullet.transform.position = playerShootPos.transform.position;
                 shootTime = 0f;
@@ -165,7 +168,7 @@ public class Player : MonoBehaviour
     {
         for (int i = 0; i < 2; i++)
         {
-            GameObject playerBullet = pool.MakeObject("Bullet_LvMAX");
+            GameObject playerBullet = pool.MakeObject(setplayerBulletName[3]);
             playerBullet.transform.position = (i == 0) ?
                     playerShootPos.transform.position + new Vector3(-0.35f, 0f) :
                     playerShootPos.transform.position + new Vector3(0.35f, 0f);
@@ -179,7 +182,7 @@ public class Player : MonoBehaviour
         {
             for (int j = 0; j < 2; j++)
             {
-                GameObject playerBullet = pool.MakeObject("Bullet_LvMAX");
+                GameObject playerBullet = pool.MakeObject(setplayerBulletName[3]);
                 playerBullet.transform.position = (j == 0) ?
                         playerShootPos.transform.position + new Vector3(-0.4f, 0f) :
                         playerShootPos.transform.position + new Vector3(0.4f, 0f);
@@ -194,7 +197,7 @@ public class Player : MonoBehaviour
     {
         for (int i = 0; i < 2; i++)
         {
-            GameObject playerBullet = pool.MakeObject("Bullet_LvMAX");
+            GameObject playerBullet = pool.MakeObject(setplayerBulletName[3]);
             playerBullet.transform.position = (i == 0) ?
                     playerShootPos.transform.position + new Vector3(-0.25f, 0f) :
                     playerShootPos.transform.position + new Vector3(0.25f, 0f);

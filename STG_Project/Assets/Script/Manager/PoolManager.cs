@@ -24,7 +24,9 @@ public class PoolManager : MonoBehaviour
     }
 
     // 1. bullet Prefab
-    public GameObject[] PlayerBullet;
+    public GameObject[] PlayerBulletA;
+    public GameObject[] PlayerBulletB;
+    public GameObject[] PlayerBulletC;
 
     public GameObject[] EBulletSmall;
     public GameObject[] EBulletMedium;
@@ -45,7 +47,11 @@ public class PoolManager : MonoBehaviour
 
     // A. bullet Pool
     public GameObject[]
-        poolPBullet_Lv1, poolPBullet_Lv2, poolPBullet_Lv3, poolPBullet_LvMAX;
+        poolPBulletA_Lv1, poolPBulletA_Lv2, poolPBulletA_Lv3, poolPBulletA_LvMAX;
+    public GameObject[]
+        poolPBulletB_Lv1, poolPBulletB_Lv2, poolPBulletB_Lv3, poolPBulletB_LvMAX;
+    public GameObject[]
+        poolPBulletC_Lv1, poolPBulletC_Lv2, poolPBulletC_Lv3, poolPBulletC_LvMAX;
 
     public GameObject[]
         poolEBulletSmall_A, poolEBulletSmall_B;
@@ -87,10 +93,18 @@ public class PoolManager : MonoBehaviour
     {
         if (instance == null) instance = this;
 
-        MakePool(PlayerBullet[0], ref poolPBullet_Lv1, 25);
-        MakePool(PlayerBullet[1], ref poolPBullet_Lv2, 25);
-        MakePool(PlayerBullet[2], ref poolPBullet_Lv3, 25);
-        MakePool(PlayerBullet[3], ref poolPBullet_LvMAX, 30);
+        MakePool(PlayerBulletA[0], ref poolPBulletA_Lv1, 15);
+        MakePool(PlayerBulletA[1], ref poolPBulletA_Lv2, 15);
+        MakePool(PlayerBulletA[2], ref poolPBulletA_Lv3, 15);
+        MakePool(PlayerBulletA[3], ref poolPBulletA_LvMAX, 16);
+        MakePool(PlayerBulletB[0], ref poolPBulletB_Lv1, 15);
+        MakePool(PlayerBulletB[1], ref poolPBulletB_Lv2, 15);
+        MakePool(PlayerBulletB[2], ref poolPBulletB_Lv3, 15);
+        MakePool(PlayerBulletB[3], ref poolPBulletB_LvMAX, 40);
+        MakePool(PlayerBulletC[0], ref poolPBulletC_Lv1, 15);
+        MakePool(PlayerBulletC[1], ref poolPBulletC_Lv2, 15);
+        MakePool(PlayerBulletC[2], ref poolPBulletC_Lv3, 15);
+        MakePool(PlayerBulletC[3], ref poolPBulletC_LvMAX, 16);
 
         MakePool(EBulletSmall[0], ref poolEBulletSmall_A, 200);
         MakePool(EBulletSmall[1], ref poolEBulletSmall_B, 200);
@@ -151,10 +165,18 @@ public class PoolManager : MonoBehaviour
     {
         switch (obj)
         {
-            case "Bullet_Lv1":  targetPool = poolPBullet_Lv1; break;
-            case "Bullet_Lv2":  targetPool = poolPBullet_Lv2; break;
-            case "Bullet_Lv3":  targetPool = poolPBullet_Lv3; break;
-            case "Bullet_LvMAX":targetPool = poolPBullet_LvMAX; break;
+            case "BulletA_Lv1":  targetPool = poolPBulletA_Lv1; break;
+            case "BulletA_Lv2":  targetPool = poolPBulletA_Lv2; break;
+            case "BulletA_Lv3":  targetPool = poolPBulletA_Lv3; break;
+            case "BulletA_LvMAX":targetPool = poolPBulletA_LvMAX; break;
+            case "BulletB_Lv1": targetPool = poolPBulletB_Lv1; break;
+            case "BulletB_Lv2": targetPool = poolPBulletB_Lv2; break;
+            case "BulletB_Lv3": targetPool = poolPBulletB_Lv3; break;
+            case "BulletB_LvMAX": targetPool = poolPBulletB_LvMAX; break;
+            case "BulletC_Lv1": targetPool = poolPBulletC_Lv1; break;
+            case "BulletC_Lv2": targetPool = poolPBulletC_Lv2; break;
+            case "BulletC_Lv3": targetPool = poolPBulletC_Lv3; break;
+            case "BulletC_LvMAX": targetPool = poolPBulletC_LvMAX; break;
 
             case "EBS_A":       targetPool = poolEBulletSmall_A; break;
             case "EBS_B":       targetPool = poolEBulletSmall_B; break;

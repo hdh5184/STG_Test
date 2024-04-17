@@ -239,7 +239,7 @@ MonoBehaviour:
   stageManager: {fileID: 0}
   audioMain: {fileID: 0}
   audioSub: {fileID: 0}
-  playerType: 0
+  playerType: 1
   playerShootPos: {fileID: 8509946373695219933}
   playerGuardSprite: {fileID: 5546672309318065388}
   playerAudio: {fileID: 7063000144375659334}

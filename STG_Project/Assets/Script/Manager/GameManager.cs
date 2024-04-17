@@ -11,7 +11,8 @@ public class GameManager : MonoBehaviour
     public PoolManager pool;
     public LobbyManager lobbyManager;
     public AudioManager audioManager;
-    //public StageManager stageManager;
+
+    public int setPlayerUnit = 0;
 
     
 
@@ -41,6 +42,15 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SetPlayerUnit()
+    {
+        setPlayerUnit++;
+        if (setPlayerUnit == 3) setPlayerUnit = 0;
+
+        lobbyManager.SelectedPlayerUnit.sprite =
+            lobbyManager.PlayerUnitSprite[setPlayerUnit];
     }
 
     

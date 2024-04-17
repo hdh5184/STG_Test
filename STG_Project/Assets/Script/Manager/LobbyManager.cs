@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
 using Unity.VisualScripting;
@@ -21,6 +22,9 @@ public class LobbyManager : MonoBehaviour
     public GameObject selectExitPanel;
 
     public GameObject selectPanelNow;
+
+    public Sprite[] PlayerUnitSprite;
+    public Image SelectedPlayerUnit;
 
     //public GameObject LoadScene_EffectL;
     //public GameObject LoadScene_EffectR;
@@ -78,6 +82,7 @@ public class LobbyManager : MonoBehaviour
     {
         menuSelected = MenuSelected.Main;
         selectPanelNow = selectMenuPanel;
+        SelectedPlayerUnit.sprite = PlayerUnitSprite[0];
         selectMenuPanel.SetActive(true);
     }
 
@@ -205,6 +210,10 @@ public class LobbyManager : MonoBehaviour
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_ANDROID
+        AndroidJavaObject activity =
+            new AndroidJavaClass("com.unity3d.player.UnityPlayer").GetStatic<AndroidJavaObject>("currentActivity");
+        activity.Call("finish");
 #else
         Application.Quit();
 #endif

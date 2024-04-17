@@ -38,11 +38,9 @@ public class EnemyBullet : MonoBehaviour
     }
     void Update()
     {
-        if (LobbyManager.menuSelected == MenuSelected.Main)
-            gameObject.SetActive(false);
+        if (LobbyManager.menuSelected == MenuSelected.Main) gameObject.SetActive(false);
         fieldTime += Time.deltaTime;
         MovingBullet();
-        //EnemyDestroyCompare();
     }
 
     void MovingBullet()
@@ -55,27 +53,13 @@ public class EnemyBullet : MonoBehaviour
                 transform.Translate(Vector2.down * speed * Time.deltaTime * fieldTime); break;
             case EBulletType_Moving.Homing:
                 Homing();
-                transform.Translate(Vector2.down * 5f * Time.deltaTime);
-                break;
-        }
-    }
-
-    void EnemyDestroyCompare()
-    {
-        bool findEnemy = false;
-
-        if (!findEnemy)
-        {
-            gameObject.SetActive(false);
+                transform.Translate(Vector2.down * 5f * Time.deltaTime); break;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Field"))
-        {
-            gameObject.SetActive(false);
-        }
+        if (collision.CompareTag("Field")) gameObject.SetActive(false);
     }
 
     void Homing()

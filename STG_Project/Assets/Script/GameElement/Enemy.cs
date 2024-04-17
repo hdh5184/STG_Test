@@ -466,6 +466,18 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    IEnumerator MidBossDead()
+    {
+        StageManager.instance.GameClear();
+        InvokeRepeating("BossExplosion", 0f, 0.16f);
+
+        yield return new WaitForSeconds(1.5f);
+
+        CancelInvoke("BossExplosion");
+        StartCoroutine("BossDestroyed");
+
+    }
+
     IEnumerator BossDead()
     {
         StageManager.instance.GameClear();
