@@ -98,6 +98,7 @@ public class StageManager : MonoBehaviour
     {
         InGameUI.SetActive(true);
 
+
         getPlayerType = GameManager.instance.setPlayerUnit;
 
         getStageNum = LobbyManager.instance.setStageNum;
@@ -113,6 +114,8 @@ public class StageManager : MonoBehaviour
         currentSpawnTime = 0;
         nextSpawnDelay = 0;
 
+        if (player != null) player.SetActive(false);
+
         switch (getPlayerType)
         {
             case 0:   player = pool.MakeObject("Player_A"); break;
@@ -120,12 +123,12 @@ public class StageManager : MonoBehaviour
             case 2:   player = pool.MakeObject("Player_C"); break;
         }
 
-        player.transform.position = new Vector2(0, -3);
-        playerPos = player.transform.position;
         player.GetComponent<Player>().pool = pool;
         player.GetComponent<Player>().audioManager = audioManager;
         player.GetComponent<Player>().stageManager = instance;
         player.GetComponent<Player>().PlayerInit();
+        player.transform.position = new Vector2(0, -3);
+        playerPos = player.transform.position;
 
         Ui_Stage.SetActive(true);
         gameResultPanel.SetActive(false);
@@ -376,7 +379,7 @@ public class StageManager : MonoBehaviour
     {
         spawnEnd = true;
         //debugObj.GetComponent<DebugTest>().bossExist = false;
-        bossExist = true;
+        bossExist = false;
         StartCoroutine("GameResult");
     }
 
@@ -406,16 +409,16 @@ public class StageManager : MonoBehaviour
             {
                 case 0:
                     Result_Score.text =
-                $"<size=64>Score</size> {Score.ToString()}"; break;
+                $"<size=56>Score</size> {Score.ToString()}"; break;
                 case 1:
                     Result_BossTime.text =
-                $"<size=64>Boss-time</size> {BossTimeScore.ToString()}"; break;
+                $"<size=56>Boss-time</size> {BossTimeScore.ToString()}"; break;
                 case 2:
                     Result_Remaining.text =
-                $"<size=64>Remaining</size> {RemainingScore.ToString()}"; break;
+                $"<size=56>Remaining</size> {RemainingScore.ToString()}"; break;
                 case 3:
                     Result_TotalScore.text =
-                $"<size=80>Total Score</size>\n{ResultScore.ToString()}"; break;
+                $"<size=64>Total Score</size>\n{ResultScore.ToString()}"; break;
                 case 4: Back_Button.SetActive(true); break;
             }
             ShowResultTime = 0; ShowResultCount++;

@@ -62,6 +62,8 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (StageManager.stageState == StageManager.StageState.Lobby)
+            gameObject.SetActive(false);
         if (Input.GetMouseButton(0)) if (TouchScreenPos()) return;
 
         Move();     // 플레이어 이동
@@ -73,7 +75,7 @@ public class Player : MonoBehaviour
         TouchPos = Camera.main.ScreenToWorldPoint(new Vector3(
                     Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
 
-        if (TouchPos.y > 4f) return true;
+        if (TouchPos.y > 3.5f) return true;
         else return false;
     }
 
@@ -101,7 +103,7 @@ public class Player : MonoBehaviour
         // 필드 외에 나가지 않도록 이동 범위 제한
         transform.position = new Vector2(
             Mathf.Clamp(transform.position.x, -2.3f, 2.3f),
-            Mathf.Clamp(transform.position.y, -4.5f, 3.75f));
+            Mathf.Clamp(transform.position.y, -4.5f, 3f));
     }
 
     void Fire()

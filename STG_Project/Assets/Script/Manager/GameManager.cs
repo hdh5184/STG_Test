@@ -32,18 +32,6 @@ public class GameManager : MonoBehaviour
         Application.targetFrameRate = 60;
     }
 
-    
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
-
     public void SetPlayerUnit()
     {
         setPlayerUnit++;
@@ -52,8 +40,4 @@ public class GameManager : MonoBehaviour
         lobbyManager.SelectedPlayerUnit.sprite =
             lobbyManager.PlayerUnitSprite[setPlayerUnit];
     }
-
-    
-
-    
 }

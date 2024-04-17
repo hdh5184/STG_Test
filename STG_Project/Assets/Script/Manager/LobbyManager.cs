@@ -150,6 +150,7 @@ public class LobbyManager : MonoBehaviour
             default: SceneManager.LoadScene("InGame_Stage"); break;
         }
 
+        StageManager.stageState = StageManager.StageState.Lobby;
         isLoadScene = false;
     }
 

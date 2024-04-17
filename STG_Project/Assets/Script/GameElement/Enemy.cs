@@ -175,13 +175,13 @@ public class Enemy : MonoBehaviour
 
         switch (bulletPattern)
         {
-            case BulletPattern.Straight: Straight(false, shootPos); break;
-            case BulletPattern.n_Way: n_Way(true, shootPos); break;
-            case BulletPattern.Circle: Circle(true, shootPos); break;
-            case BulletPattern.Spread: Spread(true, shootPos); break;
+            case BulletPattern.Straight:    Straight(false, shootPos); break;
+            case BulletPattern.n_Way:       n_Way(true, shootPos); break;
+            case BulletPattern.Circle:      Circle(true, shootPos); break;
+            case BulletPattern.Spread:      Spread(true, shootPos); break;
             case BulletPattern.Spread_Random: Spread_Random(180, shootPos); break;
-            case BulletPattern.Vortex: Vortex(); break;
-            case BulletPattern.Down: Down(shootPos); break;
+            case BulletPattern.Vortex:      Vortex(); break;
+            case BulletPattern.Down:        Down(shootPos); break;
         }
     }
 
@@ -233,10 +233,8 @@ public class Enemy : MonoBehaviour
                 transform.Translate(moveVec * movSpeed * Time.deltaTime); break;
             case MovingType.Accel:
                 if (enemyState == EnemyState.Exit)
-                {
-                    transform.Translate(moveExitVec * movSpeed * Time.deltaTime * fieldTime * 2); break;
-                }
-                transform.Translate(moveVec * movSpeed * Time.deltaTime * fieldTime * 2); break;
+                    transform.Translate(moveExitVec * movSpeed * Time.deltaTime * fieldTime * 2);
+                else transform.Translate(moveVec * movSpeed * Time.deltaTime * fieldTime * 2); break;
             case MovingType.SlowDown:
                 if (fieldTime < 1)
                 transform.position = Vector2.Lerp(transform.position, moveDesVec, 0.03f);
@@ -427,94 +425,81 @@ public class Enemy : MonoBehaviour
     public void Dead()
     {
         enemyState = EnemyState.Dead;
-        fieldTime = 0;
-
-        if (Health <= 0)
-        {
-            StageManager.Score += setScore;
-        }
-
-        //sr.enabled = false;
-
-
+        StageManager.Score += setScore;
         StageManager.EnemyList.Remove(gameObject);
 
-        GameObject Explosion;
-
-        if (enemyType == EnemyType.Boss && Health <= 0)
+        switch (enemyType)
         {
-            StartCoroutine("BossDead");
-            StageManager.bossExist = false;
+            case EnemyType.Small:
+            case EnemyType.Medium:  Explosion("ExplodeB", "EShotL"); break;
+            case EnemyType.Large:   Explosion("ExplodeC", "Explode"); break;
+            case EnemyType.Big:     StartCoroutine("MidBossDead"); return;
+            case EnemyType.Boss:    StartCoroutine("BossDead"); return;
         }
-        else
+        gameObject.SetActive(false);
+    }
+
+    GameObject Explosion(string obj, string audio)
+    {
+        GameObject explosion = pool.MakeObject(obj);
+        explosion.GetComponent<Effect>().audio.clip =
+            audioManager.getAudioClip(audio);
+        explosion.transform.position = transform.position;
+            
+
+        return explosion;
+    }
+
+    void RandomExplosion()
+    {
+        GameObject explosion = Explosion("ExplodeB", "EShotL");
+        Vector2 bossPos = transform.position;
+        Vector2 ExplosionPos = new Vector2(
+            Random.Range(bossPos.x - 2, bossPos.x + 2),
+            Random.Range(bossPos.y - 1, bossPos.y + 1));
+        explosion.transform.position = ExplosionPos;
+
+        if (enemyType == EnemyType.Big)
         {
-            switch (enemyType)
-            {
-                case EnemyType.Large:
-                case EnemyType.Big:
-                    Explosion = pool.MakeObject("ExplodeC");
-                    Explosion.GetComponent<Effect>().audio.clip =
-                        audioManager.getAudioClip("Explode"); break;
-                default:
-                    Explosion = pool.MakeObject("ExplodeB");
-                    Explosion.GetComponent<Effect>().audio.clip =
-                        audioManager.getAudioClip("EShotL"); break;
-            }
-            Explosion.transform.position = transform.position;
-            //Explosion.SetActive(true);
-            gameObject.SetActive(false);
+            GameObject item = pool.MakeObject("SilverCoin");
+            item.transform.position = ExplosionPos;
         }
     }
 
     IEnumerator MidBossDead()
     {
-        StageManager.instance.GameClear();
-        InvokeRepeating("BossExplosion", 0f, 0.16f);
+        InvokeRepeating("RandomExplosion", 0f, 0.12f);
+        yield return new WaitForSeconds(1.2f);
 
-        yield return new WaitForSeconds(1.5f);
-
-        CancelInvoke("BossExplosion");
-        StartCoroutine("BossDestroyed");
-
+        CancelInvoke("RandomExplosion");
+        GameObject explosion = Explosion("ExplodeBoss", "ExplodeBoss");
+        explosion.transform.localScale = new Vector3(10, 10, 1);
+        gameObject.SetActive(false);
     }
 
     IEnumerator BossDead()
     {
         StageManager.instance.GameClear();
-        InvokeRepeating("BossExplosion", 0f, 0.16f);
-
+        InvokeRepeating("RandomExplosion", 0f, 0.16f);
+        StageManager.bossExist = false;
         yield return new WaitForSeconds(1.5f);
 
-        CancelInvoke("BossExplosion");
+        CancelInvoke("RandomExplosion");
         StartCoroutine("BossDestroyed");
 
     }
 
     IEnumerator BossDestroyed()
     {
-        InvokeRepeating("BossExplosion", 0f, 0.1f);
-
+        InvokeRepeating("RandomExplosion", 0f, 0.1f);
         yield return new WaitForSeconds(1.5f);
 
-        CancelInvoke("BossExplosion");
-        GameObject Explosion = pool.MakeObject("ExplodeBoss");
-        Explosion.transform.localScale = new Vector3(10, 10, 1);
-        Explosion.GetComponent<Effect>().audio.clip =
-                        audioManager.getAudioClip("ExplodeBoss");
-        Explosion.transform.position = transform.position;
+        CancelInvoke("RandomExplosion");
+        GameObject explosion = Explosion("ExplodeBoss", "ExplodeBoss");
+        explosion.transform.localScale = new Vector3(10, 10, 1);
         gameObject.SetActive(false);
     }
 
-    void BossExplosion()
-    {
-        GameObject Explosion = pool.MakeObject("ExplodeB");
-        Explosion.GetComponent<Effect>().audio.clip =
-                        audioManager.getAudioClip("EShotL");
-        Vector2 bossPos = transform.position;
-        Explosion.transform.position = new Vector2(
-            Random.Range(bossPos.x - 2, bossPos.x + 2),
-            Random.Range(bossPos.y - 1, bossPos.y + 1));
-    }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -524,12 +509,12 @@ public class Enemy : MonoBehaviour
         // 플레이어 공격 충돌 시 체력 감소
         switch (collision.tag)
         {
-            case "PlayerBullet_Lv1": Health -= 3; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_Lv2": Health -= 4; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_Lv3": Health -= 5; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_A": Health -= 8; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_B": Health -= 4; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_C": Health -= 5; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv1":        Health -= 3; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv2":        Health -= 4; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_Lv3":        Health -= 5; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_LvMAX_A":    Health -= 8; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_LvMAX_B":    Health -= 4; collision.gameObject.SetActive(false); break;
+            case "PlayerBullet_LvMAX_C":    Health -= 5; collision.gameObject.SetActive(false); break;
         }
 
         // 적기 파괴
@@ -538,18 +523,14 @@ public class Enemy : MonoBehaviour
             GameObject item;
             switch (getDropItemName)
             {
-                case "silver": item = pool.MakeObject("SilverCoin"); break;
-                case "gold": item = pool.MakeObject("GoldCoin"); break;
-                case "pow": item = pool.MakeObject("PowerUp"); break;
-                case "hp": item = pool.MakeObject("Heal"); break;
-                default: item = null; break;
+                case "silver":  item = pool.MakeObject("SilverCoin"); break;
+                case "gold":    item = pool.MakeObject("GoldCoin"); break;
+                case "pow":     item = pool.MakeObject("PowerUp"); break;
+                case "hp":      item = pool.MakeObject("Heal"); break;
+                default:        item = null; break;
             }
 
-            if (item != null)
-            {
-                item.transform.position = transform.position;
-            }
-
+            if (item != null)   item.transform.position = transform.position;
             Dead();
         }
     }
