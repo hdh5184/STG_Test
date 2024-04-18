@@ -144,7 +144,7 @@ public class PoolManager : MonoBehaviour
         MakePool(EnemyBig[0], ref poolEnemyBig_A, 3);
 
         MakePool(EnemyBoss[0], ref poolEnemyBoss_A, 1);
-        //MakePool(EnemyBoss[1], ref poolEnemyBoss_B, 1);
+        MakePool(EnemyBoss[1], ref poolEnemyBoss_B, 1);
         //MakePool(EnemyBoss[2], ref poolEnemyBoss_C, 1);
         //MakePool(EnemyBoss[3], ref poolEnemyBoss_D, 1);
     }
@@ -229,13 +229,11 @@ public class PoolManager : MonoBehaviour
             {
                 if (!targetPool[i].activeSelf)
                 {
-                    //isSetActive.Add(targetPool[i]);
                     targetPool[i].SetActive(true);
                     return targetPool[i];
                 }
             }
         }
-
         Debug.Log($"\"{obj}\" 오브젝트의 여분이 없거나 찾을 수 없습니다.");
         return null;
     }

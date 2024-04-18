@@ -270,7 +270,7 @@ public class StageManager : MonoBehaviour
         switch (getStageNum)
         {
             case 1: textFile = "BossLogic_A"; break;
-            case 2: textFile = "BossLogic_A"; break;
+            case 2: textFile = "BossLogic_B"; break;
             default:
                 Debug.Log("스테이지 정보를 불러올 수 없습니다.");
                 textFile = null; break;
@@ -314,8 +314,7 @@ public class StageManager : MonoBehaviour
 
             if (data_Dialog[i]["BossLogicCode"].ToString() == "Final")
             {
-                bossLogic.bossLogicsFinal.Enqueue(bossLogicData);
-                break;
+                bossLogic.bossLogicsFinal.Enqueue(bossLogicData); break;
             }
             bossLogic.bossLogics.Enqueue(bossLogicData);
         }
@@ -368,7 +367,6 @@ public class StageManager : MonoBehaviour
             if (enemy.GetComponent<Enemy>().enemyType == Enemy.EnemyType.Boss)
             {
                 BossInit(enemy);
-                //debugObj.GetComponent<DebugTest>().bossExist = true;
                 bossExist = true;
             }
             enemyLogic.Init();
@@ -378,7 +376,6 @@ public class StageManager : MonoBehaviour
     public void GameClear()
     {
         spawnEnd = true;
-        //debugObj.GetComponent<DebugTest>().bossExist = false;
         bossExist = false;
         StartCoroutine("GameResult");
     }
@@ -407,18 +404,14 @@ public class StageManager : MonoBehaviour
         {
             switch (ShowResultCount)
             {
-                case 0:
-                    Result_Score.text =
-                $"<size=56>Score</size> {Score.ToString()}"; break;
-                case 1:
-                    Result_BossTime.text =
-                $"<size=56>Boss-time</size> {BossTimeScore.ToString()}"; break;
-                case 2:
-                    Result_Remaining.text =
-                $"<size=56>Remaining</size> {RemainingScore.ToString()}"; break;
-                case 3:
-                    Result_TotalScore.text =
-                $"<size=64>Total Score</size>\n{ResultScore.ToString()}"; break;
+                case 0: Result_Score.text =
+                        $"<size=56>Score</size> {Score.ToString()}"; break;
+                case 1: Result_BossTime.text =
+                        $"<size=56>Boss-time</size> {BossTimeScore.ToString()}"; break;
+                case 2: Result_Remaining.text =
+                        $"<size=56>Remaining</size> {RemainingScore.ToString()}"; break;
+                case 3: Result_TotalScore.text =
+                        $"<size=64>Total Score</size>\n{ResultScore.ToString()}"; break;
                 case 4: Back_Button.SetActive(true); break;
             }
             ShowResultTime = 0; ShowResultCount++;

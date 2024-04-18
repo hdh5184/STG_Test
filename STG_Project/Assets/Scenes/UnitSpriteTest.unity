@@ -815,8 +815,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.84, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
-  m_ConstrainProportionsScale: 1
+  m_LocalScale: {x: 0.3, y: 0.3, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1907575199}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2018,12 +2018,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!95 &1381377298442056343
 Animator:
   serializedVersion: 5
@@ -2402,12 +2424,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!4 &2579729362167779186
 Transform:
   m_ObjectHideFlags: 0
@@ -2497,12 +2541,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!70 &3241578669048216095
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2551,12 +2617,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!4 &3424767795597541346
 Transform:
   m_ObjectHideFlags: 0
@@ -2585,12 +2673,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!50 &3476790075586711591
 Rigidbody2D:
   serializedVersion: 4
@@ -2866,12 +2976,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!1 &4381494013068995765
 GameObject:
   m_ObjectHideFlags: 0
@@ -2955,12 +3087,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!1 &5043016403580153366
 GameObject:
   m_ObjectHideFlags: 0
@@ -3104,12 +3258,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!212 &6106525937107242767
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3319,12 +3495,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!212 &6995869681784135474
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3546,12 +3744,34 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
 --- !u!58 &7452710885942101451
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -3758,63 +3978,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1001 &8699006903287600467
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4036358780111200627, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_Name
-      value: Item_Heal
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8800649424396089436, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 36e67280e639d4d1f88f4e332a75c11d, type: 3}
 --- !u!4 &8770080621087760945
 Transform:
   m_ObjectHideFlags: 0
@@ -3928,12 +4091,91 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
+  audioManager: {fileID: 0}
   enemyState: 0
   enemyType: 0
+  movingType: 0
   bulletPattern: 0
+  getPatternType: 
   playerPos: {x: 0, y: 0, z: 0}
-  BulletType: EBS_A
+  moveVec: {x: 0, y: 0}
+  moveDesVec: {x: 0, y: 0}
+  moveExitVec: {x: 0, y: 0}
+  speed: 0
+  movSpeed: 0
+  bulletSpeed: 0
+  getBulletName: 
+  getMovingType: 
+  getDropItemName: 
+  getBulletType: 
   Health: 0
+  firstWaitTime: 0
+  waitTime: 0
+  shootLimit: 0
+  fieldTimeLimit: 0
+  degreeZ: 0
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
+--- !u!1001 &9115101121916689958
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3717683457169632682, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_Name
+      value: BossB
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4560920234307889128, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: b47fed58972a04e80890dd79435b706a, type: 3}
 --- !u!70 &9198331368640981272
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -3979,4 +4221,4 @@ SceneRoots:
   - {fileID: 77470068}
   - {fileID: 748733570}
   - {fileID: 1184332753}
-  - {fileID: 8699006903287600467}
+  - {fileID: 9115101121916689958}

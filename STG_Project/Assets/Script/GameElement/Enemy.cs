@@ -90,11 +90,11 @@ public class Enemy : MonoBehaviour
 
         switch (enemyType)
         {
-            case EnemyType.Small:   Health = 3;     setScore = 100; break;
-            case EnemyType.Medium:  Health = 40;    setScore = 500; break;
-            case EnemyType.Large:   Health = 180;   setScore = 5000; break;
-            case EnemyType.Big:     Health = 350;   setScore = 20000; break;
-            case EnemyType.Boss:    Health = 1200;  setScore = 80000; break;
+            case EnemyType.Small:   Health = 3;     setScore = 100;     break;
+            case EnemyType.Medium:  Health = 40;    setScore = 500;     break;
+            case EnemyType.Large:   Health = 180;   setScore = 5000;    break;
+            case EnemyType.Big:     Health = 350;   setScore = 20000;   break;
+            case EnemyType.Boss:    Health = 1200;  setScore = 80000;   break;
         }
         bulletPatterns.Clear();
         bossLogicsFinal.Clear();
@@ -133,36 +133,42 @@ public class Enemy : MonoBehaviour
         if (LobbyManager.menuSelected == MenuSelected.Main)
             gameObject.SetActive(false);
 
-        if (enemyState == EnemyState.Dead) return;
         if (StageManager.stageState == StageState.End ||
             StageManager.stageState == StageState.Pause) return;
+        if (enemyState == EnemyState.Dead) return;
 
         fieldTime += Time.deltaTime;
         IdleTime += Time.deltaTime;
 
-        if (enemyState == EnemyState.Idle && IdleTime >= firstWaitTime)
+        switch (enemyState)
         {
-            enemyState = EnemyState.Play; IdleTime = 0f;
+            case EnemyState.Idle:
+                if (IdleTime >= firstWaitTime)
+                {
+                    enemyState = EnemyState.Play; IdleTime = 0f;
+                }
+                break;
+            case EnemyState.Play:
+                if (IdleTime >= shootTime)
+                {
+                    if (enemyType == EnemyType.Boss) BossPattern();
+                    else
+                    {
+                        SelectPattern(null, 0); shootCount++;
+                    }
+                }
+
+                if (!isBossFinal && fieldTime >= fieldTimeLimit && enemyType == EnemyType.Boss)
+                {
+                    isBossFinal = true;
+                    setBossLogic(bossLogicsFinal.Peek());
+                    bossLogics.Clear();
+                    bossLogics = bossLogicsFinal;
+                }
+                break;
         }
 
-        if (!isBossFinal && fieldTime >= fieldTimeLimit && enemyType == EnemyType.Boss)
-        {
-            isBossFinal = true;
-            setBossLogic(bossLogicsFinal.Peek());
-            bossLogics.Clear();
-            bossLogics = bossLogicsFinal;
-        }
-
-        if (enemyState == EnemyState.Play && IdleTime >= shootTime)
-        {
-            if (enemyType == EnemyType.Boss) BossPattern();
-            else
-            {
-                SelectPattern(null, 0);
-                shootCount++;
-            }
-            
-        }
+        
         
         Moving();
         WaitCompare();

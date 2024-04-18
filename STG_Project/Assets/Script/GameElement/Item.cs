@@ -63,7 +63,7 @@ public class Item : MonoBehaviour
     {
         if (transform.position.x >= 2.5f) movingisLeft = true;
         else if (transform.position.x <= -2.5f) movingisLeft = false;
-        if (transform.position.y >= 4.5f) movingisDown = true;
+        if (transform.position.y >= 3f) movingisDown = true;
         else if (transform.position.y <= -4.5f) movingisDown = false;
 
         transform.Translate(
