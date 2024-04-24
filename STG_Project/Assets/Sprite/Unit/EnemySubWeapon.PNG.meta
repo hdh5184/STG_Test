@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fdf3c51951b69464596fcd61454a80ec
+guid: 39b3fcc49c75740849b681e3767c1886
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -95,7 +95,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
     buildTarget: Android
-    maxTextureSize: 1024
+    maxTextureSize: 128
     resizeAlgorithm: 0
     textureFormat: 50
     textureCompression: 1
@@ -121,133 +121,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: BossUnit_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 1024
-        width: 1024
-        height: 1024
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3fce30055a76d4d159fc25690cef33b7
-      internalID: 1421387155
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossUnit_1
-      rect:
-        serializedVersion: 2
-        x: 1024
-        y: 1024
-        width: 1024
-        height: 1024
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ad0611f502ddd4421be29d16d5c6ad3b
-      internalID: -1954558686
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossUnit_2
-      rect:
-        serializedVersion: 2
-        x: 2048
-        y: 1024
-        width: 1024
-        height: 1024
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 01ef89039fece4a1c8b2e4bc42f4fea1
-      internalID: 1323079137
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossUnit_3
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1024
-        height: 1024
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 7b81e81adac9c42758604509621a759e
-      internalID: -934107895
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossUnit_4
-      rect:
-        serializedVersion: 2
-        x: 1024
-        y: 0
-        width: 1024
-        height: 1024
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9f19bf0533a414dddbcd20463f8e07d5
-      internalID: -558368972
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: BossUnit_5
-      rect:
-        serializedVersion: 2
-        x: 2048
-        y: 0
-        width: 1024
-        height: 1024
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d1b624f506c5245dbbb49bac0cabf396
-      internalID: -64566746
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     physicsShape: []
     bones: []
@@ -258,13 +132,7 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      BossUnit_0: 1421387155
-      BossUnit_1: -1954558686
-      BossUnit_2: 1323079137
-      BossUnit_3: -934107895
-      BossUnit_4: -558368972
-      BossUnit_5: -64566746
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

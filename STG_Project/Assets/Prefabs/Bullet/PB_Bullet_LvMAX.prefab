@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3381431889747530148}
   - component: {fileID: 9144592968060533760}
   - component: {fileID: 8102765866427725947}
+  - component: {fileID: -3051622360972687994}
   m_Layer: 0
   m_Name: PB_Bullet_LvMAX
   m_TagString: PlayerBullet_LvMAX_B
@@ -155,4 +156,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e110075007c61492f8a014fa9d002b1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  targetEnemy: {fileID: 0}
   PBType: 0
+--- !u!210 &-3051622360972687994
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9155646767620761209}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 10
+  m_SortAtRoot: 0

@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 2733836998177000753}
   - component: {fileID: -5673748529552094112}
   - component: {fileID: 4460620575157867039}
-  - component: {fileID: -875725386756551820}
   m_Layer: 0
   m_Name: Enemy_BigA
   m_TagString: Untagged
@@ -77,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: -1541582515, guid: e1883cb11876f4f78a1279a154c29f79, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -288,15 +287,3 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
---- !u!210 &-875725386756551820
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9149842999067862270}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_SortAtRoot: 0

@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: -198033913074105944}
   - component: {fileID: 5082355701284748882}
   - component: {fileID: 222777827676870967}
-  - component: {fileID: 7898215453026920849}
   m_Layer: 0
   m_Name: Enemy_MediumC
   m_TagString: Untagged
@@ -77,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: -1678798462, guid: e1883cb11876f4f78a1279a154c29f79, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -288,15 +287,3 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
---- !u!210 &7898215453026920849
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7630827915518267666}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 5
-  m_SortAtRoot: 0

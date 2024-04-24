@@ -82,7 +82,7 @@ public class PoolManager : MonoBehaviour
     public GameObject[]
         poolEnemyLarge_A, poolEnemyLarge_B;
     public GameObject[]
-        poolEnemyBig_A;
+        poolEnemyBig_A, poolEnemyBig_B;
     public GameObject[]
         poolEnemyBoss_A, poolEnemyBoss_B, poolEnemyBoss_C, poolEnemyBoss_D;
 
@@ -142,11 +142,12 @@ public class PoolManager : MonoBehaviour
         MakePool(EnemyLarge[1], ref poolEnemyLarge_B, 5);
 
         MakePool(EnemyBig[0], ref poolEnemyBig_A, 3);
+        MakePool(EnemyBig[1], ref poolEnemyBig_B, 3);
 
         MakePool(EnemyBoss[0], ref poolEnemyBoss_A, 1);
         MakePool(EnemyBoss[1], ref poolEnemyBoss_B, 1);
-        //MakePool(EnemyBoss[2], ref poolEnemyBoss_C, 1);
-        //MakePool(EnemyBoss[3], ref poolEnemyBoss_D, 1);
+        MakePool(EnemyBoss[2], ref poolEnemyBoss_C, 1);
+        MakePool(EnemyBoss[3], ref poolEnemyBoss_D, 1);
     }
 
     /// <summary> Pool 생성 </summary>
@@ -214,6 +215,7 @@ public class PoolManager : MonoBehaviour
             case "EnemyL_B":    targetPool = poolEnemyLarge_B; break;
 
             case "EnemyB_A":    targetPool = poolEnemyBig_A; break;
+            case "EnemyB_B":    targetPool = poolEnemyBig_B; break;
 
             case "Boss_A":      targetPool = poolEnemyBoss_A; break;
             case "Boss_B":      targetPool = poolEnemyBoss_B; break;

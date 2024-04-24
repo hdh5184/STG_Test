@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 7985106476809174786}
   - component: {fileID: 7704951820526567836}
   - component: {fileID: 6459405584949302974}
-  - component: {fileID: 9130844473962528461}
   m_Layer: 0
   m_Name: PlayerB
   m_TagString: Player
@@ -79,7 +78,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 7
   m_Sprite: {fileID: 368402432, guid: e1883cb11876f4f78a1279a154c29f79, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -243,18 +242,6 @@ MonoBehaviour:
   playerShootPos: {fileID: 8509946373695219933}
   playerGuardSprite: {fileID: 5546672309318065388}
   playerAudio: {fileID: 7063000144375659334}
---- !u!210 &9130844473962528461
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3893609168385795177}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_SortAtRoot: 0
 --- !u!1 &5546672309318065388
 GameObject:
   m_ObjectHideFlags: 0

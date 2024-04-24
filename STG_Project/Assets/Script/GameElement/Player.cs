@@ -90,8 +90,8 @@ public class Player : MonoBehaviour
             PlayerMovingVec = TouchPos - transform.position;
             //PlayerMovingVec = (Vector3.Distance(TouchPos, transform.position) <= 1f) ?
             //    PlayerMovingVec : PlayerMovingVec.normalized;
-
-            transform.position += PlayerMovingVec.normalized * 7f * Time.deltaTime;
+            transform.position += (Vector3.Magnitude(PlayerMovingVec) < 7f * Time.deltaTime) ?
+                PlayerMovingVec.normalized * Vector3.Magnitude(PlayerMovingVec) : PlayerMovingVec.normalized * 7f * Time.deltaTime;
         }
         else
         {
@@ -211,6 +211,7 @@ public class Player : MonoBehaviour
     {
         if (playerState == PlayerState.Play && collision.CompareTag("EnemyBullet"))
         {
+            if (GameManager.instance.isDebug) return;
             Debug.Log("플레이어 파괴됨");
 
             DestroyPlayer();

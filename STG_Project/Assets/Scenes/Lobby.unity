@@ -3623,7 +3623,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1596553170
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4931,9 +4931,12 @@ MonoBehaviour:
   - {fileID: 5360190585096588300, guid: 99e76d384749446949f3b752b9dde06f, type: 3}
   EnemyBig:
   - {fileID: 9149842999067862270, guid: ffc1353f5276f42d0adc70d2ebd66bbc, type: 3}
+  - {fileID: 6819692951887069912, guid: 11793109c0ccc48cd93fa470e6a112b6, type: 3}
   EnemyBoss:
   - {fileID: 6800352218390604158, guid: 9e839497bcfbb49e7a7d89714c7a09da, type: 3}
   - {fileID: 3717683457169632682, guid: b47fed58972a04e80890dd79435b706a, type: 3}
+  - {fileID: 8473745537692354634, guid: 8021802db275a48ad85f71b628969535, type: 3}
+  - {fileID: 7940133045006263909, guid: 347d7a861649b474780943c26299c17d, type: 3}
   poolPBulletA_Lv1: []
   poolPBulletA_Lv2: []
   poolPBulletA_Lv3: []
@@ -4974,6 +4977,7 @@ MonoBehaviour:
   poolEnemyLarge_A: []
   poolEnemyLarge_B: []
   poolEnemyBig_A: []
+  poolEnemyBig_B: []
   poolEnemyBoss_A: []
   poolEnemyBoss_B: []
   poolEnemyBoss_C: []

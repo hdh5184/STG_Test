@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
 
     public int setPlayerUnit = 0;
 
-    
+    public bool isDebug = false;
 
 
     private void Awake()
@@ -39,5 +39,14 @@ public class GameManager : MonoBehaviour
 
         lobbyManager.SelectedPlayerUnit.sprite =
             lobbyManager.PlayerUnitSprite[setPlayerUnit];
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            isDebug = !isDebug;
+            Debug.Log($"디버그 모드 : {isDebug}");
+        }
     }
 }

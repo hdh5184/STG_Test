@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 7870516268749766265}
   - component: {fileID: 6668620467266624722}
   - component: {fileID: -7729986362454556500}
+  - component: {fileID: -8392455426174797659}
   m_Layer: 0
   m_Name: PC_Bullet_Lv2
   m_TagString: PlayerBullet_Lv2
@@ -190,6 +191,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetEnemy: {fileID: 0}
   PBType: 0
+--- !u!210 &-8392455426174797659
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1062271753935961124}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 10
+  m_SortAtRoot: 0
 --- !u!1 &6778056045124683701
 GameObject:
   m_ObjectHideFlags: 0

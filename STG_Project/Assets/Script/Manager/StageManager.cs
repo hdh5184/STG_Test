@@ -215,6 +215,7 @@ public class StageManager : MonoBehaviour
         {
             case 1: textFile = "Spawn_Stage1"; break;
             case 2: textFile = "Spawn_Stage2"; break;
+            case 3: textFile = "Spawn_Stage3"; break;
             default:
                 Debug.Log("스테이지 정보를 불러올 수 없습니다.");
                 textFile = null; break;

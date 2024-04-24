@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 2048442051822327462}
   - component: {fileID: 5680220104413117831}
   - component: {fileID: 1829758606151366961}
-  - component: {fileID: -6317049754021392838}
   m_Layer: 0
   m_Name: EBulletMedium_B
   m_TagString: EnemyBullet
@@ -77,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 11
   m_Sprite: {fileID: -1085725316, guid: 8623740055a9d4463981c948818bbdaf, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -188,15 +187,3 @@ MonoBehaviour:
   getBulletType: 
   enemyFromCode: 0
   speed: 0
---- !u!210 &-6317049754021392838
-SortingGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1213247180876686863}
-  m_Enabled: 1
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 11
-  m_SortAtRoot: 0
