@@ -6,7 +6,72 @@ public class PoolManager : MonoBehaviour
 {
     public static PoolManager instance;
 
-    //List<GameObject> isSetActive = new List<GameObject>();
+    // 1. 탄 Prefab
+    public GameObject[] PlayerBulletA;
+    public GameObject[] PlayerBulletB;
+    public GameObject[] PlayerBulletC;
+
+    public GameObject[] EBulletSmall;
+    public GameObject[] EBulletMedium;
+
+    // 2. 아이템 & 이펙트 Prefab
+    public GameObject[] Item;
+    public GameObject[] Effect;
+
+    // 3. 플레이어 Prefab
+    public GameObject[] Player;
+
+    // 4. Enemy Prefab
+    public GameObject[] EnemySmall;
+    public GameObject[] EnemyMedium;
+    public GameObject[] EnemyLarge;
+    public GameObject[] EnemyBig;
+    public GameObject[] EnemyBoss;
+
+
+    // A. 탄 Pool
+    public GameObject[]
+        poolPBulletA_Lv1, poolPBulletA_Lv2, poolPBulletA_Lv3, poolPBulletA_LvMAX;
+    public GameObject[]
+        poolPBulletB_Lv1, poolPBulletB_Lv2, poolPBulletB_Lv3, poolPBulletB_LvMAX;
+    public GameObject[]
+        poolPBulletC_Lv1, poolPBulletC_Lv2, poolPBulletC_Lv3, poolPBulletC_LvMAX;
+
+    public GameObject[]
+        poolEBulletSmall_A, poolEBulletSmall_B;
+    public GameObject[]
+        poolEBulletMedium_A, poolEBulletMedium_B;
+
+    // B. 아이템 & 이펙트 Pool
+    public GameObject[] poolItem_PowerUp;
+    public GameObject[] poolItem_Heal;
+    public GameObject[] poolItem_SilverCoin;
+    public GameObject[] poolItem_GoldCoin;
+
+    public GameObject[] poolEffect_Explode_A_Boss;
+    public GameObject[]
+        poolEffect_Explode_A, poolEffect_Explode_B, poolEffect_Explode_C;
+    public GameObject[]
+        poolEffect_Explode_Short, poolEffect_Smoke;
+
+    // C. 플레이어 Pool
+    public GameObject[]
+        poolPlayer_A, poolPlayer_B, poolPlayer_C;
+
+    // D. Enemy Pool
+    public GameObject[]
+        poolEnemySmall_A, poolEnemySmall_B, poolEnemySmall_C, poolEnemySmall_D, poolEnemySmall_E;
+    public GameObject[]
+        poolEnemyMedium_A, poolEnemyMedium_B, poolEnemyMedium_C;
+    public GameObject[]
+        poolEnemyLarge_A, poolEnemyLarge_B;
+    public GameObject[]
+        poolEnemyBig_A, poolEnemyBig_B;
+    public GameObject[]
+        poolEnemyBoss_A, poolEnemyBoss_B, poolEnemyBoss_C, poolEnemyBoss_D;
+
+    // @. 생성할 오브젝트 target 지정
+    public GameObject[] targetPool;
 
     private void Awake()
     {
@@ -23,72 +88,7 @@ public class PoolManager : MonoBehaviour
         InitPool();
     }
 
-    // 1. bullet Prefab
-    public GameObject[] PlayerBulletA;
-    public GameObject[] PlayerBulletB;
-    public GameObject[] PlayerBulletC;
-
-    public GameObject[] EBulletSmall;
-    public GameObject[] EBulletMedium;
-
-    // 2. Item & Effect Prefab
-    public GameObject[] Item;
-    public GameObject[] Effect;
-
-    public GameObject[] Player;
-
-    // 3. Enemy Prefab
-    public GameObject[] EnemySmall;
-    public GameObject[] EnemyMedium;
-    public GameObject[] EnemyLarge;
-    public GameObject[] EnemyBig;
-    public GameObject[] EnemyBoss;
-
-
-    // A. bullet Pool
-    public GameObject[]
-        poolPBulletA_Lv1, poolPBulletA_Lv2, poolPBulletA_Lv3, poolPBulletA_LvMAX;
-    public GameObject[]
-        poolPBulletB_Lv1, poolPBulletB_Lv2, poolPBulletB_Lv3, poolPBulletB_LvMAX;
-    public GameObject[]
-        poolPBulletC_Lv1, poolPBulletC_Lv2, poolPBulletC_Lv3, poolPBulletC_LvMAX;
-
-    public GameObject[]
-        poolEBulletSmall_A, poolEBulletSmall_B;
-    public GameObject[]
-        poolEBulletMedium_A, poolEBulletMedium_B;
-
-    // B. Item & Effect Pool
-    public GameObject[] poolItem_PowerUp;
-    public GameObject[] poolItem_Heal;
-    public GameObject[] poolItem_SilverCoin;
-    public GameObject[] poolItem_GoldCoin;
-
-    public GameObject[] poolEffect_Explode_A_Boss;
-
-    public GameObject[]
-        poolEffect_Explode_A, poolEffect_Explode_B, poolEffect_Explode_C;
-    public GameObject[]
-        poolEffect_Explode_Short, poolEffect_Smoke;
-
-    public GameObject[]
-        poolPlayer_A, poolPlayer_B, poolPlayer_C;
-
-    // C. Enemy Pool
-    public GameObject[]
-        poolEnemySmall_A, poolEnemySmall_B, poolEnemySmall_C, poolEnemySmall_D, poolEnemySmall_E;
-    public GameObject[]
-        poolEnemyMedium_A, poolEnemyMedium_B, poolEnemyMedium_C;
-    public GameObject[]
-        poolEnemyLarge_A, poolEnemyLarge_B;
-    public GameObject[]
-        poolEnemyBig_A, poolEnemyBig_B;
-    public GameObject[]
-        poolEnemyBoss_A, poolEnemyBoss_B, poolEnemyBoss_C, poolEnemyBoss_D;
-
-    // * 생성할 오브젝트에 해당하는 Pool을 target으로 정하기
-    public GameObject[] targetPool;
-
+    /// <summary> Pool 초기화 </summary>
     private void InitPool()
     {
         if (instance == null) instance = this;
@@ -108,8 +108,8 @@ public class PoolManager : MonoBehaviour
 
         MakePool(EBulletSmall[0], ref poolEBulletSmall_A, 200);
         MakePool(EBulletSmall[1], ref poolEBulletSmall_B, 200);
-        MakePool(EBulletMedium[0], ref poolEBulletMedium_A, 100);
-        MakePool(EBulletMedium[1], ref poolEBulletMedium_B, 100);
+        MakePool(EBulletMedium[0], ref poolEBulletMedium_A, 200);
+        MakePool(EBulletMedium[1], ref poolEBulletMedium_B, 200);
 
         MakePool(Item[0], ref poolItem_PowerUp, 8);
         MakePool(Item[1], ref poolItem_Heal, 8);
@@ -161,7 +161,7 @@ public class PoolManager : MonoBehaviour
         }
     }
 
-    /// <summary> Pool에서 오브젝트 꺼내기 </summary>
+    /// <summary> Pool - 오브젝트 선택 </summary>
     public GameObject MakeObject(string obj)
     {
         switch (obj)

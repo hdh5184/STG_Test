@@ -74,7 +74,7 @@ public class Enemy : MonoBehaviour
     public enum MovingType { Straight, Accel, SlowDown, none }
     public enum BulletPattern { Straight, n_Way, Circle, Spread, Spread_Random, Vortex, Down, None }
 
-    // 기체 데이터 초기화
+    /// <summary> Enemy 기체 데이터 초기화 </summary>
     private void OnEnable()
     {
         enemyState = EnemyState.Idle;
@@ -91,8 +91,8 @@ public class Enemy : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.Small:   Health = 3;     setScore = 100;     break;
-            case EnemyType.Medium:  Health = 40;    setScore = 500;     break;
-            case EnemyType.Large:   Health = 180;   setScore = 5000;    break;
+            case EnemyType.Medium:  Health = 30;    setScore = 500;     break;
+            case EnemyType.Large:   Health = 120;   setScore = 5000;    break;
             case EnemyType.Big:     Health = 350;   setScore = 20000;   break;
             case EnemyType.Boss:    Health = 1200;  setScore = 80000;   break;
 
@@ -103,8 +103,8 @@ public class Enemy : MonoBehaviour
         bossLogicsFinal.Clear();
     }
 
-    // 공격, 이동, 기체 회전 속성 초기화 (+ 보스 공격)
-    public void Init()
+    /// <summary> Enemy - 공격, 이동, 기체 회전 속성 초기화 (+ 보스 공격) </summary>
+    public void EnemyInit()
     {
         switch (getPatternType)
         {
@@ -129,7 +129,7 @@ public class Enemy : MonoBehaviour
     }
 
 
-    // Enemy 로직
+    /// <summary> Enemy 로직 </summary>
     void Update()
     {
         if (LobbyManager.menuSelected == MenuSelected.Main) gameObject.SetActive(false);
@@ -148,7 +148,7 @@ public class Enemy : MonoBehaviour
             case EnemyState.Play:
                 if (IdleTime >= shootTime)
                 {
-                    if      (enemyType == EnemyType.Boss) BossPattern();
+                    if (enemyType == EnemyType.Boss) BossPattern();
                     else if (enemyType == EnemyType.SubWeapon)
                     {
                         foreach (var item in BigShootPos)
@@ -156,7 +156,10 @@ public class Enemy : MonoBehaviour
                             SelectPattern(item, 0); shootCount++;
                         }
                     }
-                    else SelectPattern(null, 0); shootCount++;
+                    else
+                    {
+                        SelectPattern(null, 0); shootCount++;
+                    }
                 }
 
                 if (!isBossFinal && fieldTime >= fieldTimeLimit && enemyType == EnemyType.Boss)
@@ -179,7 +182,7 @@ public class Enemy : MonoBehaviour
         ExitCompare();
     }
 
-    // 공격 패턴 설정
+    /// <summary> 공격 패턴 설정 </summary>
     void SelectPattern(GameObject shootPos, int pos)
     {
         if (enemyType == EnemyType.Boss) setBossPos = pos;
@@ -196,7 +199,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 보스 공격 패턴 설정
+    /// <summary> 보스 공격 패턴 설정 </summary>
     void BossPattern()
     {
         if (shoot1) SelectPattern(BossShootPos1, 1);
@@ -207,7 +210,7 @@ public class Enemy : MonoBehaviour
         shootCount++;
     }
 
-    // 보스 Enemy 로직 설정
+    /// <summary> 보스 Enemy 로직 설정 </summary>
     void setBossLogic(BossLogic bossLogic)
     {
         waitTime = bossLogic.delay;
@@ -227,13 +230,13 @@ public class Enemy : MonoBehaviour
         bulletSpeed = bossLogic.bulletSpeed;
         shootLimit = bossLogic.shootLimit;
 
-        Init();
+        EnemyInit();
 
         Debug.Log($"보스 공격 {bossLogic.BossLogicCode}");
         bossLogics.Enqueue(bossLogic);
     }
 
-    // 이동 로직
+    /// <summary> Enemy 이동 로직 </summary>
     void Moving()
     {
         switch (movingType)
@@ -246,12 +249,12 @@ public class Enemy : MonoBehaviour
                 else transform.Translate(moveVec * movSpeed * Time.deltaTime * fieldTime * 2); break;
             case MovingType.SlowDown:
                 if (fieldTime < 1)
-                    transform.position = Vector2.Lerp(transform.position, moveDesVec, 0.03f);
+                    transform.position = Vector2.Lerp(transform.position, moveDesVec, 0.07f);
                 else movingType = MovingType.Straight; break;
         }
     }
 
-    // 공격 - 대기 로직
+    /// <summary> 공격 - 대기 로직 </summary>
     void WaitCompare()
     {
         switch (enemyState)
@@ -276,7 +279,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 후퇴 로직
+    /// <summary> 후퇴 로직 </summary>
     void ExitCompare()
     {
         if (enemyType == EnemyType.Boss) return;
@@ -288,7 +291,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 탄도 각 설정
+    /// <summary> 탄도 각 설정 </summary>
     void GetDegree(GameObject shootPos)
     {
         playerPos = StageManager.playerPos;
@@ -317,7 +320,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 보스 공격 Position 탄도 각 설정
+    /// <summary> 보스 공격 Position 별 탄도 각 설정 </summary>
     void setBossDegree()
     {
         if (enemyType == EnemyType.Boss)
@@ -333,7 +336,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 탄 발사 로직
+    /// <summary> 탄 발사 로직 </summary>
     private void Fire(float deg, GameObject shootPos)
     {
         GameObject bullet = pool.MakeObject(getBulletName);
@@ -356,7 +359,7 @@ public class Enemy : MonoBehaviour
 
     /*************** 공격 패턴 모음 ***************/
 
-    // str : 플레이어 조준 공격
+    /// <summary> str : 플레이어 조준 공격 </summary>
     private void Straight(bool isLock, GameObject shootPos)
     {
         if (!isLock || shootCount == 0) GetDegree(shootPos);
@@ -364,7 +367,7 @@ public class Enemy : MonoBehaviour
         Fire(degree, shootPos);
     }
 
-    // way : n개 탄 방사 공격
+    /// <summary> way : n개 탄 방사 공격 </summary>
     private void n_Way(bool isLock, GameObject shootPos)
     {
         if (!isLock || shootCount == 0) GetDegree(shootPos);
@@ -382,7 +385,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // cir : 원형 공격
+    /// <summary> cir : 원형 공격 </summary>
     private void Circle(bool isLock, GameObject shootPos)
     {
         if (!isLock || shootCount == 0) GetDegree(shootPos);
@@ -400,7 +403,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // spr : 역삼각형 모양 방사 반복 공격
+    /// <summary> spr : 역삼각형 모양 방사 반복 공격 </summary>
     private void Spread(bool isLock, GameObject shootPos)
     {
         if (!isLock || shootCount == 0) GetDegree(shootPos);
@@ -418,7 +421,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // sprR : 플레이어 기준 전방 무작위 각도 방사
+    /// <summary> sprR : 플레이어 기준 전방 무작위 각도 방사 공격 </summary>
     private void Spread_Random(float degLimit, GameObject shootPos)
     {
         int n_Count = 4;
@@ -436,14 +439,14 @@ public class Enemy : MonoBehaviour
     {
 
     }
-
-    // 전방 고정 공격
+ 
+    /// <summary> down : 전방 고정 공격 </summary>
     private void Down(GameObject shootPos) => Fire(0, shootPos);
 
 
     /*************** 기체 파괴 처리 ***************/
 
-    // 기체 파괴
+    /// <summary> 기체 파괴 </summary>
     public void Dead()
     {
         enemyState = EnemyState.Dead;
@@ -466,7 +469,7 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    // 폭발 이펙트 출현
+    /// <summary> 폭발 이펙트 출현 </summary>
     GameObject Explosion(string obj, string audio)
     {
         GameObject explosion = pool.MakeObject(obj);
@@ -477,7 +480,7 @@ public class Enemy : MonoBehaviour
         return explosion;
     }
 
-    // 폭발 이벤트 반복 출현 (범위 내 무작위)
+    /// <summary> 폭발 이벤트 반복 출현 (범위 내 무작위) </summary>
     void RandomExplosion()
     {
         GameObject explosion = Explosion("ExplodeB", "EShotL");
@@ -494,7 +497,7 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 중 보스 파괴 표현
+    /// <summary> 중 보스 파괴 표현 </summary>
     IEnumerator MidBossDead()
     {
         InvokeRepeating("RandomExplosion", 0f, 0.12f);
@@ -506,7 +509,7 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    // 보스 파괴 표현
+    /// <summary> 보스 파괴 표현 </summary>
     IEnumerator BossDead()
     {
         StageManager.instance.GameClear();
@@ -519,7 +522,7 @@ public class Enemy : MonoBehaviour
 
     }
 
-    // 보스 파괴 표현 2
+    /// <summary> 보스 파괴 표현 2 </summary>
     IEnumerator BossDestroyed()
     {
         InvokeRepeating("RandomExplosion", 0f, 0.1f);

@@ -229,30 +229,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
   enemyType: 5
   movingType: 3
   bulletPattern: 0
+  getDropItemName: 
+  getMovingType: 
+  getBulletType: acc
+  getBulletName: EBS_A
   getPatternType: 
-  playerPos: {x: 0, y: 0, z: 0}
+  degreeZ: 0
+  movSpeed: 0
   moveVec: {x: 0, y: 0}
   moveDesVec: {x: 0, y: 0}
   moveExitVec: {x: 0, y: 0}
-  speed: 0
-  movSpeed: 0
-  bulletSpeed: 3
-  getBulletName: EBS_A
-  getMovingType: 
-  getDropItemName: 
-  getBulletType: acc
-  Health: 0
-  firstWaitTime: 3
-  waitTime: 2
-  shootLimit: 3
   fieldTimeLimit: 99
-  degreeZ: 0
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
+  bulletSpeed: 3
+  shootLimit: 3
+  firstWaitTime: 4
+  waitTime: 3
   BigShootPos:
   - {fileID: 424604485847979654}
   - {fileID: 6070207949072608336}
@@ -262,6 +258,8 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
+  subWeaponObj: []
+  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &5697086903772788968
 AudioSource:
   m_ObjectHideFlags: 0
@@ -556,30 +554,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
   enemyType: 5
   movingType: 3
   bulletPattern: 0
+  getDropItemName: 
+  getMovingType: 
+  getBulletType: acc
+  getBulletName: EBS_A
   getPatternType: 
-  playerPos: {x: 0, y: 0, z: 0}
+  degreeZ: 0
+  movSpeed: 0
   moveVec: {x: 0, y: 0}
   moveDesVec: {x: 0, y: 0}
   moveExitVec: {x: 0, y: 0}
-  speed: 0
-  movSpeed: 0
-  bulletSpeed: 3
-  getBulletName: EBS_A
-  getMovingType: 
-  getDropItemName: 
-  getBulletType: acc
-  Health: 0
-  firstWaitTime: 1
-  waitTime: 2
-  shootLimit: 3
   fieldTimeLimit: 99
-  degreeZ: 0
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
+  bulletSpeed: 3
+  shootLimit: 3
+  firstWaitTime: 2
+  waitTime: 3
   BigShootPos:
   - {fileID: 7576026781086716187}
   - {fileID: 982074647887729366}
@@ -589,6 +583,8 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
+  subWeaponObj: []
+  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &7333817188473668282
 AudioSource:
   m_ObjectHideFlags: 0
@@ -976,30 +972,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
   enemyType: 5
   movingType: 3
   bulletPattern: 0
+  getDropItemName: 
+  getMovingType: 
+  getBulletType: acc
+  getBulletName: EBS_A
   getPatternType: 
-  playerPos: {x: 0, y: 0, z: 0}
+  degreeZ: 0
+  movSpeed: 0
   moveVec: {x: 0, y: 0}
   moveDesVec: {x: 0, y: 0}
   moveExitVec: {x: 0, y: 0}
-  speed: 0
-  movSpeed: 0
-  bulletSpeed: 3
-  getBulletName: EBS_A
-  getMovingType: 
-  getDropItemName: 
-  getBulletType: acc
-  Health: 0
-  firstWaitTime: 2.5
-  waitTime: 2
-  shootLimit: 3
   fieldTimeLimit: 99
-  degreeZ: 0
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
+  bulletSpeed: 3
+  shootLimit: 3
+  firstWaitTime: 3.5
+  waitTime: 3
   BigShootPos:
   - {fileID: 3450021943173161021}
   - {fileID: 8507564454220239996}
@@ -1009,6 +1001,8 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
+  subWeaponObj: []
+  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &3892087763388449954
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1365,30 +1359,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
   enemyType: 5
   movingType: 3
   bulletPattern: 0
+  getDropItemName: 
+  getMovingType: 
+  getBulletType: acc
+  getBulletName: EBS_A
   getPatternType: 
-  playerPos: {x: 0, y: 0, z: 0}
+  degreeZ: 0
+  movSpeed: 0
   moveVec: {x: 0, y: 0}
   moveDesVec: {x: 0, y: 0}
   moveExitVec: {x: 0, y: 0}
-  speed: 0
-  movSpeed: 0
-  bulletSpeed: 3
-  getBulletName: EBS_A
-  getMovingType: 
-  getDropItemName: 
-  getBulletType: acc
-  Health: 0
-  firstWaitTime: 5
-  waitTime: 2
-  shootLimit: 3
   fieldTimeLimit: 99
-  degreeZ: 0
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
+  bulletSpeed: 3
+  shootLimit: 3
+  firstWaitTime: 6
+  waitTime: 3
   BigShootPos:
   - {fileID: 4685744374301111121}
   - {fileID: 2639036988005194705}
@@ -1398,6 +1388,8 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
+  subWeaponObj: []
+  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &4569635178836519787
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1661,30 +1653,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
   enemyType: 5
   movingType: 3
   bulletPattern: 0
+  getDropItemName: 
+  getMovingType: 
+  getBulletType: acc
+  getBulletName: EBS_A
   getPatternType: 
-  playerPos: {x: 0, y: 0, z: 0}
+  degreeZ: 0
+  movSpeed: 0
   moveVec: {x: 0, y: 0}
   moveDesVec: {x: 0, y: 0}
   moveExitVec: {x: 0, y: 0}
-  speed: 0
-  movSpeed: 0
-  bulletSpeed: 3
-  getBulletName: EBS_A
-  getMovingType: 
-  getDropItemName: 
-  getBulletType: acc
-  Health: 0
-  firstWaitTime: 5.5
-  waitTime: 2
-  shootLimit: 3
   fieldTimeLimit: 99
-  degreeZ: 0
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
+  bulletSpeed: 3
+  shootLimit: 3
+  firstWaitTime: 6.5
+  waitTime: 3
   BigShootPos:
   - {fileID: 8964676494610434626}
   - {fileID: 8405927015177162841}
@@ -1694,6 +1682,8 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
+  subWeaponObj: []
+  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &2939321510508912344
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1957,30 +1947,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
   enemyType: 5
   movingType: 3
   bulletPattern: 0
+  getDropItemName: 
+  getMovingType: 
+  getBulletType: acc
+  getBulletName: EBS_A
   getPatternType: 
-  playerPos: {x: 0, y: 0, z: 0}
+  degreeZ: 0
+  movSpeed: 0
   moveVec: {x: 0, y: 0}
   moveDesVec: {x: 0, y: 0}
   moveExitVec: {x: 0, y: 0}
-  speed: 0
-  movSpeed: 0
-  bulletSpeed: 3
-  getBulletName: EBS_A
-  getMovingType: 
-  getDropItemName: 
-  getBulletType: acc
-  Health: 0
-  firstWaitTime: 1.5
-  waitTime: 2
-  shootLimit: 3
   fieldTimeLimit: 99
-  degreeZ: 0
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
+  bulletSpeed: 3
+  shootLimit: 3
+  firstWaitTime: 2.5
+  waitTime: 3
   BigShootPos:
   - {fileID: 1579752316372398202}
   - {fileID: 5937271636484998302}
@@ -1990,6 +1976,8 @@ MonoBehaviour:
   BossShootPos3: {fileID: 0}
   BossShootPos4: {fileID: 0}
   BossShootPos5: {fileID: 0}
+  subWeaponObj: []
+  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &2074524786813914736
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2161,7 +2149,6 @@ GameObject:
   - component: {fileID: 8783547716191000353}
   - component: {fileID: 6525872430450479185}
   - component: {fileID: 7675102144709479874}
-  - component: {fileID: 4135158768115527467}
   - component: {fileID: 7397632896966896550}
   m_Layer: 0
   m_Name: Enemy_BigB
@@ -2340,102 +2327,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!82 &4135158768115527467
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6819692951887069912}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &7397632896966896550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2450,28 +2341,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
   enemyType: 3
   movingType: 0
   bulletPattern: 0
+  getDropItemName: 
+  getMovingType: 
+  getBulletType: 
+  getBulletName: 
   getPatternType: 
-  playerPos: {x: 0, y: 0, z: 0}
+  degreeZ: 0
+  movSpeed: 0
   moveVec: {x: 0, y: 0}
   moveDesVec: {x: 0, y: 0}
   moveExitVec: {x: 0, y: 0}
-  speed: 0
-  movSpeed: 0
+  fieldTimeLimit: 0
   bulletSpeed: 0
-  getBulletName: 
-  getMovingType: 
-  getDropItemName: 
-  getBulletType: 
-  Health: 0
+  shootLimit: 0
   firstWaitTime: 0
   waitTime: 0
-  shootLimit: 0
-  fieldTimeLimit: 0
-  degreeZ: 0
+  BigShootPos: []
+  BossShootPos1: {fileID: 0}
+  BossShootPos2: {fileID: 0}
+  BossShootPos3: {fileID: 0}
+  BossShootPos4: {fileID: 0}
+  BossShootPos5: {fileID: 0}
   subWeaponObj:
   - {fileID: 5436252624711072711}
   - {fileID: 1408316554802195351}
@@ -2480,12 +2375,6 @@ MonoBehaviour:
   - {fileID: 4805585144833659751}
   - {fileID: 5167593514189835305}
   subWeaponOwner: {fileID: 0}
-  BigShootPos: []
-  BossShootPos1: {fileID: 0}
-  BossShootPos2: {fileID: 0}
-  BossShootPos3: {fileID: 0}
-  BossShootPos4: {fileID: 0}
-  BossShootPos5: {fileID: 0}
 --- !u!1 &7576026781086716187
 GameObject:
   m_ObjectHideFlags: 0

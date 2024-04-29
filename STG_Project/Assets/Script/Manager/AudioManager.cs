@@ -6,7 +6,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
 
-    public AudioClip[] audioClip;
+    public AudioClip[] audioClip; // 오디오 파일 모음
 
     private void Awake()
     {
@@ -21,6 +21,7 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    // 오디오 선택
     public AudioClip getAudioClip(string clipName)
     {
         switch (clipName)

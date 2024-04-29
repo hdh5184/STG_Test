@@ -12,63 +12,64 @@ using static LobbyManager;
 public class StageManager : MonoBehaviour
 {
     public static StageManager instance;
-    public PoolManager pool;    // 오브젝트 Pool
+
+    // 1. 매니저
+    public PoolManager pool;
     public AudioManager audioManager;
 
-    public GameObject InGameUI;
-
-    public TextMeshProUGUI scoreText, bossFieldLimitText;
-    public TextMeshProUGUI
-        Result_Score, Result_BossTime, Result_Remaining, Result_TotalScore;
-    public GameObject Back_Button;
-
-    public static List<GameObject> EnemyList;
-
-    public enum StageState { Lobby, Ready, Play, End, Pause }
-
-    public static StageState stageState = StageState.Lobby;
-
-    public List<SpawnLogic> spawnList;
-    public int spawnIndex;
-    public int spawnAmount;
-    public bool spawnEnd;
-
-    public float currentSpawnTime;
-    public float nextSpawnDelay;
-    
-    public GameObject debugObj;
-    public GameObject Ui_Stage;
+    // 2. UI
+    public Sprite[] backgroundSprite;
+    public SpriteRenderer background_sr;
     public GameObject background;
 
-    public Sprite[] backgroundSprite;
+    public TextMeshProUGUI scoreText, bossFieldLimitText;
+    public TextMeshProUGUI Result_Score, Result_BossTime, Result_Remaining, Result_TotalScore;
+    public GameObject InGameUI;
+    public GameObject Ui_Stage;
+    public GameObject playerRemain1, playerRemain2;
+    public GameObject Back_Button;
 
     public GameObject gameResultPanel;
     public GameObject gameOverPanel;
     public GameObject gamePausePanel;
     public GameObject gameQuitPanel;
 
-    public GameObject playerRemain1, playerRemain2;
+    public TextMeshProUGUI debug_StageTime;
 
-    public SpriteRenderer background_sr;
-    float background_offset = 0;
+    float ShowResultTime = 0;
+    int ShowResultCount = 0;
+    int ResultScore, BossTimeScore, RemainingScore;
 
+    // 3. Stage 속성
+    public static StageState stageState = StageState.Lobby;
+    public int getStageNum = 0;
+    public int getPlayerType;
+
+    public static int Score = 0;
+    float StageTime = 0;
+
+    // 4. 플레이어
     public GameObject player;
     public static Vector3 playerPos;
     public Vector3 playerMovingVec;
     public static int playerLevel = 1;
     public static int playerHealth = 2;
 
-    public static int Score = 0;
+    // 5. Enemy 관리
+    public static List<GameObject> EnemyList;
+    public List<SpawnLogic> spawnList;
 
-    public int getStageNum = 0;
-    public int getPlayerType;
+    public int spawnIndex;
+    public int spawnAmount;
+    public float currentSpawnTime;
+    public float nextSpawnDelay;
+    public bool spawnEnd;
 
     public float BossFieldLimitTime = 0;
     public static bool bossExist;
 
-    float ShowResultTime = 0;
-    int ShowResultCount = 0;
-    int ResultScore, BossTimeScore, RemainingScore;
+    // e. 속성 모음
+    public enum StageState { Lobby, Ready, Play, End, Pause }
 
     private void Awake()
     {
@@ -86,18 +87,24 @@ public class StageManager : MonoBehaviour
         */
     }
 
+    /// <summary> 스테이지 입장 </summary>
     private void OnEnable()
     {
         pool = PoolManager.instance;
         audioManager = AudioManager.instance;
-        Debug.Log("게임 시작");
         StageInit();
+        Debug.Log("게임 시작");
     }
 
+    /*************** 스테이지 매커니즘 ***************/
+
+    /// <summary> 스테이지 시작 </summary>
+    public void GameStart() => stageState = StageState.Play;
+
+    /// <summary> 스테이지 초기화 </summary>
     public void StageInit()
     {
         InGameUI.SetActive(true);
-
 
         getPlayerType = GameManager.instance.setPlayerUnit;
 
@@ -141,16 +148,10 @@ public class StageManager : MonoBehaviour
         background_sr = background.GetComponent<SpriteRenderer>();
         background_sr.sprite = backgroundSprite[getStageNum - 1];
 
-        /*
-        DebugTest debugtest = debugObj.GetComponent<DebugTest>();
-        debugtest.pool = pool;
-        */
-
         BossFieldLimitTime = 60;
         bossExist = false;
         scoreText.text = "0";
         bossFieldLimitText.text = "";
-
 
         ReadSpawnFile();
         SpawnEnemy();
@@ -158,8 +159,7 @@ public class StageManager : MonoBehaviour
         Invoke("GameStart", 2f);
     }
 
-    public void GameStart() => stageState = StageState.Play;
-
+    /// <summary> Stage 로직 </summary>
     void Update()
     {
         if (stageState == StageState.Pause) return;
@@ -169,7 +169,6 @@ public class StageManager : MonoBehaviour
 
         if (stageState == StageState.Play)
         {
-            // 플레이어 이동 벡터 및 위치 저장
             playerMovingVec = player.transform.position - playerPos;
             playerPos = player.transform.position;
 
@@ -190,7 +189,8 @@ public class StageManager : MonoBehaviour
             else
             {
                 bossFieldLimitText.text =
-                    $"{Mathf.FloorToInt(BossFieldLimitTime):D2}<size=96>.{(int)(BossFieldLimitTime * 100 % 100):D2}</size>";
+                    $"{Mathf.FloorToInt(BossFieldLimitTime):D2}<size=96>." +
+                    $"{(int)(BossFieldLimitTime * 100 % 100):D2}</size>";
             }
         }
 
@@ -201,8 +201,16 @@ public class StageManager : MonoBehaviour
             ShowResultTime += Time.deltaTime;
             ShowResult();
         }
+
+        StageTime += Time.deltaTime;
+
+        if (GameManager.instance.isDebug) DebugTest(true);
+        else DebugTest(false);
     }
 
+    /*************** Enemy 생성 매커니즘 ***************/
+
+    /// <summary> Enemy 생성 데이터 적용 </summary>
     void ReadSpawnFile()
     {
         spawnList.Clear();
@@ -230,27 +238,27 @@ public class StageManager : MonoBehaviour
             spawnData.spawnCode =       data_Dialog[i]["spawnCode"].ToString();
 
             spawnData.delay =           float.Parse(data_Dialog[i]["delay"].ToString());
-            spawnData.enemyType =       data_Dialog[i]["enemyType"].ToString();
+            spawnData.enemyType =                   data_Dialog[i]["enemyType"].ToString();
             spawnData.posX =            float.Parse(data_Dialog[i]["posX"].ToString());
             spawnData.posY =            float.Parse(data_Dialog[i]["posY"].ToString());
-            spawnData.dropItemName =    data_Dialog[i]["dropItemName"].ToString();
+            spawnData.dropItemName =                data_Dialog[i]["dropItemName"].ToString();
 
             spawnData.movX =            float.Parse(data_Dialog[i]["movX"].ToString());
             spawnData.movY =            float.Parse(data_Dialog[i]["movY"].ToString());
             spawnData.degreeZ =         float.Parse(data_Dialog[i]["degreeZ"].ToString());
             spawnData.movSpeed =        float.Parse(data_Dialog[i]["movSpeed"].ToString());
-            spawnData.movingType =      data_Dialog[i]["movingType"].ToString();
+            spawnData.movingType =                  data_Dialog[i]["movingType"].ToString();
             spawnData.movDesX =         float.Parse(data_Dialog[i]["movDesX"].ToString());
             spawnData.movDesY =         float.Parse(data_Dialog[i]["movDesY"].ToString());
             spawnData.movExitX =        float.Parse(data_Dialog[i]["movExitX"].ToString());
             spawnData.movExitY =        float.Parse(data_Dialog[i]["movExitY"].ToString());
             spawnData.fieldTimeLimit =  float.Parse(data_Dialog[i]["fieldTimeLimit"].ToString());
 
-            spawnData.bulletType =      data_Dialog[i]["bulletType"].ToString();
-            spawnData.bulletName =      data_Dialog[i]["bulletName"].ToString();
-            spawnData.patternType =     data_Dialog[i]["patternType"].ToString();
+            spawnData.bulletType =                  data_Dialog[i]["bulletType"].ToString();
+            spawnData.bulletName =                  data_Dialog[i]["bulletName"].ToString();
+            spawnData.patternType =                 data_Dialog[i]["patternType"].ToString();
             spawnData.bulletSpeed =     float.Parse(data_Dialog[i]["bulletSpeed"].ToString());
-            spawnData.shootLimit =      int.Parse(data_Dialog[i]["shootLimit"].ToString());
+            spawnData.shootLimit =      int.Parse  (data_Dialog[i]["shootLimit"].ToString());
             spawnData.firstWaitTime =   float.Parse(data_Dialog[i]["firstWaitTime"].ToString());
             spawnData.waitTime =        float.Parse(data_Dialog[i]["waitTime"].ToString());
 
@@ -260,6 +268,7 @@ public class StageManager : MonoBehaviour
         nextSpawnDelay = spawnList[0].delay;
     }
 
+    /// <summary> Boss 데이터 적용 </summary>
     public void BossInit(GameObject boss)
     {
         Enemy bossLogic = boss.GetComponent<Enemy>();
@@ -272,6 +281,7 @@ public class StageManager : MonoBehaviour
         {
             case 1: textFile = "BossLogic_A"; break;
             case 2: textFile = "BossLogic_B"; break;
+            case 3: textFile = "BossLogic_C"; break;
             default:
                 Debug.Log("스테이지 정보를 불러올 수 없습니다.");
                 textFile = null; break;
@@ -283,7 +293,7 @@ public class StageManager : MonoBehaviour
         {
             BossLogic bossLogicData = new BossLogic();
 
-            bossLogicData.BossLogicCode = data_Dialog[i]["BossLogicCode"].ToString();
+            bossLogicData.BossLogicCode =           data_Dialog[i]["BossLogicCode"].ToString();
 
             bossLogicData.delay =       float.Parse(data_Dialog[i]["delay"].ToString());
             bossLogicData.posX =        float.Parse(data_Dialog[i]["posX"].ToString());
@@ -293,23 +303,23 @@ public class StageManager : MonoBehaviour
             bossLogicData.movY =        float.Parse(data_Dialog[i]["movY"].ToString());
             bossLogicData.degreeZ =     float.Parse(data_Dialog[i]["degreeZ"].ToString());
             bossLogicData.movSpeed =    float.Parse(data_Dialog[i]["movSpeed"].ToString());
-            bossLogicData.movingType =  data_Dialog[i]["movingType"].ToString();
+            bossLogicData.movingType =              data_Dialog[i]["movingType"].ToString();
             bossLogicData.movDesX =     float.Parse(data_Dialog[i]["movDesX"].ToString());
             bossLogicData.movDesY =     float.Parse(data_Dialog[i]["movDesY"].ToString());
             bossLogicData.movExitX =    float.Parse(data_Dialog[i]["movExitX"].ToString());
             bossLogicData.movExitY =    float.Parse(data_Dialog[i]["movExitY"].ToString());
 
-            bossLogicData.shootPos1 =   data_Dialog[i]["pos1"].ToString();
-            bossLogicData.shootPos2 =   data_Dialog[i]["pos2"].ToString();
-            bossLogicData.shootPos3 =   data_Dialog[i]["pos3"].ToString();
-            bossLogicData.shootPos4 =   data_Dialog[i]["pos4"].ToString();
-            bossLogicData.shootPos5 =   data_Dialog[i]["pos5"].ToString();
+            bossLogicData.shootPos1 =               data_Dialog[i]["pos1"].ToString();
+            bossLogicData.shootPos2 =               data_Dialog[i]["pos2"].ToString();
+            bossLogicData.shootPos3 =               data_Dialog[i]["pos3"].ToString();
+            bossLogicData.shootPos4 =               data_Dialog[i]["pos4"].ToString();
+            bossLogicData.shootPos5 =               data_Dialog[i]["pos5"].ToString();
 
-            bossLogicData.bulletType =  data_Dialog[i]["bulletType"].ToString();
-            bossLogicData.bulletName =  data_Dialog[i]["bulletName"].ToString();
-            bossLogicData.patternType = data_Dialog[i]["patternType"].ToString();
+            bossLogicData.bulletType =              data_Dialog[i]["bulletType"].ToString();
+            bossLogicData.bulletName =              data_Dialog[i]["bulletName"].ToString();
+            bossLogicData.patternType =             data_Dialog[i]["patternType"].ToString();
             bossLogicData.bulletSpeed = float.Parse(data_Dialog[i]["bulletSpeed"].ToString());
-            bossLogicData.shootLimit =  int.Parse(data_Dialog[i]["shootLimit"].ToString());
+            bossLogicData.shootLimit =  int.Parse  (data_Dialog[i]["shootLimit"].ToString());
             bossLogicData.firstWaitTime = float.Parse(data_Dialog[i]["firstWaitTime"].ToString());
             bossLogicData.waitTime =    float.Parse(data_Dialog[i]["waitTime"].ToString());
 
@@ -323,6 +333,7 @@ public class StageManager : MonoBehaviour
         bossLogic.firstWaitTime = 1.5f;
     }
 
+    /// <summary> Enemy 생성 로직 </summary>
     void SpawnEnemy()
     {
         if (currentSpawnTime >= nextSpawnDelay)
@@ -350,13 +361,13 @@ public class StageManager : MonoBehaviour
                 spawnList[spawnIndex].movExitX, spawnList[spawnIndex].movExitY).normalized;
             enemyLogic.fieldTimeLimit = spawnList[spawnIndex].fieldTimeLimit;
 
-            enemyLogic.getBulletType = spawnList[spawnIndex].bulletType;
-            enemyLogic.getBulletName = spawnList[spawnIndex].bulletName;
+            enemyLogic.getBulletType =  spawnList[spawnIndex].bulletType;
+            enemyLogic.getBulletName =  spawnList[spawnIndex].bulletName;
             enemyLogic.getPatternType = spawnList[spawnIndex].patternType;
-            enemyLogic.bulletSpeed = spawnList[spawnIndex].bulletSpeed;
-            enemyLogic.shootLimit = spawnList[spawnIndex].shootLimit;
-            enemyLogic.firstWaitTime = spawnList[spawnIndex].firstWaitTime;
-            enemyLogic.waitTime = spawnList[spawnIndex].waitTime;
+            enemyLogic.bulletSpeed =    spawnList[spawnIndex].bulletSpeed;
+            enemyLogic.shootLimit =     spawnList[spawnIndex].shootLimit;
+            enemyLogic.firstWaitTime =  spawnList[spawnIndex].firstWaitTime;
+            enemyLogic.waitTime =       spawnList[spawnIndex].waitTime;
 
             spawnIndex++;
             if (spawnAmount == spawnIndex) spawnEnd = true;
@@ -370,10 +381,13 @@ public class StageManager : MonoBehaviour
                 BossInit(enemy);
                 bossExist = true;
             }
-            enemyLogic.Init();
+            enemyLogic.EnemyInit();
         }
     }
 
+    /*************** 게임 결과 ***************/
+
+    /// <summary> 게임 클리어 성공 </summary>
     public void GameClear()
     {
         spawnEnd = true;
@@ -381,11 +395,13 @@ public class StageManager : MonoBehaviour
         StartCoroutine("GameResult");
     }
 
+    /// <summary> 게임 클리어 실패 </summary>
     public void GameDefeat()
     {
         StartCoroutine("GameOver");
     }
 
+    /// <summary> 게임 결과 정산 </summary>
     public IEnumerator GameResult()
     {
         yield return new WaitForSeconds(5f);
@@ -399,6 +415,7 @@ public class StageManager : MonoBehaviour
         gameResultPanel.SetActive(true);
     }
 
+    /// <summary> 게임 결과 출력 </summary>
     public void ShowResult()
     {
         if (ShowResultTime >= 0.5f)
@@ -419,6 +436,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    /// <summary> 게임 오버 </summary>
     public IEnumerator GameOver()
     {
         yield return new WaitForSeconds(1.5f);
@@ -429,6 +447,7 @@ public class StageManager : MonoBehaviour
         gameOverPanel.SetActive(true);
     }
 
+    /// <summary> 게임 종료 - Stage 나가기 </summary>
     public void GameEnd()
     {
         LobbyManager.menuSelected = MenuSelected.Main;
@@ -440,6 +459,7 @@ public class StageManager : MonoBehaviour
         LobbyManager.instance.EndStage();
     }
 
+    /// <summary> 게임 일시정지 </summary>
     public void GamePause()
     {
         if (stageState == StageState.Ready || stageState == StageState.Play)
@@ -450,6 +470,7 @@ public class StageManager : MonoBehaviour
         }
     }
 
+    /// <summary> 게임 재실행 </summary>
     public void GameResume()
     {
         Time.timeScale = 1f;
@@ -457,9 +478,26 @@ public class StageManager : MonoBehaviour
         gamePausePanel.SetActive(false);
     }
 
+    /*************** 게임 종료 여부 선택 모음 ***************/
+
+    /// <summary> 게임 종료 여부 선택 </summary>
     public void GameQuitYN() { gamePausePanel.SetActive(false); gameQuitPanel.SetActive(true); }
 
     public void GameQuitN() { gamePausePanel.SetActive(true); gameQuitPanel.SetActive(false); }
     public void GameQuitY() { stageState = StageState.End; GameEnd(); }
 
+    /*************** 디버그 관리 ***************/
+
+    void DebugTest(bool isDebug)
+    {
+        if (isDebug)
+        {
+            debug_StageTime.gameObject.SetActive(true);
+            debug_StageTime.text = $"{StageTime:N2}";
+        }
+        else
+        {
+            debug_StageTime.gameObject.SetActive(false);
+        }
+    }
 }

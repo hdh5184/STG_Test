@@ -21,9 +21,10 @@ public class Player : MonoBehaviour
     public GameObject playerAudio;
 
     // 플레이어 이동 벡터
-    //Vector3 CurrentTouchPos;
     Vector3 PlayerMovingVec;
+    Vector3 CurrentTouchPos;
     Vector3 TouchPos;
+    bool isFirstTouch;
 
     float shootTime = 0, shootTime_Lv2 = 0;
 
@@ -87,17 +88,32 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            PlayerMovingVec = TouchPos - transform.position;
-            //PlayerMovingVec = (Vector3.Distance(TouchPos, transform.position) <= 1f) ?
-            //    PlayerMovingVec : PlayerMovingVec.normalized;
-            transform.position += (Vector3.Magnitude(PlayerMovingVec) < 7f * Time.deltaTime) ?
-                PlayerMovingVec.normalized * Vector3.Magnitude(PlayerMovingVec) : PlayerMovingVec.normalized * 7f * Time.deltaTime;
+            switch (GameManager.instance.setPlayerMoveType)
+            {
+                case 0:
+                    if (!isFirstTouch) { isFirstTouch = true; CurrentTouchPos = TouchPos;}
+                    PlayerMovingVec = TouchPos - CurrentTouchPos; break;
+                case 1:
+                    PlayerMovingVec = TouchPos - transform.position; break;
+            }
+
+            PlayerMovingVec =
+                        (Vector3.Magnitude(PlayerMovingVec) < 7f * Time.deltaTime) ?
+                        PlayerMovingVec.normalized * Vector3.Magnitude(PlayerMovingVec) :
+                        PlayerMovingVec.normalized * 7f * Time.deltaTime;
+            transform.position += PlayerMovingVec;
+            CurrentTouchPos += PlayerMovingVec;
         }
         else
         {
             // 방향키 입력에 따른 플레이어 이동
             PlayerMovingVec = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
             transform.Translate(PlayerMovingVec * Time.deltaTime * 4f);
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            isFirstTouch = false;
         }
 
         // 필드 외에 나가지 않도록 이동 범위 제한

@@ -45,7 +45,6 @@ GameObject:
   - component: {fileID: 1239070624769779951}
   - component: {fileID: 1142587840442052409}
   - component: {fileID: 6019164382706091475}
-  - component: {fileID: 3324541359832368474}
   - component: {fileID: 4075439688241961938}
   m_Layer: 0
   m_Name: BossB
@@ -258,102 +257,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!82 &3324541359832368474
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3717683457169632682}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 0.5
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &4075439688241961938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,33 +271,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
   enemyType: 4
   movingType: 0
   bulletPattern: 0
+  getDropItemName: 
+  getMovingType: 
+  getBulletType: 
+  getBulletName: 
   getPatternType: 
-  playerPos: {x: 0, y: 0, z: 0}
+  degreeZ: 0
+  movSpeed: 0
   moveVec: {x: 0, y: 0}
   moveDesVec: {x: 0, y: 0}
   moveExitVec: {x: 0, y: 0}
-  speed: 0
-  movSpeed: 0
+  fieldTimeLimit: 0
   bulletSpeed: 0
-  getBulletName: 
-  getMovingType: 
-  getDropItemName: 
-  getBulletType: 
-  Health: 0
+  shootLimit: 0
   firstWaitTime: 0
   waitTime: 0
-  shootLimit: 0
-  fieldTimeLimit: 0
-  degreeZ: 0
+  BigShootPos: []
   BossShootPos1: {fileID: 2443246571858007659}
   BossShootPos2: {fileID: 9180596769047720790}
   BossShootPos3: {fileID: 6448543432511846124}
   BossShootPos4: {fileID: 7686548130456317411}
   BossShootPos5: {fileID: 7118616514643256334}
+  subWeaponObj: []
+  subWeaponOwner: {fileID: 0}
 --- !u!1 &6448543432511846124
 GameObject:
   m_ObjectHideFlags: 0

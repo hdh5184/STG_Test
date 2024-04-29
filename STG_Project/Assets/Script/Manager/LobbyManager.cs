@@ -32,6 +32,7 @@ public class LobbyManager : MonoBehaviour
     public RectTransform LoadScene_EffectL;
     public RectTransform LoadScene_EffectR;
 
+    public TextMeshProUGUI Text_SetMoveType;
     public TextMeshProUGUI Text_Credit;
 
     public string setPlayerType;
@@ -66,12 +67,6 @@ public class LobbyManager : MonoBehaviour
 
         audio = GetComponent<AudioSource>();
 
-        //LoadScene_EffectL = GetComponent<RectTransform>();
-        //LoadScene_EffectR = GetComponent<RectTransform>();
-
-        //LoadScene_EffectL.transform.position = new Vector2(-5, 0);
-        //LoadScene_EffectR.transform.position = new Vector2(5, 0);
-
         LoadScene_EffectL.anchoredPosition = new Vector3(-1000, 0);
         LoadScene_EffectR.anchoredPosition = new Vector3(1000, 0);
 
@@ -82,7 +77,7 @@ public class LobbyManager : MonoBehaviour
     {
         menuSelected = MenuSelected.Main;
         selectPanelNow = selectMenuPanel;
-        SelectedPlayerUnit.sprite = PlayerUnitSprite[0];
+        //SelectedPlayerUnit.sprite = PlayerUnitSprite[0];
         selectMenuPanel.SetActive(true);
     }
 
