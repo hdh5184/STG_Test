@@ -36,16 +36,6 @@ public class GameManager : MonoBehaviour
         }
 
         Application.targetFrameRate = 60;
-        setPlayerUnit = PlayerPrefs.GetInt("PlayerType");
-        lobbyManager.SelectedPlayerUnit.sprite =
-            lobbyManager.PlayerUnitSprite[setPlayerUnit];
-
-        setPlayerMoveType = PlayerPrefs.GetInt("MoveType");
-        switch (setPlayerMoveType)
-        {
-            case 0: lobbyManager.Text_SetMoveType.text = "A"; break;
-            case 1: lobbyManager.Text_SetMoveType.text = "B"; break;
-        }
 
         MusicMasterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
         MusicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
@@ -77,6 +67,16 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         audioMixer.SetFloat("Master", Mathf.Log10(MusicMasterSlider.value) * 20);
+        setPlayerUnit = PlayerPrefs.GetInt("PlayerType");
+        lobbyManager.SelectedPlayerUnit.sprite =
+            lobbyManager.PlayerUnitSprite[setPlayerUnit];
+
+        setPlayerMoveType = PlayerPrefs.GetInt("MoveType");
+        switch (setPlayerMoveType)
+        {
+            case 0: lobbyManager.Text_SetMoveType.text = "A"; break;
+            case 1: lobbyManager.Text_SetMoveType.text = "B"; break;
+        }
     }
 
     private void Update()
