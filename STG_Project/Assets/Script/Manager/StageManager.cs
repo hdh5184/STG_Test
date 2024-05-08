@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using TMPro;
 using static LobbyManager;
+using UnityEngine.SocialPlatforms;
 
 public class StageManager : MonoBehaviour
 {
@@ -22,12 +23,12 @@ public class StageManager : MonoBehaviour
     public SpriteRenderer background_sr;
     public GameObject background;
 
-    public TextMeshProUGUI scoreText, bossFieldLimitText;
-    public TextMeshProUGUI Result_Score, Result_BossTime, Result_Remaining, Result_TotalScore;
+    public TextMeshProUGUI scoreText, bossFieldLimitText, remainText;
+    public TextMeshProUGUI[] ResultText_Clear, ResultText_Defeat;
     public GameObject InGameUI;
     public GameObject Ui_Stage;
-    public GameObject playerRemain1, playerRemain2;
-    public GameObject Back_Button;
+    public GameObject[] playerRemain_UI;
+    public GameObject Back_Button_Clear, Back_Button_Defeat;
 
     public GameObject gameResultPanel;
     public GameObject gameOverPanel;
@@ -37,7 +38,7 @@ public class StageManager : MonoBehaviour
     public TextMeshProUGUI debug_StageTime;
 
     float ShowResultTime = 0;
-    int ShowResultCount = 0;
+    int ShowResultCountLimit = 0, ShowResultCount = 0;
     int ResultScore, BossTimeScore, RemainingScore;
 
     // 3. Stage 속성
@@ -117,6 +118,8 @@ public class StageManager : MonoBehaviour
         playerLevel = 1;
         playerHealth = 2;
         Score = 0;
+        BossTimeScore = 0;
+        RemainingScore = 0;
 
         currentSpawnTime = 0;
         nextSpawnDelay = 0;
@@ -139,9 +142,12 @@ public class StageManager : MonoBehaviour
 
         Ui_Stage.SetActive(true);
         gameResultPanel.SetActive(false);
-        Result_Score.text = Result_BossTime.text =
-            Result_Remaining.text = Result_TotalScore.text = "";
-        Back_Button.SetActive(false);
+        foreach (var item in ResultText_Clear) item.text = "";
+        foreach (var item in ResultText_Defeat) item.text = "";
+        foreach (var item in playerRemain_UI) item.SetActive(false);
+        playerRemain_UI[GameManager.instance.setPlayerUnit].SetActive(true);
+        Back_Button_Clear.SetActive(false);
+        Back_Button_Defeat.SetActive(false);
         gamePausePanel.SetActive(false);
         gameOverPanel.SetActive(false);
 
@@ -152,6 +158,11 @@ public class StageManager : MonoBehaviour
         bossExist = false;
         scoreText.text = "0";
         bossFieldLimitText.text = "";
+        remainText.text = "2";
+
+        ShowResultCountLimit = 0;
+        ShowResultCount = 0;
+        
 
         ReadSpawnFile();
         SpawnEnemy();
@@ -163,9 +174,6 @@ public class StageManager : MonoBehaviour
     void Update()
     {
         if (stageState == StageState.Pause) return;
-
-        if (playerHealth == 1) playerRemain2.SetActive(false);
-        if (playerHealth == 0) playerRemain1.SetActive(false);
 
         if (stageState == StageState.Play)
         {
@@ -196,7 +204,7 @@ public class StageManager : MonoBehaviour
 
         scoreText.text = Score.ToString();
 
-        if (stageState == StageState.End && ShowResultCount < 5)
+        if (stageState == StageState.End && ShowResultCount < ShowResultCountLimit)
         {
             ShowResultTime += Time.deltaTime;
             ShowResult();
@@ -407,11 +415,15 @@ public class StageManager : MonoBehaviour
         yield return new WaitForSeconds(5f);
         InGameUI.SetActive(false);
 
-        BossTimeScore = (int)(BossFieldLimitTime * 100) * 10;
-        RemainingScore = playerHealth * 40000;
+        if (playerHealth >= 0)
+        {
+            BossTimeScore = (int)(BossFieldLimitTime * 100) * 10;
+            RemainingScore = playerHealth * 40000;
+        }
         ResultScore += Score + BossTimeScore + RemainingScore;
 
         stageState = StageState.End;
+        ShowResultCountLimit = 5;
         gameResultPanel.SetActive(true);
     }
 
@@ -420,17 +432,36 @@ public class StageManager : MonoBehaviour
     {
         if (ShowResultTime >= 0.5f)
         {
-            switch (ShowResultCount)
+            if (playerHealth < 0)
             {
-                case 0: Result_Score.text =
-                        $"<size=56>Score</size> {Score.ToString()}"; break;
-                case 1: Result_BossTime.text =
-                        $"<size=56>Boss-time</size> {BossTimeScore.ToString()}"; break;
-                case 2: Result_Remaining.text =
-                        $"<size=56>Remaining</size> {RemainingScore.ToString()}"; break;
-                case 3: Result_TotalScore.text =
-                        $"<size=64>Total Score</size>\n{ResultScore.ToString()}"; break;
-                case 4: Back_Button.SetActive(true); break;
+                switch (ShowResultCount)
+                {
+                    case 0:
+                        ResultText_Defeat[0].text = "Defeat"; break;
+                    case 1:
+                        ResultText_Defeat[1].text =
+                            $"<size=72>Total Score</size>\n{Score.ToString()}"; break;
+                    case 2: Back_Button_Defeat.SetActive(true); break;
+                }
+            }
+            else
+            {
+                switch (ShowResultCount)
+                {
+                    case 0:
+                        ResultText_Clear[0].text =
+                            $"<size=64>Score</size> {Score.ToString()}"; break;
+                    case 1:
+                        ResultText_Clear[1].text =
+                            $"<size=64>Boss-time</size> {BossTimeScore.ToString()}"; break;
+                    case 2:
+                        ResultText_Clear[2].text =
+                            $"<size=64>Remaining</size> {RemainingScore.ToString()}"; break;
+                    case 3:
+                        ResultText_Clear[3].text =
+                            $"<size=72>Total Score</size>\n{ResultScore.ToString()}"; break;
+                    case 4: Back_Button_Clear.SetActive(true); break;
+                }
             }
             ShowResultTime = 0; ShowResultCount++;
         }
@@ -443,7 +474,8 @@ public class StageManager : MonoBehaviour
         InGameUI.SetActive(false);
 
         stageState = StageState.End;
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
+        ShowResultCountLimit = 3;
         gameOverPanel.SetActive(true);
     }
 

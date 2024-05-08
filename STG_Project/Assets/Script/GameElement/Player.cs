@@ -234,7 +234,7 @@ public class Player : MonoBehaviour
 
             if (StageManager.playerHealth < 0)
             {
-                Debug.Log("게임 끝");
+                Debug.Log("게임 오버");
                 StageManager.instance.GameDefeat();
             }
             else Invoke("ReloadPlayer", 1.5f);
@@ -298,6 +298,7 @@ public class Player : MonoBehaviour
         transform.position = GameManager.instance.transform.position + new Vector3(0, -3f);
         playerGuardSprite.SetActive(true);
         gameObject.SetActive(true);
+        StageManager.instance.remainText.text = $"{StageManager.playerHealth.ToString()}";
 
         // 2.5초 후 무적 해제
         Invoke("Unguard", 2.5f);

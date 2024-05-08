@@ -99,7 +99,7 @@ spawnCode,delay,enemyType,posX,posY,dropItemName,movX,movY,degreeZ,movSpeed,movi
 314,0.25,EnemyS_D,1,4,,0,1,150,3,acc,0,0,0,0,99,str,EBS_A,str,4,1,0.6,5,39.25
 314,0.25,EnemyS_D,0,4,,0,1,150,3,acc,0,0,0,0,99,str,EBS_A,str,4,1,0.6,5,39.5
 314,0.25,EnemyS_D,3,4,,0,1,150,3,acc,0,0,0,0,99,str,EBS_A,str,4,1,0.6,5,39.75
-321,2.25,EnemyB_B,7,3,,0,-1,-70,1,str,0,0,0,0,99,0,0,0,0,0,0,0,42
+321,2.25,EnemyB_B,7,3,,0,-1,-70,1,str,0,0,0,0,99,str,EBS_A,str,0,0,99,99,42
 321,1,EnemyS_A,-1,4,pow,0,-1,0,2,str,0,0,0,0,99,str,EBS_A,str,4,1,1,2,43
 321,0.25,EnemyS_A,-1.5,4,,0,-1,0,2,str,0,0,0,0,99,str,EBS_A,str,4,1,1,2,43.25
 321,0,EnemyS_A,-0.5,4,,0,-1,0,2,str,0,0,0,0,99,str,EBS_A,str,4,1,1,2,43.25

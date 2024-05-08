@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static LobbyManager;
+using static StageManager;
 
 public class EnemyBullet : MonoBehaviour
 {
@@ -38,6 +39,7 @@ public class EnemyBullet : MonoBehaviour
     }
     void Update()
     {
+        if (StageManager.stageState == StageState.End) return;
         if (LobbyManager.menuSelected == MenuSelected.Main) gameObject.SetActive(false);
         fieldTime += Time.deltaTime;
         MovingBullet();

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Item;
 using static LobbyManager;
+using static StageManager;
 
 public class Item : MonoBehaviour
 {
@@ -49,6 +50,7 @@ public class Item : MonoBehaviour
 
     void Update()
     {
+        if (StageManager.stageState == StageState.End) return;
         if (LobbyManager.menuSelected == MenuSelected.Main)
             gameObject.SetActive(false);
         fieldTime += Time.deltaTime;
