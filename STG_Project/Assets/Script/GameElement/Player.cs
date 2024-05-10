@@ -227,7 +227,7 @@ public class Player : MonoBehaviour
     {
         if (playerState == PlayerState.Play && collision.CompareTag("EnemyBullet"))
         {
-            if (GameManager.instance.isDebug) return;
+            if (GameManager.isDebug_PlayerNonHit && GameManager.isDebug) return;
             Debug.Log("플레이어 파괴됨");
 
             DestroyPlayer();

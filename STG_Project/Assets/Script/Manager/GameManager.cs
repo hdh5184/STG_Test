@@ -20,8 +20,10 @@ public class GameManager : MonoBehaviour
     public int setPlayerUnit = 0;
     public int setPlayerMoveType = 0;
 
-    public bool isDebug = false;
-
+    public static bool isDebug = false;
+    public static bool isDebug_PlayerNonHit = false;
+    public static bool isDebug_StopSpawn = false;
+    public static bool isDebug_HideDebug = false;
 
     private void Awake()
     {
@@ -82,12 +84,24 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.P))
+            SetDebug("활성화", ref isDebug);
+
+        if (isDebug)
         {
-            isDebug = !isDebug;
-            Debug.Log($"디버그 모드 : {isDebug}");
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+                SetDebug("플레이어 무적", ref isDebug_PlayerNonHit);
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+                SetDebug("적 생성 정지", ref isDebug_StopSpawn);
+            if (Input.GetKeyDown(KeyCode.Equals))
+                SetDebug("숨기기", ref isDebug_HideDebug);
         }
     }
 
+    void SetDebug(string massage ,ref bool selectDebug)
+    {
+        selectDebug = !selectDebug;
+        Debug.Log($"디버그 - {massage} : {selectDebug}");
+    }
 
     public void SetMasterVolume(float volume)
     {

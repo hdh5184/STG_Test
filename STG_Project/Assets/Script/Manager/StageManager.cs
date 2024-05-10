@@ -180,7 +180,6 @@ public class StageManager : MonoBehaviour
             playerMovingVec = player.transform.position - playerPos;
             playerPos = player.transform.position;
 
-            currentSpawnTime += Time.deltaTime;
             if (!spawnEnd) SpawnEnemy();
         }
 
@@ -212,7 +211,8 @@ public class StageManager : MonoBehaviour
 
         StageTime += Time.deltaTime;
 
-        if (GameManager.instance.isDebug) DebugTest(true);
+        if (GameManager.isDebug && !GameManager.isDebug_HideDebug)
+            DebugTest(true);
         else DebugTest(false);
     }
 
@@ -232,6 +232,7 @@ public class StageManager : MonoBehaviour
             case 1: textFile = "Spawn_Stage1"; break;
             case 2: textFile = "Spawn_Stage2"; break;
             case 3: textFile = "Spawn_Stage3"; break;
+            case 4: textFile = "Spawn_Stage4"; break;
             default:
                 Debug.Log("스테이지 정보를 불러올 수 없습니다.");
                 textFile = null; break;
@@ -290,6 +291,7 @@ public class StageManager : MonoBehaviour
             case 1: textFile = "BossLogic_A"; break;
             case 2: textFile = "BossLogic_B"; break;
             case 3: textFile = "BossLogic_C"; break;
+            case 4: textFile = "BossLogic_D"; break;
             default:
                 Debug.Log("스테이지 정보를 불러올 수 없습니다.");
                 textFile = null; break;
@@ -344,6 +346,9 @@ public class StageManager : MonoBehaviour
     /// <summary> Enemy 생성 로직 </summary>
     void SpawnEnemy()
     {
+        if (GameManager.isDebug_StopSpawn && GameManager.isDebug) return;
+        currentSpawnTime += Time.deltaTime;
+
         if (currentSpawnTime >= nextSpawnDelay)
         {
             Debug.Log($"편대 {spawnList[spawnIndex].spawnCode}번");
@@ -418,7 +423,7 @@ public class StageManager : MonoBehaviour
         if (playerHealth >= 0)
         {
             BossTimeScore = (int)(BossFieldLimitTime * 100) * 10;
-            RemainingScore = playerHealth * 40000;
+            RemainingScore = playerHealth * 20000;
         }
         ResultScore += Score + BossTimeScore + RemainingScore;
 
@@ -526,6 +531,11 @@ public class StageManager : MonoBehaviour
         {
             debug_StageTime.gameObject.SetActive(true);
             debug_StageTime.text = $"{StageTime:N2}";
+
+            if (GameManager.isDebug_PlayerNonHit)
+                debug_StageTime.text += "\nNon-Hit";
+            if (GameManager.isDebug_StopSpawn)
+                debug_StageTime.text += "\nNon-Spawn";
         }
         else
         {
