@@ -48,6 +48,7 @@ public class StageManager : MonoBehaviour
 
     public static int Score = 0;
     float StageTime = 0;
+    bool isGameClear = false;
 
     // 4. 플레이어
     public GameObject player;
@@ -162,7 +163,8 @@ public class StageManager : MonoBehaviour
 
         ShowResultCountLimit = 0;
         ShowResultCount = 0;
-        
+
+        isGameClear = false;
 
         ReadSpawnFile();
         SpawnEnemy();
@@ -405,6 +407,7 @@ public class StageManager : MonoBehaviour
     {
         spawnEnd = true;
         bossExist = false;
+        isGameClear = true;
         StartCoroutine("GameResult");
     }
 
@@ -487,13 +490,16 @@ public class StageManager : MonoBehaviour
     /// <summary> 게임 종료 - Stage 나가기 </summary>
     public void GameEnd()
     {
-        LobbyManager.menuSelected = MenuSelected.Main;
+        //LobbyManager.menuSelected = MenuSelected.Main;
         gameResultPanel.SetActive(false);
         gameOverPanel.SetActive(false);
         player.SetActive(false);
         Time.timeScale = 1f;
 
-        LobbyManager.instance.EndStage();
+        if (isGameClear && getStageNum == 4)
+            LobbyManager.instance.EndStage(true);
+        else
+            LobbyManager.instance.EndStage();
     }
 
     /// <summary> 게임 일시정지 </summary>

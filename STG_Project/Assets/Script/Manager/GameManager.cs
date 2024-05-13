@@ -25,6 +25,8 @@ public class GameManager : MonoBehaviour
     public static bool isDebug_StopSpawn = false;
     public static bool isDebug_HideDebug = false;
 
+    public static bool isGamePlaying = false;
+
     private void Awake()
     {
         if (instance != this && instance != null)
@@ -79,6 +81,8 @@ public class GameManager : MonoBehaviour
             case 0: lobbyManager.Text_SetMoveType.text = "A"; break;
             case 1: lobbyManager.Text_SetMoveType.text = "B"; break;
         }
+
+        isGamePlaying = false;
     }
 
     private void Update()
@@ -94,6 +98,10 @@ public class GameManager : MonoBehaviour
                 SetDebug("적 생성 정지", ref isDebug_StopSpawn);
             if (Input.GetKeyDown(KeyCode.Equals))
                 SetDebug("숨기기", ref isDebug_HideDebug);
+            if (Input.GetKeyDown(KeyCode.LeftBracket) && isGamePlaying)
+                SetDebug("플레이어 레벨", -1);
+            if (Input.GetKeyDown(KeyCode.RightBracket) && isGamePlaying)
+                SetDebug("플레이어 레벨", 1);
         }
     }
 
@@ -101,6 +109,14 @@ public class GameManager : MonoBehaviour
     {
         selectDebug = !selectDebug;
         Debug.Log($"디버그 - {massage} : {selectDebug}");
+    }
+
+    void SetDebug(string massage, int levelCount)
+    {
+        StageManager.playerLevel =
+            Mathf.Clamp(StageManager.playerLevel + levelCount, 1, 4);
+        
+        Debug.Log($"디버그 - {massage} : {StageManager.playerLevel}");
     }
 
     public void SetMasterVolume(float volume)

@@ -26,14 +26,12 @@ public class LobbyManager : MonoBehaviour
     public Sprite[] PlayerUnitSprite;
     public Image SelectedPlayerUnit;
 
-    //public GameObject LoadScene_EffectL;
-    //public GameObject LoadScene_EffectR;
-
     public RectTransform LoadScene_EffectL;
     public RectTransform LoadScene_EffectR;
 
     public TextMeshProUGUI Text_SetMoveType;
-    public TextMeshProUGUI Text_Credit;
+    public TextMeshProUGUI Text_CreditTitle;
+    public RectTransform Text_Credits;
 
     public string setPlayerType;
     public int setStageNum;
@@ -77,7 +75,6 @@ public class LobbyManager : MonoBehaviour
     {
         menuSelected = MenuSelected.Main;
         selectPanelNow = selectMenuPanel;
-        //SelectedPlayerUnit.sprite = PlayerUnitSprite[0];
         selectMenuPanel.SetActive(true);
     }
 
@@ -99,7 +96,9 @@ public class LobbyManager : MonoBehaviour
             case MenuSelected.Main: selectPanelNow = selectMenuPanel; break;
             case MenuSelected.Stage: selectPanelNow = selectStagePanel; break;
             case MenuSelected.Setting: selectPanelNow = selectSettingPanel; break;
-            case MenuSelected.Credit: selectPanelNow = selectCreditPanel; break;
+            case MenuSelected.Credit:
+                selectPanelNow = selectCreditPanel;
+                Text_Credits.anchoredPosition = new Vector2(0, -700); break;
             case MenuSelected.Exit: selectPanelNow = selectExitPanel; break;
         }
 
@@ -113,6 +112,7 @@ public class LobbyManager : MonoBehaviour
     public void SelectStage4() => StartCoroutine("LoadScene", 4);
 
     public void EndStage() => StartCoroutine("LoadScene", 0);
+    public void EndStage(bool credit) => StartCoroutine("LoadScene", 5);
 
     public IEnumerator LoadScene(int StageNum)
     {
@@ -128,21 +128,34 @@ public class LobbyManager : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
-        if (setStageNum != 0)
+        if (setStageNum == 5)
+        {
+            GameTitle.SetActive(true);
+            menuSelected = MenuSelected.Credit;
+            selectPanelNow = selectCreditPanel;
+            selectCreditPanel.SetActive(true);
+        }
+        else if (setStageNum == 0)
+        {
+            GameTitle.SetActive(true);
+            LobbyInit();
+        }
+        else
         {
             GameTitle.SetActive(false);
             audio.clip = AudioManager.instance.getAudioClip("MoveDown");
             audio.Play();
         }
-        else {
-            GameTitle.SetActive(true);
-            LobbyInit();
-        }
 
         switch (StageNum)
         {
-            case 0: SceneManager.LoadScene("Lobby"); break;
-            default: SceneManager.LoadScene("InGame_Stage"); break;
+            case 0:
+            case 5:
+                SceneManager.LoadScene("Lobby");
+                GameManager.isGamePlaying = false; break;
+            default:
+                SceneManager.LoadScene("InGame_Stage");
+                GameManager.isGamePlaying = true; break;
         }
 
         StageManager.stageState = StageManager.StageState.Lobby;
@@ -152,7 +165,7 @@ public class LobbyManager : MonoBehaviour
     void Update()
     {
         LoadSceneEffect();
-        FontEffect();
+        if (menuSelected == MenuSelected.Credit) Credit();
     }
 
     void LoadSceneEffect()
@@ -183,20 +196,19 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    void FontEffect()
+    void Credit()
     {
-        if (menuSelected != MenuSelected.Credit) return;
+        if (FontEffectTrigger) FontColorGreen -= 2;
+        else FontColorGreen += 2;
 
-        FontEffectTime += Time.deltaTime;
-        
-        if (FontEffectTime >= 0.001f)
-        {
-            if (FontEffectTrigger) FontColorGreen -= 2;
-            else FontColorGreen += 2;
-            FontEffectTime = 0;
-        }
+        Vector2 creditPos = Text_Credits.anchoredPosition;
+        if (creditPos.y >= 5000)
+            Text_Credits.anchoredPosition = new Vector2(0, -700);
+        else
+            Text_Credits.anchoredPosition =
+                new Vector2(0, Text_Credits.anchoredPosition.y + Time.deltaTime * 150);
 
-        Text_Credit.color = new Color32(255, FontColorGreen, 0, 255);
+        Text_CreditTitle.color = new Color32(255, FontColorGreen, 0, 255);
 
         if (FontColorGreen == 128) FontEffectTrigger = false;
         if (FontColorGreen == 228) FontEffectTrigger = true;
