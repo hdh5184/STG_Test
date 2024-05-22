@@ -152,6 +152,7 @@ public class LobbyManager : MonoBehaviour
             case 0:
             case 5:
                 SceneManager.LoadScene("Lobby");
+                GameManager.instance.BackTitle();
                 GameManager.isGamePlaying = false; break;
             default:
                 SceneManager.LoadScene("InGame_Stage");

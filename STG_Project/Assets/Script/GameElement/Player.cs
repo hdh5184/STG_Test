@@ -59,6 +59,9 @@ public class Player : MonoBehaviour
         audioMain.clip = null; audioSub.clip = null;
         shootTime = 0; shootTime_Lv2 = 0;
         isShoot = false;
+
+        PlayerMovingVec = Vector3.zero;
+        isFirstTouch = false;
     }
 
     void Update()

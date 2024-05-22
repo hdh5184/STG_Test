@@ -41,31 +41,8 @@ public class GameManager : MonoBehaviour
 
         Application.targetFrameRate = 60;
 
-        MusicMasterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
+        MusicMasterSlider.value = PlayerPrefs.GetFloat("MasterVolume", 1f);
         MusicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
-    }
-
-    public void SetPlayerUnit()
-    {
-        setPlayerUnit++;
-        if (setPlayerUnit == 3) setPlayerUnit = 0;
-        PlayerPrefs.SetInt("PlayerType", setPlayerUnit);
-
-        lobbyManager.SelectedPlayerUnit.sprite =
-            lobbyManager.PlayerUnitSprite[setPlayerUnit];
-    }
-
-    public void SetPlayerMoveType()
-    {
-        setPlayerMoveType++;
-        if (setPlayerMoveType == 2) setPlayerMoveType = 0;
-        PlayerPrefs.SetInt("MoveType", setPlayerMoveType);
-
-        switch (setPlayerMoveType)
-        {
-            case 0: lobbyManager.Text_SetMoveType.text = "A"; break;
-            case 1: lobbyManager.Text_SetMoveType.text = "B"; break;
-        }
     }
 
     private void Start()
@@ -105,6 +82,60 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void BackTitle()
+    {
+        MusicMasterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
+        MusicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
+        switch (setPlayerMoveType)
+        {
+            case 0: lobbyManager.Text_SetMoveType.text = "A"; break;
+            case 1: lobbyManager.Text_SetMoveType.text = "B"; break;
+        }
+    }
+
+
+    public void SetPlayerUnit()
+    {
+        setPlayerUnit++;
+        if (setPlayerUnit == 3) setPlayerUnit = 0;
+        PlayerPrefs.SetInt("PlayerType", setPlayerUnit);
+
+        lobbyManager.SelectedPlayerUnit.sprite =
+            lobbyManager.PlayerUnitSprite[setPlayerUnit];
+    }
+
+    public void SetPlayerMoveType()
+    {
+        setPlayerMoveType++;
+        if (setPlayerMoveType == 2) setPlayerMoveType = 0;
+        PlayerPrefs.SetInt("MoveType", setPlayerMoveType);
+
+        switch (setPlayerMoveType)
+        {
+            case 0: lobbyManager.Text_SetMoveType.text = "A"; break;
+            case 1: lobbyManager.Text_SetMoveType.text = "B"; break;
+        }
+    }
+
+    public void SetPlayerMoveType(bool isLobby)
+    {
+        setPlayerMoveType++;
+        if (setPlayerMoveType == 2) setPlayerMoveType = 0;
+        PlayerPrefs.SetInt("MoveType", setPlayerMoveType);
+    }
+
+    public void SetMasterVolume(float volume)
+    {
+        audioMixer.SetFloat("Master", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("MasterVolume", MusicMasterSlider.value);
+    }
+
+    public void SetMasterVolume(float volume, float sliderValue)
+    {
+        audioMixer.SetFloat("Master", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("MasterVolume", sliderValue);
+    }
+
     void SetDebug(string massage ,ref bool selectDebug)
     {
         selectDebug = !selectDebug;
@@ -119,9 +150,4 @@ public class GameManager : MonoBehaviour
         Debug.Log($"디버그 - {massage} : {StageManager.playerLevel}");
     }
 
-    public void SetMasterVolume(float volume)
-    {
-        audioMixer.SetFloat("Master", Mathf.Log10(volume) * 20);
-        PlayerPrefs.SetFloat("MasterVolume", MusicMasterSlider.value);
-    }
 }

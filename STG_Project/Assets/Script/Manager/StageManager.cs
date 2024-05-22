@@ -4,7 +4,8 @@ using System.IO;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
+using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using TMPro;
 using static LobbyManager;
@@ -22,6 +23,10 @@ public class StageManager : MonoBehaviour
     public Sprite[] backgroundSprite;
     public SpriteRenderer background_sr;
     public GameObject background;
+
+    public Slider MusicMasterSlider;
+    public TextMeshProUGUI Text_SetMoveType;
+    public TextMeshProUGUI Text_SetMoveTypeDes;
 
     public TextMeshProUGUI scoreText, bossFieldLimitText, remainText;
     public TextMeshProUGUI[] ResultText_Clear, ResultText_Defeat;
@@ -94,6 +99,22 @@ public class StageManager : MonoBehaviour
     {
         pool = PoolManager.instance;
         audioManager = AudioManager.instance;
+
+        MusicMasterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
+        MusicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
+
+        switch (GameManager.instance.setPlayerMoveType)
+        {
+            case 0:
+                Text_SetMoveType.text = "A";
+                Text_SetMoveTypeDes.text = "<조작법 A - 드래그>\n터치한 곳을 기준으로\n기체가 움직입니다.";
+                break;
+            case 1:
+                Text_SetMoveType.text = "B";
+                Text_SetMoveTypeDes.text = "<조작법 B - 타겟팅>\n터치한 곳을 따라서\n기체가 움직입니다.";
+                break;
+        }
+
         StageInit();
         Debug.Log("게임 시작");
     }
@@ -521,13 +542,30 @@ public class StageManager : MonoBehaviour
         gamePausePanel.SetActive(false);
     }
 
-    /*************** 게임 종료 여부 선택 모음 ***************/
+    /*************** 게임 일시정지 모음 ***************/
 
     /// <summary> 게임 종료 여부 선택 </summary>
     public void GameQuitYN() { gamePausePanel.SetActive(false); gameQuitPanel.SetActive(true); }
 
     public void GameQuitN() { gamePausePanel.SetActive(true); gameQuitPanel.SetActive(false); }
     public void GameQuitY() { stageState = StageState.End; GameEnd(); }
+
+    public void SetMasterVolume(float volume) => GameManager.instance.SetMasterVolume(volume, volume);
+    public void setPlayerMoveType()
+    {
+        GameManager.instance.SetPlayerMoveType(false);
+        switch (GameManager.instance.setPlayerMoveType)
+        {
+            case 0:
+                Text_SetMoveType.text = "A";
+                Text_SetMoveTypeDes.text = "<조작법 A - 드래그>\n터치한 곳을 기준으로\n기체가 움직입니다.";
+                break;
+            case 1:
+                Text_SetMoveType.text = "B";
+                Text_SetMoveTypeDes.text = "<조작법 B - 타겟팅>\n터치한 곳을 따라서\n기체가 움직입니다.";
+                break;
+        }
+    }
 
     /*************** 디버그 관리 ***************/
 

@@ -1,18 +1,22 @@
 using System;
-//using GoogleMobileAds;
-//using GoogleMobileAds.Api;
+using GoogleMobileAds;
+using GoogleMobileAds.Api;
 using UnityEngine;
 
 public class GoogleMobileAdsDemoScript : MonoBehaviour
 {
-    /*
-    public void Start()
+    public void Awake()
     {
         // Initialize the Google Mobile Ads SDK.
         MobileAds.Initialize((InitializationStatus initStatus) =>
         {
             // This callback is called once the MobileAds SDK is initialized.
         });
+    }
+
+    private void Start()
+    {
+        LoadAd();
     }
 
 
@@ -56,11 +60,11 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
         }
 
         // create our request used to load the ad.
-        var adRequest = new AdRequest();
+        AdRequest request = new AdRequest.Builder().Build();
 
         // send the request to load the ad.
         Debug.Log("Loading banner ad.");
-        _bannerView.LoadAd(adRequest);
+        _bannerView.LoadAd(request);
     }
 
     /// <summary>
@@ -121,5 +125,4 @@ public class GoogleMobileAdsDemoScript : MonoBehaviour
             _bannerView = null;
         }
     }
-    */
 }
