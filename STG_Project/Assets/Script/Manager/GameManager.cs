@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public LobbyManager lobbyManager;
     public AudioManager audioManager;
 
-    [SerializeField] private AudioMixer audioMixer;
+    public AudioMixer audioMixer;
     [SerializeField] private Slider MusicMasterSlider;
 
     public int setPlayerUnit = 0;
@@ -130,11 +130,15 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetFloat("MasterVolume", MusicMasterSlider.value);
     }
 
+    
     public void SetMasterVolume(float volume, float sliderValue)
     {
         audioMixer.SetFloat("Master", Mathf.Log10(volume) * 20);
         PlayerPrefs.SetFloat("MasterVolume", sliderValue);
+
+        Debug.Log($"MusicMasterSlider.value : {PlayerPrefs.GetFloat("MasterVolume", 1f)}");
     }
+
 
     void SetDebug(string massage ,ref bool selectDebug)
     {

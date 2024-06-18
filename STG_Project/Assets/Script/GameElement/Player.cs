@@ -276,6 +276,8 @@ public class Player : MonoBehaviour
 
         gameObject.SetActive(false);
 
+        isFirstTouch = false;
+
         // 폭발 연출 생성
         GameObject Explosion = pool.MakeObject("ExplodeA");
         Explosion.transform.position = transform.position;

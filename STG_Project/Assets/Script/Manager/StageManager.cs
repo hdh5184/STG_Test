@@ -550,7 +550,12 @@ public class StageManager : MonoBehaviour
     public void GameQuitN() { gamePausePanel.SetActive(true); gameQuitPanel.SetActive(false); }
     public void GameQuitY() { stageState = StageState.End; GameEnd(); }
 
-    public void SetMasterVolume(float volume) => GameManager.instance.SetMasterVolume(volume, volume);
+    public void SetMasterVolume(float volume)
+    {
+        GameManager.instance.audioMixer.SetFloat("Master", Mathf.Log10(volume) * 20);
+        PlayerPrefs.SetFloat("MasterVolume", MusicMasterSlider.value);
+    }
+
     public void setPlayerMoveType()
     {
         GameManager.instance.SetPlayerMoveType(false);
