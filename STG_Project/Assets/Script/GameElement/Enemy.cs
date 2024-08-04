@@ -182,6 +182,31 @@ public class Enemy : MonoBehaviour
         ExitCompare();
     }
 
+    public void SetEnemyData(SpawnLogic spawnData)
+    {
+        pool = StageManager.instance.pool;
+        getDropItemName = spawnData.dropItemName;
+
+        moveVec = new Vector2(
+            spawnData.movX, spawnData.movY).normalized;
+        degreeZ = spawnData.degreeZ;
+        movSpeed = spawnData.movSpeed;
+        getMovingType = spawnData.movingType;
+        moveDesVec = new Vector2(
+            spawnData.movDesX, spawnData.movDesY);
+        moveExitVec = new Vector2(
+            spawnData.movExitX, spawnData.movExitY).normalized;
+        fieldTimeLimit = spawnData.fieldTimeLimit;
+
+        getBulletType = spawnData.bulletType;
+        getBulletName = spawnData.bulletName;
+        getPatternType = spawnData.patternType;
+        bulletSpeed = spawnData.bulletSpeed;
+        shootLimit = spawnData.shootLimit;
+        firstWaitTime = spawnData.firstWaitTime;
+        waitTime = spawnData.waitTime;
+    }
+
     /// <summary> 공격 패턴 설정 </summary>
     void SelectPattern(GameObject shootPos, int pos)
     {
@@ -540,14 +565,10 @@ public class Enemy : MonoBehaviour
     {
         if (enemyState == EnemyState.Dead) return;
 
-        switch (collision.tag)
+        if (collision.tag == "PlayerBullet")
         {
-            case "PlayerBullet_Lv1":        Health -= 3; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_Lv2":        Health -= 4; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_Lv3":        Health -= 5; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_A":    Health -= 8; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_B":    Health -= 4; collision.gameObject.SetActive(false); break;
-            case "PlayerBullet_LvMAX_C":    Health -= 5; collision.gameObject.SetActive(false); break;
+            Health -= collision.GetComponent<PlayerBullet>().power;
+            collision.gameObject.SetActive(false);
         }
 
         if (Health <= 0)

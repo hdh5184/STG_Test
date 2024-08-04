@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -5600677712229299446}
   m_Layer: 0
   m_Name: PA_Bullet_LvMAX
-  m_TagString: PlayerBullet_LvMAX_A
+  m_TagString: PlayerBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -123,6 +123,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetEnemy: {fileID: 0}
   PBType: 0
+  PBLevel: 3
+  power: 0
 --- !u!58 &663496048503812249
 CircleCollider2D:
   m_ObjectHideFlags: 0

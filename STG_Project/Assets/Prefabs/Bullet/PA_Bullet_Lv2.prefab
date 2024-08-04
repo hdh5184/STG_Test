@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7912008484875020295}
   m_Layer: 0
   m_Name: PA_Bullet_Lv2
-  m_TagString: PlayerBullet_Lv2
+  m_TagString: PlayerBullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85,6 +85,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetEnemy: {fileID: 0}
   PBType: 0
+  PBLevel: 1
+  power: 0
 --- !u!210 &7912008484875020295
 SortingGroup:
   m_ObjectHideFlags: 0

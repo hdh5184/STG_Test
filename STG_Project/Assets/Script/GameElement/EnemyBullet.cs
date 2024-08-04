@@ -39,6 +39,7 @@ public class EnemyBullet : MonoBehaviour
     }
     void Update()
     {
+        if (StageManager.stageState == StageState.Pause) return;
         if (StageManager.stageState == StageState.End) return;
         if (LobbyManager.menuSelected == MenuSelected.Main) gameObject.SetActive(false);
         fieldTime += Time.deltaTime;

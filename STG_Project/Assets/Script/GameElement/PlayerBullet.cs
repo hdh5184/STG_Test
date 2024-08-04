@@ -6,14 +6,21 @@ public class PlayerBullet : MonoBehaviour
 {
     public GameObject targetEnemy = null;
 
-    public PlayerBulletType PBType;
+    public PBulletType PBType;
+    public PBulletLv PBLevel;
 
     Vector3 ShootVec = Vector2.up;
+    Vector2 MoveVec;
 
     float degreeZ;
     float fieldTime = 0f;
+    public int power = 0;
 
-    public enum PlayerBulletType { Bullet, Accel, Homing }
+    delegate void Move_Set();
+    Move_Set Move;
+
+    public enum PBulletLv { Lv1, Lv2, Lv3, LvMAX_A, LvMAX_B, LvMAX_C }
+    public enum PBulletType { Bullet, Accel, Homing }
 
     private void OnEnable() => Init();
 
@@ -24,6 +31,32 @@ public class PlayerBullet : MonoBehaviour
         degreeZ = 0f;
         fieldTime = 0f;
 
+        switch (PBLevel)
+        {
+            case PBulletLv.Lv1: power = 3; break;
+            case PBulletLv.Lv2: power = 4; break;
+            case PBulletLv.Lv3: power = 5; break;
+            case PBulletLv.LvMAX_A: power = 8; break;
+            case PBulletLv.LvMAX_B: power = 4; break;
+            case PBulletLv.LvMAX_C: power = 5; break;
+        }
+
+        switch (PBType)
+        {
+            case PBulletType.Bullet:
+                MoveVec = Vector2.up * 12f;
+                Move = Move_Bullet;
+                break;
+            case PBulletType.Accel:
+                MoveVec = Vector2.up * 15f;
+                Move = Move_Accel;
+                break;
+            case PBulletType.Homing:
+                MoveVec = Vector2.up * 8f;
+                Move = Move_Homing;
+                break;
+        }
+
         transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
@@ -31,19 +64,23 @@ public class PlayerBullet : MonoBehaviour
     {
         fieldTime += Time.deltaTime;
 
+        /*
         switch (PBType)
         {
-            case PlayerBulletType.Bullet:   Move_Bullet(); break;
-            case PlayerBulletType.Accel:    Move_Accel(); break;
-            case PlayerBulletType.Homing:   Move_Homing(); break;
+            case PBulletType.Bullet:   Move_Bullet(); break;
+            case PBulletType.Accel:    Move_Accel(); break;
+            case PBulletType.Homing:   Move_Homing(); break;
         }
+        */
+
+        Move();
 
         if (transform.position.y > GameManager.instance.transform.position.y + 8f)
             gameObject.SetActive(false);
     }
 
-    void Move_Bullet() => transform.Translate(Vector2.up * 12f * Time.deltaTime);
-    void Move_Accel() => transform.Translate(Vector2.up * 15f * Time.deltaTime * fieldTime);
+    void Move_Bullet() => transform.Translate(MoveVec * Time.deltaTime);
+    void Move_Accel() => transform.Translate(MoveVec * Time.deltaTime * fieldTime);
 
     void Move_Homing()
     {
@@ -54,7 +91,7 @@ public class PlayerBullet : MonoBehaviour
             if (targetEnemy.gameObject.activeSelf == false) targetEnemy = null;
             else Homing();
         }
-        transform.Translate(Vector2.up * 8f * Time.deltaTime);
+        transform.Translate(MoveVec * Time.deltaTime);
     }
 
     void Homing()

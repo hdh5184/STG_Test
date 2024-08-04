@@ -1,15 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
-using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
 using TMPro;
-using static LobbyManager;
-using UnityEngine.SocialPlatforms;
 
 public class StageManager : MonoBehaviour
 {
@@ -55,6 +48,9 @@ public class StageManager : MonoBehaviour
     float StageTime = 0;
     bool isGameClear = false;
 
+    string StageDataName;
+    string StageBossDataName;
+
     // 4. 플레이어
     public GameObject player;
     public static Vector3 playerPos;
@@ -78,31 +74,119 @@ public class StageManager : MonoBehaviour
     // e. 속성 모음
     public enum StageState { Lobby, Ready, Play, End, Pause }
 
-    private void Awake()
-    {
-        instance = this;
-        /*
-        if (instance != this && instance != null)
-        {
-            Destroy(gameObject); return;
-        }
-        else
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        */
-    }
+
+
+
+
+    /*************** 게임 루프 ***************/
+
+    private void Awake() => instance = this;
 
     /// <summary> 스테이지 입장 </summary>
     private void OnEnable()
     {
+        // 1. Load Manager
         pool = PoolManager.instance;
         audioManager = AudioManager.instance;
 
-        MusicMasterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
-        MusicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
+        // 2. Init
+        StageInit();
+        UI_Init();
+        PlayerInit();
 
+        // 3. Set Data
+        SetStageDataName();
+        SetSpawnData();
+
+        // 4. Starting
+        Invoke("GameStart", 2f);
+        Debug.Log("게임 시작");
+    }
+
+    /// <summary> Stage 로직 </summary>
+    void Update()
+    {
+        if (stageState == StageState.Pause) return;
+
+        Timing();
+
+        switch (stageState)
+        {
+            case StageState.Play:
+                SetPMovingVec();
+                SpawnEnemy();
+
+                if (bossExist)
+                ShowBossState();
+
+                scoreText.text = Score.ToString();
+                break;
+
+            case StageState.End:
+                ShowResult();
+                break;
+        }
+
+        if (GameManager.isDebug && !GameManager.isDebug_HideDebug)
+            DebugTest(true);
+        else DebugTest(false);
+    }
+
+
+
+
+
+    /*************** 스테이지 초기화 매커니즘 ***************/
+
+    /// <summary> 스테이지 시작 </summary>
+    public void GameStart() => stageState = StageState.Play;
+
+    /// <summary> 스테이지 초기화 </summary>
+    public void StageInit()
+    {
+        // 1. List Data
+        EnemyList = new List<GameObject>();
+        spawnList = new List<SpawnLogic>();
+
+        // 2. Stage Data
+        stageState = StageState.Ready;
+        getStageNum = LobbyManager.instance.setStageNum;
+
+        // 2-1. Player
+        playerLevel = 1;
+        playerHealth = 2;
+
+        // 2-2. Score
+        Score = 0;
+        BossTimeScore = 0;
+        RemainingScore = 0;
+
+        // 2-3. Time
+        currentSpawnTime = 0;
+        nextSpawnDelay = 0;
+        BossFieldLimitTime = 60;
+
+        // 2-4. Sub Status
+        bossExist = false;
+        isGameClear = false;
+    }
+
+    /// <summary> UI 초기화 </summary>
+    void UI_Init()
+    {
+        // 1. UI
+        InGameUI.SetActive(true);
+
+        Ui_Stage.SetActive(true);
+        gameResultPanel.SetActive(false);
+        foreach (var item in playerRemain_UI) item.SetActive(false);
+        playerRemain_UI[GameManager.instance.setPlayerUnit].SetActive(true);
+        Back_Button_Clear.SetActive(false);
+        Back_Button_Defeat.SetActive(false);
+        gamePausePanel.SetActive(false);
+        gameOverPanel.SetActive(false);
+
+        // 2. Text
         switch (GameManager.instance.setPlayerMoveType)
         {
             case 0:
@@ -115,313 +199,200 @@ public class StageManager : MonoBehaviour
                 break;
         }
 
-        StageInit();
-        Debug.Log("게임 시작");
-    }
-
-    /*************** 스테이지 매커니즘 ***************/
-
-    /// <summary> 스테이지 시작 </summary>
-    public void GameStart() => stageState = StageState.Play;
-
-    /// <summary> 스테이지 초기화 </summary>
-    public void StageInit()
-    {
-        InGameUI.SetActive(true);
-
-        getPlayerType = GameManager.instance.setPlayerUnit;
-
-        getStageNum = LobbyManager.instance.setStageNum;
-        stageState = StageState.Ready;
-
-        EnemyList = new List<GameObject>();
-        spawnList = new List<SpawnLogic>();
-
-        playerLevel = 1;
-        playerHealth = 2;
-        Score = 0;
-        BossTimeScore = 0;
-        RemainingScore = 0;
-
-        currentSpawnTime = 0;
-        nextSpawnDelay = 0;
-
-        if (player != null) player.SetActive(false);
-
-        switch (getPlayerType)
-        {
-            case 0:   player = pool.MakeObject("Player_A"); break;
-            case 1:   player = pool.MakeObject("Player_B"); break;
-            case 2:   player = pool.MakeObject("Player_C"); break;
-        }
-
-        player.GetComponent<Player>().pool = pool;
-        player.GetComponent<Player>().audioManager = audioManager;
-        player.GetComponent<Player>().stageManager = instance;
-        player.GetComponent<Player>().PlayerInit();
-        player.transform.position = new Vector2(0, -3);
-        playerPos = player.transform.position;
-
-        Ui_Stage.SetActive(true);
-        gameResultPanel.SetActive(false);
         foreach (var item in ResultText_Clear) item.text = "";
         foreach (var item in ResultText_Defeat) item.text = "";
-        foreach (var item in playerRemain_UI) item.SetActive(false);
-        playerRemain_UI[GameManager.instance.setPlayerUnit].SetActive(true);
-        Back_Button_Clear.SetActive(false);
-        Back_Button_Defeat.SetActive(false);
-        gamePausePanel.SetActive(false);
-        gameOverPanel.SetActive(false);
+        remainText.text = "2";
+        scoreText.text = "0";
+        bossFieldLimitText.text = "";
 
+        // 3. Background
         background_sr = background.GetComponent<SpriteRenderer>();
         background_sr.sprite = backgroundSprite[getStageNum - 1];
 
-        BossFieldLimitTime = 60;
-        bossExist = false;
-        scoreText.text = "0";
-        bossFieldLimitText.text = "";
-        remainText.text = "2";
+        // 4. Sound
+        MusicMasterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
+        MusicMasterSlider.onValueChanged.AddListener(SetMasterVolume);
 
+        // 5. var
         ShowResultCountLimit = 0;
         ShowResultCount = 0;
-
-        isGameClear = false;
-
-        ReadSpawnFile();
-        SpawnEnemy();
-
-        Invoke("GameStart", 2f);
     }
 
-    /// <summary> Stage 로직 </summary>
-    void Update()
+    /// <summary> Player 초기화 </summary>
+    void PlayerInit()
     {
-        if (stageState == StageState.Pause) return;
+        // Player 완전 비활성화
+        if (player != null) player.SetActive(false);
 
-        if (stageState == StageState.Play)
+        // Player 타입 가져오기
+        getPlayerType = GameManager.instance.setPlayerUnit;
+
+        switch (getPlayerType)
         {
-            playerMovingVec = player.transform.position - playerPos;
-            playerPos = player.transform.position;
-
-            if (!spawnEnd) SpawnEnemy();
+            case 0: player = pool.MakeObject("Player_A"); break;
+            case 1: player = pool.MakeObject("Player_B"); break;
+            case 2: player = pool.MakeObject("Player_C"); break;
         }
 
-        if (bossExist)
-        {
-            BossFieldLimitTime -= Time.deltaTime;
-            if (BossFieldLimitTime <= 0)
-            {
-                BossFieldLimitTime = 0;
-                bossExist = false;
-                bossFieldLimitText.text =
-                $"0<size=96>.00</size>";
-            }
-            else
-            {
-                bossFieldLimitText.text =
-                    $"{Mathf.FloorToInt(BossFieldLimitTime):D2}<size=96>." +
-                    $"{(int)(BossFieldLimitTime * 100 % 100):D2}</size>";
-            }
-        }
+        // Player에 필요한 매니저 연결 및 초기화
+        Player PComponent = player.GetComponent<Player>();
+        PComponent.pool = pool;
+        PComponent.audioManager = audioManager;
+        PComponent.stageManager = instance;
+        PComponent.PlayerInit();
 
-        scoreText.text = Score.ToString();
-
-        if (stageState == StageState.End && ShowResultCount < ShowResultCountLimit)
-        {
-            ShowResultTime += Time.deltaTime;
-            ShowResult();
-        }
-
-        StageTime += Time.deltaTime;
-
-        if (GameManager.isDebug && !GameManager.isDebug_HideDebug)
-            DebugTest(true);
-        else DebugTest(false);
+        player.transform.position = new Vector2(0, -3);
+        playerPos = player.transform.position;
     }
 
-    /*************** Enemy 생성 매커니즘 ***************/
-
-    /// <summary> Enemy 생성 데이터 적용 </summary>
-    void ReadSpawnFile()
+    /// <summary> 스테이지 데이터 파일 불러오기 </summary>
+    void SetStageDataName()
     {
-        spawnList.Clear();
-        spawnIndex = 0;
-        spawnEnd = false;
-
-        string textFile;
-
+        // 스테이지에 따른 파일 이름 설정
         switch (getStageNum)
         {
-            case 1: textFile = "Spawn_Stage1"; break;
-            case 2: textFile = "Spawn_Stage2"; break;
-            case 3: textFile = "Spawn_Stage3"; break;
-            case 4: textFile = "Spawn_Stage4"; break;
+            case 1:
+                StageDataName = "Spawn_Stage1";
+                StageBossDataName = "BossLogic_A"; break;
+            case 2:
+                StageDataName = "Spawn_Stage2";
+                StageBossDataName = "BossLogic_B"; break;
+            case 3:
+                StageDataName = "Spawn_Stage3";
+                StageBossDataName = "BossLogic_C"; break;
+            case 4:
+                StageDataName = "Spawn_Stage4";
+                StageBossDataName = "BossLogic_D"; break;
             default:
                 Debug.Log("스테이지 정보를 불러올 수 없습니다.");
-                textFile = null; break;
+                StageDataName = null;
+                StageBossDataName = null; break;
         }
+    }
 
-        List<Dictionary<string, object>> data_Dialog = CSVReader.Read(textFile);
+    /// <summary> Enemy 생성 데이터 적용 </summary>
+    void SetSpawnData()
+    {
+        // Enemy 생성 데이터 적용
+        SpawnLogic.SetSpawnLogicData(StageDataName, spawnList);
 
-        for (int i = 0; i < data_Dialog.Count; i++)
-        {
-            SpawnLogic spawnData = new SpawnLogic();
-
-            spawnData.spawnCode =       data_Dialog[i]["spawnCode"].ToString();
-
-            spawnData.delay =           float.Parse(data_Dialog[i]["delay"].ToString());
-            spawnData.enemyType =                   data_Dialog[i]["enemyType"].ToString();
-            spawnData.posX =            float.Parse(data_Dialog[i]["posX"].ToString());
-            spawnData.posY =            float.Parse(data_Dialog[i]["posY"].ToString());
-            spawnData.dropItemName =                data_Dialog[i]["dropItemName"].ToString();
-
-            spawnData.movX =            float.Parse(data_Dialog[i]["movX"].ToString());
-            spawnData.movY =            float.Parse(data_Dialog[i]["movY"].ToString());
-            spawnData.degreeZ =         float.Parse(data_Dialog[i]["degreeZ"].ToString());
-            spawnData.movSpeed =        float.Parse(data_Dialog[i]["movSpeed"].ToString());
-            spawnData.movingType =                  data_Dialog[i]["movingType"].ToString();
-            spawnData.movDesX =         float.Parse(data_Dialog[i]["movDesX"].ToString());
-            spawnData.movDesY =         float.Parse(data_Dialog[i]["movDesY"].ToString());
-            spawnData.movExitX =        float.Parse(data_Dialog[i]["movExitX"].ToString());
-            spawnData.movExitY =        float.Parse(data_Dialog[i]["movExitY"].ToString());
-            spawnData.fieldTimeLimit =  float.Parse(data_Dialog[i]["fieldTimeLimit"].ToString());
-
-            spawnData.bulletType =                  data_Dialog[i]["bulletType"].ToString();
-            spawnData.bulletName =                  data_Dialog[i]["bulletName"].ToString();
-            spawnData.patternType =                 data_Dialog[i]["patternType"].ToString();
-            spawnData.bulletSpeed =     float.Parse(data_Dialog[i]["bulletSpeed"].ToString());
-            spawnData.shootLimit =      int.Parse  (data_Dialog[i]["shootLimit"].ToString());
-            spawnData.firstWaitTime =   float.Parse(data_Dialog[i]["firstWaitTime"].ToString());
-            spawnData.waitTime =        float.Parse(data_Dialog[i]["waitTime"].ToString());
-
-            spawnList.Add(spawnData);
-        }
+        // Enemy 생성 관련 변수 초기화
+        spawnIndex = 0;
+        spawnEnd = false;
         spawnAmount = spawnList.Count;
         nextSpawnDelay = spawnList[0].delay;
     }
 
+
+
+
+
+    /*************** Stage 요소 관련 매커니즘 ***************/
+
+    /// <summary> 시간 측정 </summary>
+    void Timing()
+    {
+        // 스테이지 진행 시간
+        StageTime += Time.deltaTime;
+
+        // Enemy 생성 시간
+        if (stageState == StageState.Play & !spawnEnd)
+            currentSpawnTime += Time.deltaTime;
+
+        // Boss 잔여 시간
+        if (bossExist)
+            BossFieldLimitTime -= Time.deltaTime;
+
+        // 결과 출력 관련 시간
+        if (stageState == StageState.End && ShowResultCount < ShowResultCountLimit)
+            ShowResultTime += Time.deltaTime;
+    }
+
+    /// <summary> Player 이동 방향 저장 </summary>
+    void SetPMovingVec()
+    {
+        // Player 이동 방향 및 위치 갱신
+        playerMovingVec = player.transform.position - playerPos;
+        playerPos = player.transform.position;
+    }
+
+    /// <summary> Boss 정보 출력 </summary>
+    void ShowBossState()
+    {
+        // Boss 잔여 시간 없음
+        if (BossFieldLimitTime <= 0)
+        {
+            bossExist = false;
+            BossFieldLimitTime = 0;
+            bossFieldLimitText.text = $"0<size=96>.00</size>";
+        }
+        // Boss 전투 진행 중 - 잔여 시간 출력
+        else
+        {
+            bossFieldLimitText.text =
+                $"{Mathf.FloorToInt(BossFieldLimitTime):D2}<size=96>." +
+                $"{(int)(BossFieldLimitTime * 100 % 100):D2}</size>";
+        }
+    }
+
+
+
+
+
+    /*************** Enemy 생성 매커니즘 ***************/
+
     /// <summary> Boss 데이터 적용 </summary>
     public void BossInit(GameObject boss)
-    {
-        Enemy bossLogic = boss.GetComponent<Enemy>();
-        bossLogic.bossLogics.Clear();
-        bossLogic.bossLogicsFinal.Clear();
-
-        string textFile;
-
-        switch (getStageNum)
-        {
-            case 1: textFile = "BossLogic_A"; break;
-            case 2: textFile = "BossLogic_B"; break;
-            case 3: textFile = "BossLogic_C"; break;
-            case 4: textFile = "BossLogic_D"; break;
-            default:
-                Debug.Log("스테이지 정보를 불러올 수 없습니다.");
-                textFile = null; break;
-        }
-
-        List<Dictionary<string, object>> data_Dialog = CSVReader.Read(textFile);
-
-        for (int i = 0; i < data_Dialog.Count; i++)
-        {
-            BossLogic bossLogicData = new BossLogic();
-
-            bossLogicData.BossLogicCode =           data_Dialog[i]["BossLogicCode"].ToString();
-
-            bossLogicData.delay =       float.Parse(data_Dialog[i]["delay"].ToString());
-            bossLogicData.posX =        float.Parse(data_Dialog[i]["posX"].ToString());
-            bossLogicData.posY =        float.Parse(data_Dialog[i]["posY"].ToString());
-
-            bossLogicData.movX =        float.Parse(data_Dialog[i]["movX"].ToString());
-            bossLogicData.movY =        float.Parse(data_Dialog[i]["movY"].ToString());
-            bossLogicData.degreeZ =     float.Parse(data_Dialog[i]["degreeZ"].ToString());
-            bossLogicData.movSpeed =    float.Parse(data_Dialog[i]["movSpeed"].ToString());
-            bossLogicData.movingType =              data_Dialog[i]["movingType"].ToString();
-            bossLogicData.movDesX =     float.Parse(data_Dialog[i]["movDesX"].ToString());
-            bossLogicData.movDesY =     float.Parse(data_Dialog[i]["movDesY"].ToString());
-            bossLogicData.movExitX =    float.Parse(data_Dialog[i]["movExitX"].ToString());
-            bossLogicData.movExitY =    float.Parse(data_Dialog[i]["movExitY"].ToString());
-
-            bossLogicData.shootPos1 =               data_Dialog[i]["pos1"].ToString();
-            bossLogicData.shootPos2 =               data_Dialog[i]["pos2"].ToString();
-            bossLogicData.shootPos3 =               data_Dialog[i]["pos3"].ToString();
-            bossLogicData.shootPos4 =               data_Dialog[i]["pos4"].ToString();
-            bossLogicData.shootPos5 =               data_Dialog[i]["pos5"].ToString();
-
-            bossLogicData.bulletType =              data_Dialog[i]["bulletType"].ToString();
-            bossLogicData.bulletName =              data_Dialog[i]["bulletName"].ToString();
-            bossLogicData.patternType =             data_Dialog[i]["patternType"].ToString();
-            bossLogicData.bulletSpeed = float.Parse(data_Dialog[i]["bulletSpeed"].ToString());
-            bossLogicData.shootLimit =  int.Parse  (data_Dialog[i]["shootLimit"].ToString());
-            bossLogicData.firstWaitTime = float.Parse(data_Dialog[i]["firstWaitTime"].ToString());
-            bossLogicData.waitTime =    float.Parse(data_Dialog[i]["waitTime"].ToString());
-
-            if (data_Dialog[i]["BossLogicCode"].ToString() == "Final")
-            {
-                bossLogic.bossLogicsFinal.Enqueue(bossLogicData); break;
-            }
-            bossLogic.bossLogics.Enqueue(bossLogicData);
-        }
-
-        bossLogic.firstWaitTime = 1.5f;
-    }
+     => BossLogic.SetBossLogicData(StageBossDataName, boss);
 
     /// <summary> Enemy 생성 로직 </summary>
     void SpawnEnemy()
     {
+        // 스폰 종료 및 디버그 모드-스폰 정지 시 함수 종료
+        if (spawnEnd) return;
         if (GameManager.isDebug_StopSpawn && GameManager.isDebug) return;
-        currentSpawnTime += Time.deltaTime;
 
+        // 생성 시간 도달 시 Enemy 생성
         if (currentSpawnTime >= nextSpawnDelay)
         {
-            Debug.Log($"편대 {spawnList[spawnIndex].spawnCode}번");
+            // 1. 생성 데이터 불러오기
+            SpawnLogic spawnData = spawnList[spawnIndex];
+            Debug.Log($"편대 {spawnData.spawnCode}번");
 
-            GameObject enemy = pool.MakeObject(spawnList[spawnIndex].enemyType);
-            enemy.GetComponent<Enemy>().audioManager = audioManager;
+            // 2. Enemy 생성 및 위치 배치
+            GameObject enemy = pool.MakeObject(spawnData.enemyType);
+            enemy.transform.position = new Vector2(spawnData.posX, spawnData.posY);
 
-            enemy.transform.position = new Vector2(
-                spawnList[spawnIndex].posX, spawnList[spawnIndex].posY);
-
+            // 3. Enemy 속성 연결, 데이터 적용 및 초기화
             Enemy enemyLogic = enemy.GetComponent<Enemy>();
-            enemyLogic.pool = pool;
-            enemyLogic.getDropItemName = spawnList[spawnIndex].dropItemName;
+            enemyLogic.audioManager = audioManager;
+            enemyLogic.SetEnemyData(spawnData);
+            enemyLogic.EnemyInit();
 
-            enemyLogic.moveVec = new Vector2(
-                spawnList[spawnIndex].movX, spawnList[spawnIndex].movY).normalized;
-            enemyLogic.degreeZ = spawnList[spawnIndex].degreeZ;
-            enemyLogic.movSpeed = spawnList[spawnIndex].movSpeed;
-            enemyLogic.getMovingType = spawnList[spawnIndex].movingType;
-            enemyLogic.moveDesVec = new Vector2(
-                spawnList[spawnIndex].movDesX, spawnList[spawnIndex].movDesY);
-            enemyLogic.moveExitVec = new Vector2(
-                spawnList[spawnIndex].movExitX, spawnList[spawnIndex].movExitY).normalized;
-            enemyLogic.fieldTimeLimit = spawnList[spawnIndex].fieldTimeLimit;
-
-            enemyLogic.getBulletType =  spawnList[spawnIndex].bulletType;
-            enemyLogic.getBulletName =  spawnList[spawnIndex].bulletName;
-            enemyLogic.getPatternType = spawnList[spawnIndex].patternType;
-            enemyLogic.bulletSpeed =    spawnList[spawnIndex].bulletSpeed;
-            enemyLogic.shootLimit =     spawnList[spawnIndex].shootLimit;
-            enemyLogic.firstWaitTime =  spawnList[spawnIndex].firstWaitTime;
-            enemyLogic.waitTime =       spawnList[spawnIndex].waitTime;
-
+            // 4. 후속 처리 및 다음 생성 시간 갱신
+            // *. Enemy 모두 생성 완료 시 Enemy 생성 로직 정지
             spawnIndex++;
-            if (spawnAmount == spawnIndex) spawnEnd = true;
-            else nextSpawnDelay = spawnList[spawnIndex].delay;
             currentSpawnTime = 0;
 
-            EnemyList.Add(enemy);
+            if (spawnAmount == spawnIndex) spawnEnd = true;
+            else nextSpawnDelay = spawnList[spawnIndex].delay;
 
-            if (enemy.GetComponent<Enemy>().enemyType == Enemy.EnemyType.Boss)
+            // @. 보스 출현 시 보스 초기화 및 보스 전투 진행 처리
+            if (enemyLogic.enemyType == Enemy.EnemyType.Boss)
             {
-                BossInit(enemy);
-                bossExist = true;
+                BossInit(enemy); bossExist = true;
             }
-            enemyLogic.EnemyInit();
+
+            // 5. 필드 내에 존재하는 Enemy 목록에 추가
+            EnemyList.Add(enemy);
         }
     }
 
-    /*************** 게임 결과 ***************/
+
+
+
+
+    /*************** 게임 결과 출력 매커니즘 ***************/
 
     /// <summary> 게임 클리어 성공 </summary>
     public void GameClear()
@@ -542,20 +513,28 @@ public class StageManager : MonoBehaviour
         gamePausePanel.SetActive(false);
     }
 
-    /*************** 게임 일시정지 모음 ***************/
+
+
+
+
+    /*************** 게임 일시정지 관련 상호작용 ***************/
 
     /// <summary> 게임 종료 여부 선택 </summary>
     public void GameQuitYN() { gamePausePanel.SetActive(false); gameQuitPanel.SetActive(true); }
 
-    public void GameQuitN() { gamePausePanel.SetActive(true); gameQuitPanel.SetActive(false); }
+    /// <summary> 게임 종료 </summary>
     public void GameQuitY() { stageState = StageState.End; GameEnd(); }
+    /// <summary> 이전 </summary>
+    public void GameQuitN() { gamePausePanel.SetActive(true); gameQuitPanel.SetActive(false); }
 
+    /// <summary> 스테이지 내 음량 갱신 </summary>
     public void SetMasterVolume(float volume)
     {
         GameManager.instance.audioMixer.SetFloat("Master", Mathf.Log10(volume) * 20);
         PlayerPrefs.SetFloat("MasterVolume", MusicMasterSlider.value);
     }
 
+    /// <summary> 스테이지 내 Player 이동 타입 설정 </summary>
     public void setPlayerMoveType()
     {
         GameManager.instance.SetPlayerMoveType(false);
@@ -571,6 +550,10 @@ public class StageManager : MonoBehaviour
                 break;
         }
     }
+
+
+
+
 
     /*************** 디버그 관리 ***************/
 
