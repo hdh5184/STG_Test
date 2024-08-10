@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossLogic
+public struct BossData
 {
+    // 1. 기본 속성
     public float delay;
     public float posX;
     public float posY;
 
+    // 2. 이동 속성
     public float movX;
     public float movY;
     public float degreeZ;
@@ -18,8 +20,10 @@ public class BossLogic
     public float movExitX;
     public float movExitY;
 
+    // 3. Boss 파츠 위치
     public string shootPos1, shootPos2, shootPos3, shootPos4, shootPos5;
 
+    // 4. 공격 속성
     public string bulletType;
     public string bulletName;
     public string patternType;
@@ -28,19 +32,31 @@ public class BossLogic
     public float firstWaitTime;
     public float waitTime;
 
+    // 0. Boss 진행 코드
     public string BossLogicCode;
+}
 
+
+
+
+
+public class Spawn_Boss
+{
+    /// <summary> Boss 데이터 설정 </summary>
     public static void SetBossLogicData(string StageBossDataName, GameObject boss)
     {
+        // Enemy 컴포넌트 불러오기 및 초기화
         Enemy bossLogic = boss.GetComponent<Enemy>();
         bossLogic.bossLogics.Clear();
         bossLogic.bossLogicsFinal.Clear();
 
+        // Boss 데이터 불러오기
         List<Dictionary<string, object>> bossData = CSVReader.Read(StageBossDataName);
 
+        // Boss 데이터 적용
         for (int i = 0; i < bossData.Count; i++)
         {
-            BossLogic bossLogicData = new BossLogic();
+            BossData bossLogicData = new BossData();
 
             bossLogicData.BossLogicCode = bossData[i]["BossLogicCode"].ToString();
 
@@ -79,6 +95,7 @@ public class BossLogic
             bossLogic.bossLogics.Enqueue(bossLogicData);
         }
 
+        // Boss 초기 대기 시간 설정
         bossLogic.firstWaitTime = 1.5f;
     }
 }

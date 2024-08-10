@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpawnLogic
+public struct EnemyData
 {
+    // 1. 기본 속성
     public float delay;
     public string enemyType;
     public float posX;
     public float posY;
     public string dropItemName;
 
+    // 2. 이동 속성
     public float movX;
     public float movY;
     public float degreeZ;
@@ -19,8 +21,11 @@ public class SpawnLogic
     public float movDesY;
     public float movExitX;
     public float movExitY;
+
+    // 3. 필드 출현 시간 (제한)
     public float fieldTimeLimit;
 
+    // 4. 공격 속성
     public string bulletType;
     public string bulletName;
     public string patternType;
@@ -29,17 +34,29 @@ public class SpawnLogic
     public float firstWaitTime;
     public float waitTime;
 
+    // 0. 편대 코드
     public string spawnCode;
+}
 
-    public static void SetSpawnLogicData(string StageDataName, List<SpawnLogic> SpawnList)
+
+
+
+
+public class Spawn
+{
+    /// <summary> Enemy 데이터 설정 </summary>
+    public static void SetSpawnLogicData(string StageDataName, List<EnemyData> SpawnList)
     {
+        // Enemy 컴포넌트 불러오기 및 초기화
         SpawnList.Clear();
 
+        // Enemy 데이터 불러오기
         List<Dictionary<string, object>> data_Dialog = CSVReader.Read(StageDataName);
 
+        // Enemy 데이터 적용
         for (int i = 0; i < data_Dialog.Count; i++)
         {
-            SpawnLogic spawnData = new SpawnLogic();
+            EnemyData spawnData = new EnemyData();
 
             spawnData.spawnCode = data_Dialog[i]["spawnCode"].ToString();
 

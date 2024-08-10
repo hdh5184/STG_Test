@@ -60,7 +60,7 @@ public class StageManager : MonoBehaviour
 
     // 5. Enemy 관리
     public static List<GameObject> EnemyList;
-    public List<SpawnLogic> spawnList;
+    public List<EnemyData> spawnList;
 
     public int spawnIndex;
     public int spawnAmount;
@@ -75,6 +75,9 @@ public class StageManager : MonoBehaviour
     public enum StageState { Lobby, Ready, Play, End, Pause }
 
 
+
+
+    public static bool isGamePlay = false;
 
 
 
@@ -146,7 +149,7 @@ public class StageManager : MonoBehaviour
     {
         // 1. List Data
         EnemyList = new List<GameObject>();
-        spawnList = new List<SpawnLogic>();
+        spawnList = new List<EnemyData>();
 
         // 2. Stage Data
         stageState = StageState.Ready;
@@ -236,8 +239,6 @@ public class StageManager : MonoBehaviour
 
         // Player에 필요한 매니저 연결 및 초기화
         Player PComponent = player.GetComponent<Player>();
-        PComponent.pool = pool;
-        PComponent.audioManager = audioManager;
         PComponent.stageManager = instance;
         PComponent.PlayerInit();
 
@@ -274,7 +275,7 @@ public class StageManager : MonoBehaviour
     void SetSpawnData()
     {
         // Enemy 생성 데이터 적용
-        SpawnLogic.SetSpawnLogicData(StageDataName, spawnList);
+        Spawn.SetSpawnLogicData(StageDataName, spawnList);
 
         // Enemy 생성 관련 변수 초기화
         spawnIndex = 0;
@@ -297,15 +298,15 @@ public class StageManager : MonoBehaviour
 
         // Enemy 생성 시간
         if (stageState == StageState.Play & !spawnEnd)
-            currentSpawnTime += Time.deltaTime;
+        currentSpawnTime += Time.deltaTime;
 
         // Boss 잔여 시간
         if (bossExist)
-            BossFieldLimitTime -= Time.deltaTime;
+        BossFieldLimitTime -= Time.deltaTime;
 
         // 결과 출력 관련 시간
         if (stageState == StageState.End && ShowResultCount < ShowResultCountLimit)
-            ShowResultTime += Time.deltaTime;
+        ShowResultTime += Time.deltaTime;
     }
 
     /// <summary> Player 이동 방향 저장 </summary>
@@ -343,7 +344,7 @@ public class StageManager : MonoBehaviour
 
     /// <summary> Boss 데이터 적용 </summary>
     public void BossInit(GameObject boss)
-     => BossLogic.SetBossLogicData(StageBossDataName, boss);
+     => Spawn_Boss.SetBossLogicData(StageBossDataName, boss);
 
     /// <summary> Enemy 생성 로직 </summary>
     void SpawnEnemy()
@@ -356,16 +357,16 @@ public class StageManager : MonoBehaviour
         if (currentSpawnTime >= nextSpawnDelay)
         {
             // 1. 생성 데이터 불러오기
-            SpawnLogic spawnData = spawnList[spawnIndex];
+            EnemyData spawnData = spawnList[spawnIndex];
             Debug.Log($"편대 {spawnData.spawnCode}번");
 
             // 2. Enemy 생성 및 위치 배치
             GameObject enemy = pool.MakeObject(spawnData.enemyType);
             enemy.transform.position = new Vector2(spawnData.posX, spawnData.posY);
 
-            // 3. Enemy 속성 연결, 데이터 적용 및 초기화
+            // 3. Enemy 데이터 적용 및 초기화
             Enemy enemyLogic = enemy.GetComponent<Enemy>();
-            enemyLogic.audioManager = audioManager;
+            //enemyLogic.audioManager = audioManager;
             enemyLogic.SetEnemyData(spawnData);
             enemyLogic.EnemyInit();
 

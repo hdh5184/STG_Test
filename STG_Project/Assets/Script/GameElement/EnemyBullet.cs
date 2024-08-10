@@ -6,69 +6,128 @@ using static StageManager;
 
 public class EnemyBullet : MonoBehaviour
 {
-    public EBulletType_Moving bulletType;
-
+    // 1. 타입
     public string getBulletType;
-    public float enemyFromCode = 0;
-    public float speed = 0f;
 
+    // 2. 참조 데이터
     Vector3 playerPos;
+
+    // 3. 속성
+    Vector2 MoveVec;
     Vector3 ShootVec = Vector2.down;
+    public float speed = 0f;
     float degreeZ = 0f;
+
+    // 4. 시간
     float fieldTime = 0f;
 
-    public enum EBulletType_Moving { Straight, Accel, Homing, Bomb }
+    // @. 대리자
+    delegate void Move_Set();
+    Move_Set Move;
 
+
+
+
+
+    /*************** 게임 루프 ***************/
+
+    /// <summary> EnemyBullet 생성 </summary>
+    private void OnEnable()
+    {
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
+
+    /// <summary> EnemyBullet 로직 </summary>
+    void Update()
+    {
+        if (!Compare_isPlay()) return;
+
+        Timing();
+        Move();
+    }
+
+
+
+
+
+    /*************** EnemyBullet 초기화 매커니즘 ***************/
+
+    /// <summary> EnemyBullet 속성 지정 </summary>
+    public void Set_Attribute(string bulletType, float fireSpeed)
+    {
+        getBulletType = bulletType;
+        speed = fireSpeed;
+    }
+
+    /// <summary> EnemyBullet 초기화 모음 </summary>
     public void Init()
+    {
+        AttributeInit();
+        TypeInit();
+    }
+
+    /// <summary> EnemyBullet 속성 초기화 </summary>
+    void AttributeInit()
+    {
+        // 1. Vector
+        ShootVec = Vector2.down;
+
+        // 2. Time
+        fieldTime = 0.5f;
+
+        // 3. etc.
+        degreeZ = 0f;
+    }
+
+    /// <summary> EnemyBullet 타입 초기화 </summary>
+    void TypeInit()
     {
         switch (getBulletType)
         {
-            case "str": bulletType = EBulletType_Moving.Straight; break;
-            case "acc": bulletType = EBulletType_Moving.Accel; break;
-            case "hom": bulletType = EBulletType_Moving.Homing; break;
-            case "bom": bulletType = EBulletType_Moving.Bomb; break;
+            case "str": Move = Move_Str; MoveVec = Vector2.down * speed; break;
+            case "acc": Move = Move_Acc; MoveVec = Vector2.down * speed; break;
+            case "hom": Move = Move_Hom; MoveVec = Vector2.down * 5; break;
         }
     }
 
-    private void OnEnable()
-    {
-        ShootVec = Vector2.down;
-        degreeZ = 0f;
-        fieldTime = 0.5f;
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-    }
-    void Update()
-    {
-        if (StageManager.stageState == StageState.Pause) return;
-        if (StageManager.stageState == StageState.End) return;
-        if (LobbyManager.menuSelected == MenuSelected.Main) gameObject.SetActive(false);
-        fieldTime += Time.deltaTime;
-        MovingBullet();
-    }
 
-    void MovingBullet()
+
+
+
+    /*************** EnemyBullet 동작 로직 ***************/
+
+    /// <summary> 게임 진행 유무 검사 </summary>
+    bool Compare_isPlay()
     {
-        switch (bulletType)
+        // 스테이지 일시정지 및 종료 시 EnemyBullet 로직 미실행
+        if (StageManager.stageState == StageState.End)      return false;
+        if (StageManager.stageState == StageState.Pause)    return false;
+        if (LobbyManager.menuSelected == MenuSelected.Main)
         {
-            case EBulletType_Moving.Straight:
-                transform.Translate(Vector2.down * speed * Time.deltaTime); break;
-            case EBulletType_Moving.Accel:
-                transform.Translate(Vector2.down * speed * Time.deltaTime * fieldTime); break;
-            case EBulletType_Moving.Homing:
-                Homing();
-                transform.Translate(Vector2.down * 5f * Time.deltaTime); break;
+            gameObject.SetActive(false);                    return false;
         }
+
+        return true;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Field")) gameObject.SetActive(false);
-    }
+    /// <summary> 시간 측정 </summary>
+    void Timing() => fieldTime += Time.deltaTime;
 
-    void Homing()
+
+
+
+
+    /*************** EnemyBullet 타입 별 이동 모음 ***************/
+
+    /// <summary> 직진 이동 </summary>
+    void Move_Str() => transform.Translate(MoveVec * Time.deltaTime);
+    /// <summary> 가속 이동 </summary>
+    void Move_Acc() => transform.Translate(MoveVec * Time.deltaTime * fieldTime);
+    /// <summary> Player 위치 추적 이동 </summary>
+    void Move_Hom()
     {
         playerPos = StageManager.playerPos;
-        
+
         Vector3 v1, v2, v3;
 
         v1 = (playerPos - transform.position).normalized;
@@ -102,6 +161,22 @@ public class EnemyBullet : MonoBehaviour
                 ShootVec = v3;
             }
         }
+
         transform.rotation = Quaternion.Euler(0, 0, degreeZ);
+        transform.Translate(MoveVec * Time.deltaTime);
+    }
+
+
+
+
+
+    /*************** EnemyBullet 충돌 처리 로직 ***************/
+
+    /// <summary> 충돌 처리 </summary>
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // 필드 이탈 시 EnemyBullet 비활성화
+        if (collision.CompareTag("Field"))
+        gameObject.SetActive(false);
     }
 }

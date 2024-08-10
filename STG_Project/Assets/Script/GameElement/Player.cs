@@ -40,8 +40,12 @@ public class Player : MonoBehaviour
 
     string[] setplayerBulletName;
 
+    /// <summary> Player 초기 설정 </summary>
     private void Awake()
     {
+        pool = PoolManager.instance;
+        audioManager = AudioManager.instance;
+
         audioMain = GetComponent<AudioSource>();
         audioSub = playerAudio.GetComponent<AudioSource>();
 
@@ -52,6 +56,8 @@ public class Player : MonoBehaviour
             case PlayerType.C: setplayerBulletName = playerBulletNameC; break;
         }
     }
+
+
 
     public void PlayerInit()
     {

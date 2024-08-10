@@ -13,8 +13,8 @@ public class Enemy : MonoBehaviour
 
     // 2. 패턴
     public Queue<BulletPattern> bulletPatterns = new Queue<BulletPattern>();
-    public Queue<BossLogic> bossLogics = new Queue<BossLogic>();
-    public Queue<BossLogic> bossLogicsFinal = new Queue<BossLogic>();
+    public Queue<BossData> bossLogics = new Queue<BossData>();
+    public Queue<BossData> bossLogicsFinal = new Queue<BossData>();
 
     // 3. 플레이어 참조
     public Vector3 playerPos;
@@ -74,33 +74,110 @@ public class Enemy : MonoBehaviour
     public enum MovingType { Straight, Accel, SlowDown, none }
     public enum BulletPattern { Straight, n_Way, Circle, Spread, Spread_Random, Vortex, Down, None }
 
-    /// <summary> Enemy 기체 데이터 초기화 </summary>
+    delegate void Attack_Set();
+    delegate void Act_Set();
+    Attack_Set Attack;
+    Act_Set Act;
+
+
+
+
+
+    /*************** 게임 루프 ***************/
+
+    /// <summary> Enemy 초기 설정 </summary>
+    private void Awake()
+    {
+        pool = PoolManager.instance;
+        audioManager = AudioManager.instance;
+    }
+
+    /// <summary> Enemy 생성 </summary>
     private void OnEnable()
     {
+        // 1. Init
+        AttributeInit();
+        TypeInit();
+
+        // @. Sub weapon Init
+        if (subWeaponObj != null)
+        foreach (var item in subWeaponObj) item.SetActive(true);
+    }
+
+    /// <summary> Enemy 로직 </summary>
+    void Update()
+    {
+        if (!Compare_isPlay()) return; // 게임 중이 아닌 경우 로직 미실행
+
+        Timing();
+
+        switch (enemyState)
+        {
+            case EnemyState.Idle:
+                Idle();
+                break;
+
+            case EnemyState.Play:
+                if (IdleTime >= shootTime)
+                Attack();
+                break;
+        }
+
+        Act();
+        Moving();
+        WaitCompare();
+        ExitCompare();
+    }
+
+
+
+    /*************** Enemy 초기화 매커니즘 ***************/
+
+    /// <summary> Enemy 속성 초기화 </summary>
+    void AttributeInit()
+    {
+        // 1. Queue Data
+        bulletPatterns.Clear();
+        bossLogicsFinal.Clear();
+
+        // 2. State
         enemyState = EnemyState.Idle;
+
+        // 3. Time
         fieldTime = 0;
         IdleTime = 0;
         shootTime = 0.1f;
+
+        // 4. etc.
         shootCount = 0;
         degree = 0;
+    }
 
-        if (subWeaponObj != null)   foreach (var item in subWeaponObj) item.SetActive(true);
-        if (pool == null )          pool = PoolManager.instance;
-        if (audioManager == null)   audioManager = AudioManager.instance;
-
+    /// <summary> Enemy 타입 초기화 </summary>
+    void TypeInit()
+    {
         switch (enemyType)
         {
-            case EnemyType.Small:   Health = 3;     setScore = 100;     break;
-            case EnemyType.Medium:  Health = 30;    setScore = 500;     break;
-            case EnemyType.Large:   Health = 120;   setScore = 5000;    break;
-            case EnemyType.Big:     Health = 350;   setScore = 20000;   break;
-            case EnemyType.Boss:    Health = 1200;  setScore = 80000;   break;
+            case EnemyType.Small: Health = 3; setScore = 100; break;
+            case EnemyType.Medium: Health = 30; setScore = 500; break;
+            case EnemyType.Large: Health = 120; setScore = 5000; break;
+            case EnemyType.Big: Health = 350; setScore = 20000; break;
 
-            case EnemyType.SubWeapon: Health = 30;  setScore = 150;     break;
+            case EnemyType.Boss:
+            Health = 1200; setScore = 80000;
+            Attack = Attack_Boss;
+            Act = Act_Boss;
+            break;
+
+            case EnemyType.SubWeapon:
+            Health = 30; setScore = 150;
+            Attack = Attack_SubWeapon;
+            Act = Act_SubWeapon;
+            break;
         }
 
-        bulletPatterns.Clear();
-        bossLogicsFinal.Clear();
+        if (Attack == null) Attack = Attack_Default;
+        if (Act == null) Act = Act_Default;
     }
 
     /// <summary> Enemy - 공격, 이동, 기체 회전 속성 초기화 (+ 보스 공격) </summary>
@@ -129,82 +206,122 @@ public class Enemy : MonoBehaviour
     }
 
 
-    /// <summary> Enemy 로직 </summary>
-    void Update()
+
+
+
+    /*************** Enemy 동작 로직 ***************/
+
+    /// <summary> 게임 진행 유무 검사 </summary>
+    bool Compare_isPlay()
     {
-        if (LobbyManager.menuSelected == MenuSelected.Main) gameObject.SetActive(false);
-        if (StageManager.stageState == StageState.End ||
-            StageManager.stageState == StageState.Pause) return;
-        if (enemyState == EnemyState.Dead) return;
-
-        fieldTime += Time.deltaTime;
-        IdleTime += Time.deltaTime;
-
-        switch (enemyState)
+        // 스테이지 일시정지 및 종료 시, Enemy 파괴 시 Enemy 로직 미실행
+        if (StageManager.stageState == StageState.End)      return false;
+        if (StageManager.stageState == StageState.Pause)    return false;
+        if (enemyState == EnemyState.Dead)                  return false;
+        if (LobbyManager.menuSelected == MenuSelected.Main)
         {
-            case EnemyState.Idle:
-                if (IdleTime >= firstWaitTime)
-                { enemyState = EnemyState.Play; IdleTime = 0f; } break;
-            case EnemyState.Play:
-                if (IdleTime >= shootTime)
-                {
-                    if (enemyType == EnemyType.Boss) BossPattern();
-                    else if (enemyType == EnemyType.SubWeapon)
-                    {
-                        foreach (var item in BigShootPos)
-                        {
-                            SelectPattern(item, 0); shootCount++;
-                        }
-                    }
-                    else
-                    {
-                        SelectPattern(null, 0); shootCount++;
-                    }
-                }
-
-                if (!isBossFinal && fieldTime >= fieldTimeLimit && enemyType == EnemyType.Boss)
-                {
-                    isBossFinal = true;
-                    setBossLogic(bossLogicsFinal.Peek());
-                    bossLogics.Clear();
-                    bossLogics = bossLogicsFinal;
-                }
-                break;
+            gameObject.SetActive(false);                    return false;
         }
 
-        if (enemyType == EnemyType.SubWeapon)
-        {
-            GetDegree(null); transform.rotation = Quaternion.Euler(0, 0, degree);
-        }
-
-        Moving();
-        WaitCompare();
-        ExitCompare();
+        return true;
     }
 
-    public void SetEnemyData(SpawnLogic spawnData)
+    /// <summary> 시간 측정 </summary>
+    void Timing()
     {
-        pool = StageManager.instance.pool;
-        getDropItemName = spawnData.dropItemName;
+        fieldTime += Time.deltaTime;    // 필드 내 출현 시간
+        IdleTime += Time.deltaTime;     // 대기 시간
+    }
 
-        moveVec = new Vector2(
-            spawnData.movX, spawnData.movY).normalized;
-        degreeZ = spawnData.degreeZ;
-        movSpeed = spawnData.movSpeed;
-        getMovingType = spawnData.movingType;
-        moveDesVec = new Vector2(
-            spawnData.movDesX, spawnData.movDesY);
-        moveExitVec = new Vector2(
-            spawnData.movExitX, spawnData.movExitY).normalized;
-        fieldTimeLimit = spawnData.fieldTimeLimit;
+    /// <summary> 초기 대기 검사 </summary>
+    void Idle()
+    {
+        if (IdleTime >= firstWaitTime)
+        { enemyState = EnemyState.Play; IdleTime = 0f; }
+    }
 
-        getBulletType = spawnData.bulletType;
-        getBulletName = spawnData.bulletName;
-        getPatternType = spawnData.patternType;
-        bulletSpeed = spawnData.bulletSpeed;
-        shootLimit = spawnData.shootLimit;
-        firstWaitTime = spawnData.firstWaitTime;
-        waitTime = spawnData.waitTime;
+
+
+
+
+    /*************** Enemy 타입 별 공격 모음 ***************/
+
+    /// <summary> Boss 공격 로직 </summary>
+    void Attack_Boss() => BossPattern();
+    /// <summary> SubWeapon 공격 로직 </summary>
+    void Attack_SubWeapon()
+    {
+        foreach (var item in BigShootPos)
+            SelectPattern(item, 0);
+        shootCount++;
+    }
+    /// <summary> 일반 공격 로직 </summary>
+    void Attack_Default()
+    {
+        SelectPattern(null, 0);
+        shootCount++;
+    }
+
+
+
+
+
+    /*************** Enemy 타입 별 동작 모음 ***************/
+
+    /// <summary> Boss 동작 모음 </summary>
+    void Act_Boss()
+    {
+        if (isBossFinal) return;
+
+        if (fieldTime >= fieldTimeLimit)
+        {
+            setBossLogic(bossLogicsFinal.Peek());
+            bossLogics.Clear();
+            bossLogics = bossLogicsFinal;
+
+            isBossFinal = true;
+        }
+    }
+    /// <summary> SubWeapon 동작 모음 </summary>
+    void Act_SubWeapon()
+    {
+        GetDegree(null);
+        transform.rotation = Quaternion.Euler(0, 0, degree);
+    }
+    /// <summary> 일반 동작 모음 </summary>
+    void Act_Default() { }
+
+
+
+
+
+
+    public void SetEnemyData(EnemyData data)
+    {
+        // 1. Item
+        getDropItemName = data.dropItemName;
+
+        // 2. Vector
+        moveVec = new Vector2(data.movX, data.movY).normalized;
+        moveDesVec = new Vector2(data.movDesX, data.movDesY);
+        moveExitVec = new Vector2(data.movExitX, data.movExitY).normalized;
+
+        // 3. Enemy Attribute
+        degreeZ = data.degreeZ;
+        movSpeed = data.movSpeed;
+        getMovingType = data.movingType;
+        fieldTimeLimit = data.fieldTimeLimit;
+
+        // 4. Bullet Attribute
+        getBulletType = data.bulletType;
+        getBulletName = data.bulletName;
+        getPatternType = data.patternType;
+        bulletSpeed = data.bulletSpeed;
+        shootLimit = data.shootLimit;
+
+        // 5. Time
+        firstWaitTime = data.firstWaitTime;
+        waitTime = data.waitTime;
     }
 
     /// <summary> 공격 패턴 설정 </summary>
@@ -236,7 +353,7 @@ public class Enemy : MonoBehaviour
     }
 
     /// <summary> 보스 Enemy 로직 설정 </summary>
-    void setBossLogic(BossLogic bossLogic)
+    void setBossLogic(BossData bossLogic)
     {
         waitTime = bossLogic.delay;
         movSpeed = bossLogic.movSpeed;
@@ -345,6 +462,23 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    void GetDegree_Boss(GameObject shootPos)
+    {
+        float deg = Mathf.Atan2
+                (playerPos.y - shootPos.transform.position.y,
+                playerPos.x - shootPos.transform.position.x)
+                / Mathf.PI * 180 + 90;
+
+        switch (setBossPos)
+        {
+            case 1: degree1 = deg; break;
+            case 2: degree2 = deg; break;
+            case 3: degree3 = deg; break;
+            case 4: degree4 = deg; break;
+            case 5: degree5 = deg; break;
+        }
+    }
+
     /// <summary> 보스 공격 Position 별 탄도 각 설정 </summary>
     void setBossDegree()
     {
@@ -364,20 +498,23 @@ public class Enemy : MonoBehaviour
     /// <summary> 탄 발사 로직 </summary>
     private void Fire(float deg, GameObject shootPos)
     {
+        // 1. 탄 오브젝트 및 속성 불러오기
         GameObject bullet = pool.MakeObject(getBulletName);
+        EnemyBullet bulletCom = bullet.GetComponent<EnemyBullet>();
 
-        if (shootPos == null)
-            bullet.transform.position = transform.position;
-        else
-            bullet.transform.position = shootPos.transform.position;
+        // 2. Transform 속성 지정
+        Vector2 pos = (shootPos == null) ?
+            transform.position : shootPos.transform.position;
+        Quaternion rotate = Quaternion.Euler(0, 0, deg);
 
-        bullet.transform.rotation = Quaternion.Euler(0, 0, deg);
+        bullet.transform.position = pos;
+        bullet.transform.rotation = rotate;
 
-        EnemyBullet bulletFrom = bullet.GetComponent<EnemyBullet>();
-        bulletFrom.getBulletType = getBulletType;
-        bulletFrom.speed = bulletSpeed;
-        bulletFrom.Init();
+        // 3. 탄 속성 지정 및 초기화
+        bulletCom.Set_Attribute(getBulletType, bulletSpeed);
+        bulletCom.Init();
 
+        // 4. 기타
         IdleTime = 0;
     }
 
