@@ -153,4 +153,25 @@ public class Spawn
             case "slow": enemy.moveType = MoveType.SlowDown; break;
         }
     }
+
+    public static void Init_MoveData(Enemy enemy, ref MoveData data)
+    {
+        data.transform = enemy.transform;
+        data.moveVec = enemy.moveVec;
+        data.movSpeed = enemy.movSpeed;
+        data.fieldTime = enemy.fieldTime;
+    }
+
+    public static void Init_AttackData(Enemy enemy, ref AttackData data)
+    {
+        data.pool = enemy.pool;
+        data.getBulletName = enemy.getBulletName;
+        data.getBulletType = enemy.getBulletType;
+        data.shootCount = enemy.shootCount;
+        data.shootLimit = enemy.shootLimit;
+        data.bulletSpeed = enemy.bulletSpeed;
+        data.degree = enemy.degree;
+        data.degreeLimit = 180;
+    }
+
 }

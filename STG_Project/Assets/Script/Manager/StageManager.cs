@@ -102,6 +102,7 @@ public class StageManager : MonoBehaviour
         SetSpawnData();
 
         // 4. Starting
+        isGamePlay = true;
         Invoke("GameStart", 2f);
         Debug.Log("게임 시작");
     }
@@ -506,6 +507,7 @@ public class StageManager : MonoBehaviour
     {
         if (stageState == StageState.Ready || stageState == StageState.Play)
         {
+            isGamePlay = false;
             Time.timeScale = 0f;
             stageState = StageState.Pause;
             gamePausePanel.SetActive(true);
@@ -515,6 +517,7 @@ public class StageManager : MonoBehaviour
     /// <summary> 게임 재실행 </summary>
     public void GameResume()
     {
+        isGamePlay = true;
         Time.timeScale = 1f;
         stageState = StageState.Play;
         gamePausePanel.SetActive(false);

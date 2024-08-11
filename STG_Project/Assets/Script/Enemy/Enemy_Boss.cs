@@ -22,7 +22,7 @@ public class Enemy_Boss : Enemy
 
     void Init()
     {
-        shootPos = new Vector2[obj_ShootPos.Length];
+        shootPos = new Transform[obj_ShootPos.Length];
 
         for (int i = 0; i < shootPos.Length; i++)
         shootPos[i] = Init_ShootPos(obj_ShootPos[i]);

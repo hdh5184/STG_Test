@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 2403800387837764411}
   - component: {fileID: 7253626577830319796}
   - component: {fileID: -4593337215841549032}
-  - component: {fileID: 3560221560928244296}
+  - component: {fileID: 3470848582390930483}
   m_Layer: 0
   m_Name: BossA
   m_TagString: Untagged
@@ -252,7 +252,7 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 10.24, y: 10.244999}
+    oldSize: {x: 10.242501, y: 10.24}
     newSize: {x: 10.24, y: 10.244999}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -294,7 +294,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3560221560928244296
+--- !u!114 &3470848582390930483
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -303,16 +303,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6800352218390604158}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da18458f806ae4751843ae0addbbe2ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 146afc243711642f68d270a63b2051e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  player: {fileID: 0}
   playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
-  enemyType: 4
-  movingType: 0
-  bulletPattern: 0
+  moveType: 0
+  attackType: 0
   getDropItemName: 
   getMovingType: 
   getBulletType: 
@@ -326,16 +326,23 @@ MonoBehaviour:
   fieldTimeLimit: 0
   bulletSpeed: 0
   shootLimit: 0
+  setScore: 0
+  Health: 0
   firstWaitTime: 0
   waitTime: 0
-  BigShootPos: []
-  BossShootPos1: {fileID: 2322119818923256873}
-  BossShootPos2: {fileID: 1785550548735875606}
-  BossShootPos3: {fileID: 2978666539493228857}
-  BossShootPos4: {fileID: 993973211868008804}
-  BossShootPos5: {fileID: 7016438172287397772}
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 0}
+  fieldTime: 0
+  attackTime: 0
+  shootTime: 0.1
+  shootCount: 0
+  isLock: 0
+  degree: 0
+  shootPos: []
+  obj_ShootPos:
+  - {fileID: 2322119818923256873}
+  - {fileID: 1785550548735875606}
+  - {fileID: 2978666539493228857}
+  - {fileID: 993973211868008804}
+  - {fileID: 7016438172287397772}
 --- !u!1 &7016438172287397772
 GameObject:
   m_ObjectHideFlags: 0

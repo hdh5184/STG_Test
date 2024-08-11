@@ -73,7 +73,7 @@ public class Enemy : MonoBehaviour
     public Spawn spawnData;
     public Spawn_Boss spawnBossData;
 
-    public Vector2[] shootPos;
+    public Transform[] shootPos;
 
 
     public struct MoveData
@@ -114,6 +114,7 @@ public class Enemy : MonoBehaviour
         Init_Attribute();
         Init_Type();
         Init_Coroutine();
+        Init_Data();
     }
 
     protected virtual void Update()
@@ -141,7 +142,7 @@ public class Enemy : MonoBehaviour
         degree = 0;
         isLock = false;
 
-        shootPos = new Vector2[1];
+        shootPos = new Transform[1];
 
         set_Atk = null;
         set_Mov = null;
@@ -151,6 +152,8 @@ public class Enemy : MonoBehaviour
     {
         Init_Pattern(this, getPatternType);
         Init_Moving(this, getMovingType);
+        Change_Attack(attackType);
+        Change_Move(moveType);
     }
 
     public void Init_Coroutine()
@@ -159,10 +162,18 @@ public class Enemy : MonoBehaviour
         StartCoroutine(Change_EnemyState(EnemyState.Exit, firstWaitTime + fieldTimeLimit));
     }
 
-    protected Vector2 Init_ShootPos(GameObject obj = null)
+    public void Init_Data()
     {
-        if (obj == null)    return transform.position;
-        else                return obj.transform.position;
+        moveData = new MoveData();
+        attackData = new AttackData();
+        Init_MoveData(this, ref moveData);
+        Init_AttackData(this, ref attackData);
+    }
+
+    protected Transform Init_ShootPos(GameObject obj = null)
+    {
+        if (obj == null)    return transform;
+        else                return obj.transform;
     }
 
     protected void Timing()
@@ -175,16 +186,19 @@ public class Enemy : MonoBehaviour
 
     protected void Move()
     {
+        moveData.fieldTime = fieldTime;
         set_Mov(ref moveData);
     }
 
     protected void Attack()
     {
         if (enemyState != EnemyState.Play) return;
+        if (attackTime < shootTime) return;
 
         for (int i = 0; i < shootPos.Length; i++)
         {
-            attackData.firePos = shootPos[i];
+            attackData.firePos = shootPos[i].position;
+            attackData.shootCount = shootCount;
 
             if (!Compare_DegreeLock())
             attackData.degree = SetDegree(attackData.firePos);
@@ -192,6 +206,7 @@ public class Enemy : MonoBehaviour
             set_Atk(ref attackData);
         }
 
+        shootCount++;
         attackTime = 0;
     }
 
@@ -237,16 +252,14 @@ public class Enemy : MonoBehaviour
     protected void Change_Attack(AttackType type)
     {
         attackType = type;
-        SetSwitch_Attack(attackType);
+        set_Atk = SetSwitch_Attack(attackType);
     }
 
 
-    protected IEnumerator Change_Move(MoveType type, float time)
+    protected void Change_Move(MoveType type)
     {
-        yield return new WaitForSeconds(time);
-
         moveType = type;
-        SetSwitch_Move(moveType);
+        set_Mov = SetSwitch_Move(moveType);
     }
     
 

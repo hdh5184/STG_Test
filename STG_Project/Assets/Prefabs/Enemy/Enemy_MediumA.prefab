@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2112297501381993465}
   - component: {fileID: 1779576366377355381}
   - component: {fileID: 4185007291421671697}
-  - component: {fileID: 5642845917835544108}
+  - component: {fileID: 4720488148568498141}
   m_Layer: 0
   m_Name: Enemy_MediumA
   m_TagString: Untagged
@@ -149,7 +149,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5642845917835544108
+--- !u!114 &4720488148568498141
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -158,16 +158,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3643129782471512763}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da18458f806ae4751843ae0addbbe2ad, type: 3}
+  m_Script: {fileID: 11500000, guid: a6f9871d3d9664451ab5ec46936a5118, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  player: {fileID: 0}
   playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
-  enemyType: 1
-  movingType: 0
-  bulletPattern: 0
+  moveType: 0
+  attackType: 0
   getDropItemName: 
   getMovingType: 
   getBulletType: 
@@ -180,14 +180,15 @@ MonoBehaviour:
   moveExitVec: {x: 0, y: 0}
   fieldTimeLimit: 0
   bulletSpeed: 0
-  shootLimit: 1
+  shootLimit: 0
+  setScore: 0
+  Health: 0
   firstWaitTime: 0
-  waitTime: 1
-  BigShootPos: []
-  BossShootPos1: {fileID: 0}
-  BossShootPos2: {fileID: 0}
-  BossShootPos3: {fileID: 0}
-  BossShootPos4: {fileID: 0}
-  BossShootPos5: {fileID: 0}
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 0}
+  waitTime: 0
+  fieldTime: 0
+  attackTime: 0
+  shootTime: 0.1
+  shootCount: 0
+  isLock: 0
+  degree: 0
+  shootPos: []

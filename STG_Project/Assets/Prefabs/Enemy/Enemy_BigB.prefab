@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 7078819284294557345}
   - component: {fileID: 42061084217946250}
   - component: {fileID: 5025935586192396553}
-  - component: {fileID: 6175067608819821721}
+  - component: {fileID: 3842658786569074616}
   - component: {fileID: 5697086903772788968}
   m_Layer: 0
   m_Name: EnemySubWeapon (1)
@@ -215,7 +215,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &6175067608819821721
+--- !u!114 &3842658786569074616
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -224,16 +224,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1408316554802195351}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da18458f806ae4751843ae0addbbe2ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 208955af5181d45f6bc1b679abd3906b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  player: {fileID: 0}
   playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
-  enemyType: 5
-  movingType: 3
-  bulletPattern: 0
+  moveType: 3
+  attackType: 0
   getDropItemName: 
   getMovingType: 
   getBulletType: acc
@@ -247,19 +247,22 @@ MonoBehaviour:
   fieldTimeLimit: 99
   bulletSpeed: 3
   shootLimit: 3
+  setScore: 0
+  Health: 0
   firstWaitTime: 4
   waitTime: 3
-  BigShootPos:
+  fieldTime: 0
+  attackTime: 0
+  shootTime: 0.1
+  shootCount: 0
+  isLock: 0
+  degree: 0
+  shootPos: []
+  subWeaponOwner: {fileID: 0}
+  Obj_ShootPos:
   - {fileID: 424604485847979654}
   - {fileID: 6070207949072608336}
   - {fileID: 2776929387008409917}
-  BossShootPos1: {fileID: 0}
-  BossShootPos2: {fileID: 0}
-  BossShootPos3: {fileID: 0}
-  BossShootPos4: {fileID: 0}
-  BossShootPos5: {fileID: 0}
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &5697086903772788968
 AudioSource:
   m_ObjectHideFlags: 0
@@ -399,7 +402,7 @@ GameObject:
   - component: {fileID: 4049222588889863477}
   - component: {fileID: 7722303201510155887}
   - component: {fileID: 5766941766345982194}
-  - component: {fileID: 7925577948013994088}
+  - component: {fileID: 5519628611469285502}
   - component: {fileID: 7333817188473668282}
   m_Layer: 0
   m_Name: EnemySubWeapon (7)
@@ -540,7 +543,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7925577948013994088
+--- !u!114 &5519628611469285502
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -549,16 +552,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1970335701725011472}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da18458f806ae4751843ae0addbbe2ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 208955af5181d45f6bc1b679abd3906b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  player: {fileID: 0}
   playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
-  enemyType: 5
-  movingType: 3
-  bulletPattern: 0
+  moveType: 3
+  attackType: 0
   getDropItemName: 
   getMovingType: 
   getBulletType: acc
@@ -572,19 +575,22 @@ MonoBehaviour:
   fieldTimeLimit: 99
   bulletSpeed: 3
   shootLimit: 3
+  setScore: 0
+  Health: 0
   firstWaitTime: 2
   waitTime: 3
-  BigShootPos:
+  fieldTime: 0
+  attackTime: 0
+  shootTime: 0.1
+  shootCount: 0
+  isLock: 0
+  degree: 0
+  shootPos: []
+  subWeaponOwner: {fileID: 0}
+  Obj_ShootPos:
   - {fileID: 7576026781086716187}
   - {fileID: 982074647887729366}
   - {fileID: 8267064647712193180}
-  BossShootPos1: {fileID: 0}
-  BossShootPos2: {fileID: 0}
-  BossShootPos3: {fileID: 0}
-  BossShootPos4: {fileID: 0}
-  BossShootPos5: {fileID: 0}
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &7333817188473668282
 AudioSource:
   m_ObjectHideFlags: 0
@@ -817,7 +823,7 @@ GameObject:
   - component: {fileID: 9198746597488859598}
   - component: {fileID: 8566183301928674811}
   - component: {fileID: 7160186163916084397}
-  - component: {fileID: 5075075643406129123}
+  - component: {fileID: 8783671523726184348}
   - component: {fileID: 3892087763388449954}
   m_Layer: 0
   m_Name: EnemySubWeapon (8)
@@ -958,7 +964,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5075075643406129123
+--- !u!114 &8783671523726184348
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -967,16 +973,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 3065404530651914384}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da18458f806ae4751843ae0addbbe2ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 208955af5181d45f6bc1b679abd3906b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  player: {fileID: 0}
   playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
-  enemyType: 5
-  movingType: 3
-  bulletPattern: 0
+  moveType: 3
+  attackType: 0
   getDropItemName: 
   getMovingType: 
   getBulletType: acc
@@ -990,19 +996,22 @@ MonoBehaviour:
   fieldTimeLimit: 99
   bulletSpeed: 3
   shootLimit: 3
+  setScore: 0
+  Health: 0
   firstWaitTime: 3.5
   waitTime: 3
-  BigShootPos:
+  fieldTime: 0
+  attackTime: 0
+  shootTime: 0.1
+  shootCount: 0
+  isLock: 0
+  degree: 0
+  shootPos: []
+  subWeaponOwner: {fileID: 0}
+  Obj_ShootPos:
   - {fileID: 3450021943173161021}
   - {fileID: 8507564454220239996}
   - {fileID: 2676859542034011966}
-  BossShootPos1: {fileID: 0}
-  BossShootPos2: {fileID: 0}
-  BossShootPos3: {fileID: 0}
-  BossShootPos4: {fileID: 0}
-  BossShootPos5: {fileID: 0}
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &3892087763388449954
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1204,7 +1213,7 @@ GameObject:
   - component: {fileID: 6592593618825369492}
   - component: {fileID: 1829961050517515733}
   - component: {fileID: 8640225286813875456}
-  - component: {fileID: 7217799359076520979}
+  - component: {fileID: 5277333308607625531}
   - component: {fileID: 4569635178836519787}
   m_Layer: 0
   m_Name: EnemySubWeapon (9)
@@ -1345,7 +1354,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7217799359076520979
+--- !u!114 &5277333308607625531
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1354,16 +1363,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4805585144833659751}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da18458f806ae4751843ae0addbbe2ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 208955af5181d45f6bc1b679abd3906b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  player: {fileID: 0}
   playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
-  enemyType: 5
-  movingType: 3
-  bulletPattern: 0
+  moveType: 3
+  attackType: 0
   getDropItemName: 
   getMovingType: 
   getBulletType: acc
@@ -1377,19 +1386,22 @@ MonoBehaviour:
   fieldTimeLimit: 99
   bulletSpeed: 3
   shootLimit: 3
+  setScore: 0
+  Health: 0
   firstWaitTime: 6
   waitTime: 3
-  BigShootPos:
+  fieldTime: 0
+  attackTime: 0
+  shootTime: 0.1
+  shootCount: 0
+  isLock: 0
+  degree: 0
+  shootPos: []
+  subWeaponOwner: {fileID: 0}
+  Obj_ShootPos:
   - {fileID: 4685744374301111121}
   - {fileID: 2639036988005194705}
   - {fileID: 2077925146248458673}
-  BossShootPos1: {fileID: 0}
-  BossShootPos2: {fileID: 0}
-  BossShootPos3: {fileID: 0}
-  BossShootPos4: {fileID: 0}
-  BossShootPos5: {fileID: 0}
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &4569635178836519787
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1498,7 +1510,7 @@ GameObject:
   - component: {fileID: 3282382858054486221}
   - component: {fileID: 6105779948531774749}
   - component: {fileID: 3122347523019937280}
-  - component: {fileID: 5354955123525632922}
+  - component: {fileID: 3455080896136695285}
   - component: {fileID: 2939321510508912344}
   m_Layer: 0
   m_Name: EnemySubWeapon (10)
@@ -1639,7 +1651,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &5354955123525632922
+--- !u!114 &3455080896136695285
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1648,16 +1660,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5167593514189835305}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da18458f806ae4751843ae0addbbe2ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 208955af5181d45f6bc1b679abd3906b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  player: {fileID: 0}
   playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
-  enemyType: 5
-  movingType: 3
-  bulletPattern: 0
+  moveType: 3
+  attackType: 0
   getDropItemName: 
   getMovingType: 
   getBulletType: acc
@@ -1671,19 +1683,22 @@ MonoBehaviour:
   fieldTimeLimit: 99
   bulletSpeed: 3
   shootLimit: 3
+  setScore: 0
+  Health: 0
   firstWaitTime: 6.5
   waitTime: 3
-  BigShootPos:
+  fieldTime: 0
+  attackTime: 0
+  shootTime: 0.1
+  shootCount: 0
+  isLock: 0
+  degree: 0
+  shootPos: []
+  subWeaponOwner: {fileID: 0}
+  Obj_ShootPos:
   - {fileID: 8964676494610434626}
   - {fileID: 8405927015177162841}
   - {fileID: 4491206407855037349}
-  BossShootPos1: {fileID: 0}
-  BossShootPos2: {fileID: 0}
-  BossShootPos3: {fileID: 0}
-  BossShootPos4: {fileID: 0}
-  BossShootPos5: {fileID: 0}
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &2939321510508912344
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1792,7 +1807,7 @@ GameObject:
   - component: {fileID: 661348241072154713}
   - component: {fileID: 5437578138368648904}
   - component: {fileID: 4218010110191627120}
-  - component: {fileID: 2175912959482155686}
+  - component: {fileID: 9131337078766466867}
   - component: {fileID: 2074524786813914736}
   m_Layer: 0
   m_Name: EnemySubWeapon
@@ -1933,7 +1948,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &2175912959482155686
+--- !u!114 &9131337078766466867
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1942,16 +1957,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5436252624711072711}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da18458f806ae4751843ae0addbbe2ad, type: 3}
+  m_Script: {fileID: 11500000, guid: 208955af5181d45f6bc1b679abd3906b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  player: {fileID: 0}
   playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
-  enemyType: 5
-  movingType: 3
-  bulletPattern: 0
+  moveType: 3
+  attackType: 0
   getDropItemName: 
   getMovingType: 
   getBulletType: acc
@@ -1965,19 +1980,22 @@ MonoBehaviour:
   fieldTimeLimit: 99
   bulletSpeed: 3
   shootLimit: 3
+  setScore: 0
+  Health: 0
   firstWaitTime: 2.5
   waitTime: 3
-  BigShootPos:
+  fieldTime: 0
+  attackTime: 0
+  shootTime: 0.1
+  shootCount: 0
+  isLock: 0
+  degree: 0
+  shootPos: []
+  subWeaponOwner: {fileID: 0}
+  Obj_ShootPos:
   - {fileID: 1579752316372398202}
   - {fileID: 5937271636484998302}
   - {fileID: 8391374953284852053}
-  BossShootPos1: {fileID: 0}
-  BossShootPos2: {fileID: 0}
-  BossShootPos3: {fileID: 0}
-  BossShootPos4: {fileID: 0}
-  BossShootPos5: {fileID: 0}
-  subWeaponObj: []
-  subWeaponOwner: {fileID: 6819692951887069912}
 --- !u!82 &2074524786813914736
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2149,7 +2167,7 @@ GameObject:
   - component: {fileID: 8783547716191000353}
   - component: {fileID: 6525872430450479185}
   - component: {fileID: 7675102144709479874}
-  - component: {fileID: 7397632896966896550}
+  - component: {fileID: -1380673901871339004}
   m_Layer: 0
   m_Name: Enemy_BigB
   m_TagString: Untagged
@@ -2327,7 +2345,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7397632896966896550
+--- !u!114 &-1380673901871339004
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2336,16 +2354,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6819692951887069912}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da18458f806ae4751843ae0addbbe2ad, type: 3}
+  m_Script: {fileID: 11500000, guid: ac6ddbac0439a44c8985853e4a1dba0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   pool: {fileID: 0}
   audioManager: {fileID: 0}
+  player: {fileID: 0}
   playerPos: {x: 0, y: 0, z: 0}
   enemyState: 0
-  enemyType: 3
-  movingType: 0
-  bulletPattern: 0
+  moveType: 0
+  attackType: 0
   getDropItemName: 
   getMovingType: 
   getBulletType: 
@@ -2359,22 +2377,18 @@ MonoBehaviour:
   fieldTimeLimit: 0
   bulletSpeed: 0
   shootLimit: 0
+  setScore: 0
+  Health: 0
   firstWaitTime: 0
   waitTime: 0
-  BigShootPos: []
-  BossShootPos1: {fileID: 0}
-  BossShootPos2: {fileID: 0}
-  BossShootPos3: {fileID: 0}
-  BossShootPos4: {fileID: 0}
-  BossShootPos5: {fileID: 0}
-  subWeaponObj:
-  - {fileID: 5436252624711072711}
-  - {fileID: 1408316554802195351}
-  - {fileID: 1970335701725011472}
-  - {fileID: 3065404530651914384}
-  - {fileID: 4805585144833659751}
-  - {fileID: 5167593514189835305}
-  subWeaponOwner: {fileID: 0}
+  fieldTime: 0
+  attackTime: 0
+  shootTime: 0.1
+  shootCount: 0
+  isLock: 0
+  degree: 0
+  shootPos: []
+  subWeaponObj: []
 --- !u!1 &7576026781086716187
 GameObject:
   m_ObjectHideFlags: 0

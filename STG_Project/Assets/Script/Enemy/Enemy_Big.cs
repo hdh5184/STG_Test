@@ -21,7 +21,6 @@ public class Enemy_Big : Enemy
 
     void Init()
     {
-        shootPos = new Vector2[1];
         shootPos[0] = Init_ShootPos();
     }
 

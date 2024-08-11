@@ -19,7 +19,7 @@ public class Enemy_SubWeapon : Enemy
 
     void Init()
     {
-        shootPos = new Vector2[Obj_ShootPos.Length];
+        shootPos = new Transform[Obj_ShootPos.Length];
 
         for (int i = 0; i < shootPos.Length; i++)
         shootPos[i] = Init_ShootPos(Obj_ShootPos[i]);
