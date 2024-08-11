@@ -162,7 +162,7 @@ public class PoolManager : MonoBehaviour
     }
 
     /// <summary> Pool - 오브젝트 선택 </summary>
-    public GameObject MakeObject(string obj)
+    public GameObject MakeObject(string obj, bool isSetActive = true)
     {
         switch (obj)
         {
@@ -231,7 +231,7 @@ public class PoolManager : MonoBehaviour
             {
                 if (!targetPool[i].activeSelf)
                 {
-                    targetPool[i].SetActive(true);
+                    targetPool[i].SetActive(isSetActive);
                     return targetPool[i];
                 }
             }

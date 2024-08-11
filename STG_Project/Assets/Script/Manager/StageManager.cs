@@ -361,14 +361,18 @@ public class StageManager : MonoBehaviour
             Debug.Log($"편대 {spawnData.spawnCode}번");
 
             // 2. Enemy 생성 및 위치 배치
-            GameObject enemy = pool.MakeObject(spawnData.enemyType);
+            GameObject enemy = pool.MakeObject(spawnData.enemyType, false);
             enemy.transform.position = new Vector2(spawnData.posX, spawnData.posY);
 
             // 3. Enemy 데이터 적용 및 초기화
             Enemy enemyLogic = enemy.GetComponent<Enemy>();
             //enemyLogic.audioManager = audioManager;
-            enemyLogic.SetEnemyData(spawnData);
-            enemyLogic.EnemyInit();
+
+            Spawn.SetEnemyData(enemyLogic, spawnData);
+            enemy.SetActive(true);
+
+            //enemyLogic.SetEnemyData(spawnData);
+            //enemyLogic.EnemyInit();
 
             // 4. 후속 처리 및 다음 생성 시간 갱신
             // *. Enemy 모두 생성 완료 시 Enemy 생성 로직 정지
@@ -379,10 +383,12 @@ public class StageManager : MonoBehaviour
             else nextSpawnDelay = spawnList[spawnIndex].delay;
 
             // @. 보스 출현 시 보스 초기화 및 보스 전투 진행 처리
+            /*
             if (enemyLogic.enemyType == Enemy.EnemyType.Boss)
             {
                 BossInit(enemy); bossExist = true;
             }
+            */
 
             // 5. 필드 내에 존재하는 Enemy 목록에 추가
             EnemyList.Add(enemy);

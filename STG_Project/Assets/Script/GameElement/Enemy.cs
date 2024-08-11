@@ -5,7 +5,7 @@ using UnityEngine;
 using static LobbyManager;
 using static StageManager;
 
-public class Enemy : MonoBehaviour
+public class Enemy_temp : MonoBehaviour
 {
     // 1. 매니저
     public PoolManager pool;

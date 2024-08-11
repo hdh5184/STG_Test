@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Enemy;
+using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public struct EnemyData
 {
@@ -86,6 +88,69 @@ public class Spawn
             spawnData.waitTime = float.Parse(data_Dialog[i]["waitTime"].ToString());
 
             SpawnList.Add(spawnData);
+        }
+    }
+
+
+
+
+    public static void SetEnemyData(Enemy enemy, EnemyData data)
+    {
+        // 1. Item
+        enemy.getDropItemName = data.dropItemName;
+
+        // 2. Vector
+        enemy.moveVec = new Vector2(data.movX, data.movY).normalized;
+        enemy.moveDesVec = new Vector2(data.movDesX, data.movDesY);
+        enemy.moveExitVec = new Vector2(data.movExitX, data.movExitY).normalized;
+
+        // 3. Enemy Attribute
+        enemy.degreeZ = data.degreeZ;
+        enemy.movSpeed = data.movSpeed;
+        enemy.getMovingType = data.movingType;
+        enemy.fieldTimeLimit = data.fieldTimeLimit;
+
+        // 4. Bullet Attribute
+        enemy.getBulletType = data.bulletType;
+        enemy.getBulletName = data.bulletName;
+        enemy.getPatternType = data.patternType;
+        enemy.bulletSpeed = data.bulletSpeed;
+        enemy.shootLimit = data.shootLimit;
+
+        // 5. Time
+        enemy.firstWaitTime = data.firstWaitTime;
+        enemy.waitTime = data.waitTime;
+
+        Init_Pattern(enemy, enemy.getPatternType);
+        Init_Moving(enemy, enemy.getMovingType);
+
+        //if (enemy.enemyType != EnemyType.Boss) enemy.bulletPatterns.Enqueue(enemy.bulletPattern);
+        enemy.transform.rotation = Quaternion.Euler(0, 0, enemy.degreeZ);
+    }
+
+    /// <summary> Enemy - 공격, 이동, 기체 회전 속성 초기화 (+ 보스 공격) </summary>
+    public static void Init_Pattern(Enemy enemy, string name_Pattern)
+    {
+        switch (name_Pattern)
+        {
+            case "str": enemy.attackType = AttackType.Straight; break;
+            case "way": enemy.attackType = AttackType.n_Way; break;
+            case "cir": enemy.attackType = AttackType.Circle; break;
+            case "spr": enemy.attackType = AttackType.Spread; break;
+            case "sprR": enemy.attackType = AttackType.Spread_Random; break;
+            case "vtx": enemy.attackType = AttackType.Vortex; break;
+            case "down": enemy.attackType = AttackType.Down; break;
+            case "none": enemy.attackType = AttackType.None; break;
+        }
+    }
+
+    public static void Init_Moving(Enemy enemy, string name_Moving)
+    {
+        switch (name_Moving)
+        {
+            case "str": enemy.moveType = MoveType.Straight; break;
+            case "acc": enemy.moveType = MoveType.Accel; break;
+            case "slow": enemy.moveType = MoveType.SlowDown; break;
         }
     }
 }

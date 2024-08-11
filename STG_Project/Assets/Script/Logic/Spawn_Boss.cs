@@ -46,9 +46,9 @@ public class Spawn_Boss
     public static void SetBossLogicData(string StageBossDataName, GameObject boss)
     {
         // Enemy 컴포넌트 불러오기 및 초기화
-        Enemy bossLogic = boss.GetComponent<Enemy>();
-        bossLogic.bossLogics.Clear();
-        bossLogic.bossLogicsFinal.Clear();
+        Enemy_Boss bossLogic = boss.GetComponent<Enemy_Boss>();
+        bossLogic.queue_Attack.Clear();
+        bossLogic.queue_AttackFinal.Clear();
 
         // Boss 데이터 불러오기
         List<Dictionary<string, object>> bossData = CSVReader.Read(StageBossDataName);
@@ -90,9 +90,9 @@ public class Spawn_Boss
 
             if (bossData[i]["BossLogicCode"].ToString() == "Final")
             {
-                bossLogic.bossLogicsFinal.Enqueue(bossLogicData); break;
+                bossLogic.queue_AttackFinal.Enqueue(bossLogicData); break;
             }
-            bossLogic.bossLogics.Enqueue(bossLogicData);
+            bossLogic.queue_Attack.Enqueue(bossLogicData);
         }
 
         // Boss 초기 대기 시간 설정

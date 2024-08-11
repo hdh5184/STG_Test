@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Enemy;
-using static Enemy_pre;
 
 public class Logic_Enemy : MonoBehaviour
 {
@@ -14,7 +13,7 @@ public class Logic_Enemy : MonoBehaviour
     public static void Move_Acc(ref MoveData data)
     {
         data.transform.Translate
-            (data.moveExitVec * data.movSpeed * Time.deltaTime * data.fieldTime * 2);
+            (data.moveVec * data.movSpeed * Time.deltaTime * data.fieldTime * 2);
     }
 
     public static void Move_Str(ref MoveData data)
@@ -26,7 +25,7 @@ public class Logic_Enemy : MonoBehaviour
     public static void Move_Slow(ref MoveData data)
     {
         data.transform.position =
-            Vector2.Lerp(data.transform.position, data.moveDesVec, 0.07f);
+            Vector2.Lerp(data.transform.position, data.moveVec, 0.07f);
     }
 
 
@@ -49,7 +48,7 @@ public class Logic_Enemy : MonoBehaviour
     }
     */
 
-
+    
     public static Set_Attack SetSwitch_Attack(AttackType patten)
     {
         switch (patten)
@@ -63,6 +62,7 @@ public class Logic_Enemy : MonoBehaviour
             case AttackType.Vortex:         return Attack_Vtx;
 
             case AttackType.None:           return Attack_None;
+
             default:                        return null;
         }
     }
@@ -95,31 +95,20 @@ public class Logic_Enemy : MonoBehaviour
 
 
 
-
-
-
     /// <summary> str : 플레이어 조준 공격 </summary>
-    public static void Attack_Str(ref AttackData data)
-    { 
-        if (!isLock || shootCount == 0) GetDegree(shootPos);
-        setBossDegree();
-        Fire(degree, shootPos);
-    }
+    public static void Attack_Str(ref AttackData data) => Fire(ref data);
 
     /// <summary> way : n개 탄 방사 공격 </summary>
     public static void Attack_n_Way(ref AttackData data)
     {
-        if (!isLock || shootCount == 0) GetDegree(shootPos);
 
-        setBossDegree();
-
-        int n_Count = shootLimit;
+        int n_Count = data.shootLimit;
         float degEach = 20f;
-        float setDeg = degree - degEach * (n_Count - 1) / 2;
+        float setDeg = data.degree - degEach * (n_Count - 1) / 2;
 
         for (int i = 0; i < n_Count; i++)
         {
-            Fire(setDeg, shootPos);
+            Fire(ref data);
             setDeg += degEach;
         }
     }
@@ -127,17 +116,14 @@ public class Logic_Enemy : MonoBehaviour
     /// <summary> cir : 원형 공격 </summary>
     public static void Attack_Cir(ref AttackData data)
     {
-        if (!isLock || shootCount == 0) GetDegree(shootPos);
-
-        setBossDegree();
 
         int n_Count = 20;
         float degEach = 360 / n_Count;
-        float setDeg = degree;
+        float setDeg = data.degree;
 
         for (int i = 0; i < n_Count; i++)
         {
-            Fire(setDeg, shootPos);
+            Fire(ref data);
             setDeg += degEach;
         }
     }
@@ -145,18 +131,14 @@ public class Logic_Enemy : MonoBehaviour
     /// <summary> spr : 역삼각형 모양 방사 반복 공격 </summary>
     public static void Attack_Spr(ref AttackData data)
     {
-        if (!isLock || shootCount == 0) GetDegree(shootPos);
-
-        setBossDegree();
-
         float degEach = 10f;
 
         for (int i = 0; i < 2; i++)
         {
             float setDeg = (i == 0) ?
-                degree - degEach * (shootCount % 4) : degree + degEach * (shootCount % 4);
-            Fire(setDeg, shootPos);
-            if (shootCount % 4 == 0) break;
+                data.degree - degEach * (data.shootCount % 4) : data.degree + degEach * (data.shootCount % 4);
+            Fire(ref data);
+            if (data.shootCount % 4 == 0) break;
         }
     }
 
@@ -165,12 +147,11 @@ public class Logic_Enemy : MonoBehaviour
     {
         int n_Count = 4;
 
-        setBossDegree();
 
         for (int i = 0; i < n_Count; i++)
         {
-            float setDeg = degree + Random.Range(-degLimit / 2, degLimit / 2);
-            Fire(setDeg, shootPos);
+            float setDeg = data.degree + Random.Range(-data.degreeLimit / 2, data.degreeLimit / 2);
+            Fire(ref data);
         }
     }
 
@@ -180,7 +161,7 @@ public class Logic_Enemy : MonoBehaviour
     }
 
     /// <summary> down : 전방 고정 공격 </summary>
-    public static void Attack_Down(ref AttackData data) => Fire(0, shootPos);
+    public static void Attack_Down(ref AttackData data) => Fire(ref data);
 
     public static void Attack_None(ref AttackData data)
     {
@@ -190,27 +171,21 @@ public class Logic_Enemy : MonoBehaviour
 
 
     /// <summary> 탄 발사 로직 </summary>
-    private void Fire(float deg, GameObject shootPos)
+    private static void Fire(ref AttackData data)
     {
         // 1. 탄 오브젝트 및 속성 불러오기
-        GameObject bullet = pool.MakeObject(getBulletName);
+        GameObject bullet = data.pool.MakeObject(data.getBulletName);
         EnemyBullet bulletCom = bullet.GetComponent<EnemyBullet>();
 
         // 2. Transform 속성 지정
-        Vector2 pos = (shootPos == null) ?
-            transform.position : shootPos.transform.position;
-        Quaternion rotate = Quaternion.Euler(0, 0, deg);
+        Quaternion rotate = Quaternion.Euler(0, 0, data.degree);
 
-        bullet.transform.position = pos;
+        bullet.transform.position = data.firePos;
         bullet.transform.rotation = rotate;
 
         // 3. 탄 속성 지정 및 초기화
-        bulletCom.Set_Attribute(getBulletType, bulletSpeed);
+        bulletCom.Set_Attribute(data.getBulletType, data.bulletSpeed);
         bulletCom.Init();
-
-        // 4. 기타
-        IdleTime = 0;
     }
-
     
 }
