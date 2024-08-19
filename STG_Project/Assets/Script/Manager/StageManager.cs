@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using static Spawn;
+using static Spawn_Boss;
 
 public class StageManager : MonoBehaviour
 {
@@ -44,7 +46,7 @@ public class StageManager : MonoBehaviour
     public int getStageNum = 0;
     public int getPlayerType;
 
-    public static int Score = 0;
+    public static int score = 0;
     float StageTime = 0;
     bool isGameClear = false;
 
@@ -61,6 +63,8 @@ public class StageManager : MonoBehaviour
     // 5. Enemy 관리
     public static List<GameObject> EnemyList;
     public List<EnemyData> spawnList;
+    public Queue<BossData> bossAttactQueue;
+    public BossData bossFinalAttact;
 
     public int spawnIndex;
     public int spawnAmount;
@@ -123,7 +127,7 @@ public class StageManager : MonoBehaviour
                 if (bossExist)
                 ShowBossState();
 
-                scoreText.text = Score.ToString();
+                scoreText.text = score.ToString();
                 break;
 
             case StageState.End:
@@ -161,7 +165,7 @@ public class StageManager : MonoBehaviour
         playerHealth = 2;
 
         // 2-2. Score
-        Score = 0;
+        score = 0;
         BossTimeScore = 0;
         RemainingScore = 0;
 
@@ -254,6 +258,7 @@ public class StageManager : MonoBehaviour
         switch (getStageNum)
         {
             case 1:
+                //StageDataName = "Spawn_Stage1 copy";
                 StageDataName = "Spawn_Stage1";
                 StageBossDataName = "BossLogic_A"; break;
             case 2:
@@ -276,7 +281,7 @@ public class StageManager : MonoBehaviour
     void SetSpawnData()
     {
         // Enemy 생성 데이터 적용
-        Spawn.SetSpawnLogicData(StageDataName, spawnList);
+        SetSpawnLogicData(StageDataName, spawnList);
 
         // Enemy 생성 관련 변수 초기화
         spawnIndex = 0;
@@ -344,8 +349,6 @@ public class StageManager : MonoBehaviour
     /*************** Enemy 생성 매커니즘 ***************/
 
     /// <summary> Boss 데이터 적용 </summary>
-    public void BossInit(GameObject boss)
-     => Spawn_Boss.SetBossLogicData(StageBossDataName, boss);
 
     /// <summary> Enemy 생성 로직 </summary>
     void SpawnEnemy()
@@ -369,7 +372,16 @@ public class StageManager : MonoBehaviour
             Enemy enemyLogic = enemy.GetComponent<Enemy>();
             //enemyLogic.audioManager = audioManager;
 
-            Spawn.SetEnemyData(enemyLogic, spawnData);
+            SetEnemyData(enemyLogic, spawnData);
+
+            // @. 보스 출현 시 보스 초기화 및 보스 전투 진행 처리
+            if (enemyLogic.isBoss)
+            {
+                bossExist = true;
+                Enemy_Boss boss = enemy.GetComponent<Enemy_Boss>();
+                SetBossLogicData(StageBossDataName, boss);
+            }
+
             enemy.SetActive(true);
 
             //enemyLogic.SetEnemyData(spawnData);
@@ -383,13 +395,9 @@ public class StageManager : MonoBehaviour
             if (spawnAmount == spawnIndex) spawnEnd = true;
             else nextSpawnDelay = spawnList[spawnIndex].delay;
 
-            // @. 보스 출현 시 보스 초기화 및 보스 전투 진행 처리
-            /*
-            if (enemyLogic.enemyType == Enemy.EnemyType.Boss)
-            {
-                BossInit(enemy); bossExist = true;
-            }
-            */
+            
+
+            
 
             // 5. 필드 내에 존재하는 Enemy 목록에 추가
             EnemyList.Add(enemy);
@@ -428,7 +436,7 @@ public class StageManager : MonoBehaviour
             BossTimeScore = (int)(BossFieldLimitTime * 100) * 10;
             RemainingScore = playerHealth * 20000;
         }
-        ResultScore += Score + BossTimeScore + RemainingScore;
+        ResultScore += score + BossTimeScore + RemainingScore;
 
         stageState = StageState.End;
         ShowResultCountLimit = 5;
@@ -448,7 +456,7 @@ public class StageManager : MonoBehaviour
                         ResultText_Defeat[0].text = "Defeat"; break;
                     case 1:
                         ResultText_Defeat[1].text =
-                            $"<size=72>Total Score</size>\n{Score.ToString()}"; break;
+                            $"<size=72>Total Score</size>\n{score.ToString()}"; break;
                     case 2: Back_Button_Defeat.SetActive(true); break;
                 }
             }
@@ -458,7 +466,7 @@ public class StageManager : MonoBehaviour
                 {
                     case 0:
                         ResultText_Clear[0].text =
-                            $"<size=64>Score</size> {Score.ToString()}"; break;
+                            $"<size=64>Score</size> {score.ToString()}"; break;
                     case 1:
                         ResultText_Clear[1].text =
                             $"<size=64>Boss-time</size> {BossTimeScore.ToString()}"; break;

@@ -1,28 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using static Init_Enemy;
+using static Logic_Enemy;
 
+/* <Enemy 보조 무기> */
 public class Enemy_SubWeapon : Enemy
 {
+    // 보조 무기 소유자
     public GameObject subWeaponOwner;
-    public GameObject[] Obj_ShootPos;
+    // 공격 위치
+    public GameObject[] obj_ShootPos;
 
     protected override void Awake()
-    { base.Awake(); setScore = 150; }
+    {
+        base.Awake();
+        Init(this, 150, 30, obj_ShootPos);
+    }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        Init();
-        Health = 30;
-    }
-
-    void Init()
-    {
-        shootPos = new Transform[Obj_ShootPos.Length];
-
-        for (int i = 0; i < shootPos.Length; i++)
-        shootPos[i] = Init_ShootPos(Obj_ShootPos[i]);
     }
 
     protected override void Update()
@@ -33,15 +29,23 @@ public class Enemy_SubWeapon : Enemy
         Act_SubWeapon();
     }
 
-    protected void Act_SubWeapon()
-    {
-        degree = Logic_Enemy.SetDegree(transform.position);
-        transform.rotation = Quaternion.Euler(0, 0, degree);
-    }
-
     protected override void Dead()
     {
         subWeaponOwner.GetComponent<Enemy>().Health -= 50;
+        Explosion(this, "ExplodeB", "EShotL");
         base.Dead();
+    }
+
+
+
+
+
+    /*************** 개별 매서드 모음 ***************/
+
+    /// <summary> 보조 무기 행동 </summary>
+    protected void Act_SubWeapon()
+    {
+        degree = SetDegree(transform.position);
+        transform.rotation = Quaternion.Euler(0, 0, degree);
     }
 }

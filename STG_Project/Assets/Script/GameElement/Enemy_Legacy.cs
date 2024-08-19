@@ -5,7 +5,7 @@ using UnityEngine;
 using static LobbyManager;
 using static StageManager;
 
-public class Enemy_temp : MonoBehaviour
+public class Enemy_Legacy : MonoBehaviour
 {
     // 1. 매니저
     public PoolManager pool;
@@ -360,11 +360,13 @@ public class Enemy_temp : MonoBehaviour
         getMovingType = bossLogic.movingType;
         moveExitVec = new Vector2(bossLogic.movExitX, bossLogic.movExitY).normalized;
 
+        /*
         shoot1 = (bossLogic.shootPos1 == "1") ? true : false;
         shoot2 = (bossLogic.shootPos2 == "1") ? true : false;
         shoot3 = (bossLogic.shootPos3 == "1") ? true : false;
         shoot4 = (bossLogic.shootPos4 == "1") ? true : false;
         shoot5 = (bossLogic.shootPos5 == "1") ? true : false;
+        */
 
         getBulletType = bossLogic.bulletType;
         getBulletName = bossLogic.bulletName;
@@ -612,7 +614,7 @@ public class Enemy_temp : MonoBehaviour
     public void Dead()
     {
         enemyState = EnemyState.Dead;
-        StageManager.Score += setScore;
+        StageManager.score += setScore;
         StageManager.EnemyList.Remove(gameObject);
 
         switch (enemyType)

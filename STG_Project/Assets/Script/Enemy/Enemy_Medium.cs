@@ -1,33 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using static Init_Enemy;
+using static Logic_Enemy;
 
+/* <Enemy 중소형> */
 public class Enemy_Medium : Enemy
 {
     protected override void Awake()
-    { base.Awake(); setScore = 500; }
+    {
+        base.Awake();
+        Init(this, 500, 30);
+    }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        Init();
-        Health = 30;
-    }
-
-    void Init()
-    {
-        shootPos[0] = Init_ShootPos();
     }
 
     protected override void Update()
     {
         if (StageManager.isGamePlay)
-            base.Update();
+        base.Update();
     }
 
     protected override void Dead()
     {
-        Explosion("ExplodeB", "EShotL");
+        Explosion(this, "ExplodeB", "EShotL");
         base.Dead();
     }
 }

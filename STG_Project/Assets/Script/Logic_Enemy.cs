@@ -1,54 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using static Enemy;
 
+/* <Enemy 로직 모음> */
 public class Logic_Enemy : MonoBehaviour
 {
-    public static Logic_Enemy instance;
+    /*************** 메서드 반환 모음 ***************/
 
-    int shootCount;
-
-    // 구조체로 매개변수를 넘겨줄까
-    public static void Move_Acc(ref MoveData data)
+    /// <summary> 이동 메서드 반환 </summary>
+    public static Set_Move SetSwitch_Move(MoveType move)
     {
-        data.transform.Translate
-            (data.moveVec * data.movSpeed * Time.deltaTime * data.fieldTime * 2);
-    }
-
-    public static void Move_Str(ref MoveData data)
-    {
-        data.transform.Translate
-            (data.moveVec * data.movSpeed * Time.deltaTime);
-    }
-
-    public static void Move_Slow(ref MoveData data)
-    {
-        data.transform.position =
-            Vector2.Lerp(data.transform.position, data.moveVec, 0.07f);
-    }
-
-
-    /*
-    public static void Moving()
-    {
-        switch (movingType)
+        switch (move)
         {
-            case MovingType.Straight:
-                transform.Translate(moveVec * movSpeed * Time.deltaTime); break;
-            case MovingType.Accel:
-                if (enemyState == EnemyState.Exit)
-                    transform.Translate(moveExitVec * movSpeed * Time.deltaTime * fieldTime * 2);
-                else transform.Translate(moveVec * movSpeed * Time.deltaTime * fieldTime * 2); break;
-            case MovingType.SlowDown:
-                if (fieldTime < 1)
-                    transform.position = Vector2.Lerp(transform.position, moveDesVec, 0.07f);
-                else movingType = MovingType.Straight; break;
+            case MoveType.Accel:    return Move_Acc;
+            case MoveType.SlowDown: return Move_Slow;
+            case MoveType.Straight: return Move_Str;
+
+            default:                return Move_None;
         }
     }
-    */
 
-    
+    /// <summary> 공격 메서드 반환 </summary>
     public static Set_Attack SetSwitch_Attack(AttackType patten)
     {
         switch (patten)
@@ -61,27 +32,131 @@ public class Logic_Enemy : MonoBehaviour
             case AttackType.Straight:       return Attack_Str;
             case AttackType.Vortex:         return Attack_Vtx;
 
-            case AttackType.None:           return Attack_None;
-
-            default:                        return null;
+            default:                        return Attack_None;
         }
     }
 
-    public static Set_Move SetSwitch_Move(MoveType move)
+
+
+
+
+    /*************** 이동 패턴 모음 ***************/
+
+    /// <summary> acc : 가속 이동 </summary>
+    public static void Move_Acc(ref MoveData data)
     {
-        switch (move)
-        {
-            case MoveType.Accel:    return Move_Acc;
-            case MoveType.SlowDown: return Move_Slow;
-            case MoveType.Straight: return Move_Str;
+        data.transform.Translate
+        (data.moveVec * data.movSpeed * Time.deltaTime * data.fieldTime * 2);
+    }
 
-            default:                return null;
+    /// <summary> str : 직진 이동 </summary>
+    public static void Move_Str(ref MoveData data)
+    {
+        data.transform.Translate
+        (data.moveVec * data.movSpeed * Time.deltaTime);
+    }
+
+    /// <summary> slow : 지정 위치까지 감쇠 이동 </summary>
+    public static void Move_Slow(ref MoveData data)
+    {
+        data.transform.position =
+        Vector2.Lerp(data.transform.position, data.moveVec, 0.07f);
+    }
+
+    /// <summary> none : 이동 없음 </summary>
+    public static void Move_None(ref MoveData data) { }
+
+
+
+
+
+    /*************** 공격 패턴 모음 ***************/
+
+    /// <summary> str : 플레이어 조준 공격 </summary>
+    public static void Attack_Str(ref AttackData data) => Fire(ref data);
+
+    /// <summary> way : n개 탄 방사 공격 </summary>
+    public static void Attack_n_Way(ref AttackData data)
+    {
+        int n_Count = data.shootLimit;
+        float degEach = 20f;
+        data.degree -= degEach * (n_Count - 1) / 2;
+
+        for (int i = 0; i < n_Count; i++)
+        {
+            Fire(ref data);
+            data.degree += degEach;
         }
+    }
+
+    /// <summary> cir : 원형 공격 </summary>
+    public static void Attack_Cir(ref AttackData data)
+    {
+        int n_Count = 20;
+        float degEach = 360 / n_Count;
+
+        for (int i = 0; i < n_Count; i++)
+        {
+            Fire(ref data);
+            data.degree += degEach;
+        }
+    }
+
+    /// <summary> spr : 역삼각형 모양 방사 반복 공격 </summary>
+    public static void Attack_Spr(ref AttackData data)
+    {
+        if (data.shootCount % 4 == 0) Fire(ref data);
+        else
+        {
+            float degOrigin = data.degree;
+            float degEach = 10f * (data.shootCount % 4);
+
+            for (int i = 0; i < 2; i++)
+            {
+                data.degree = (i == 0) ? degOrigin - degEach : degOrigin + degEach;
+                Fire(ref data);
+            }
+        }
+    }
+
+    /// <summary> sprR : 플레이어 기준 전방 무작위 각도 방사 공격 </summary>
+    public static void Attack_SprR(ref AttackData data)
+    {
+        int n_Count = 4;
+        float degOrigin = data.degree;
+        float degLimit = data.degreeLimit / 2;
+
+        for (int i = 0; i < n_Count; i++)
+        {
+            data.degree = degOrigin + Random.Range(-degLimit, degLimit);
+            Fire(ref data);
+        }
+    }
+
+    public static void Attack_Vtx(ref AttackData data)
+    {
+
+    }
+
+    /// <summary> down : 전방 고정 공격 </summary>
+    public static void Attack_Down(ref AttackData data)
+    {
+        data.degree = 0; Fire(ref data);
+    }
+
+    /// <summary> none : 공격 없음 </summary>
+    public static void Attack_None(ref AttackData data)
+    {
+        return;
     }
 
 
 
 
+
+    /*************** 공격 로직 모음 ***************/
+
+    /// <summary> 공격 기준 각도 반환 </summary>
     public static float SetDegree(Vector2 shootPos)
     {
         Vector3 playerPos = StageManager.playerPos;
@@ -93,84 +168,7 @@ public class Logic_Enemy : MonoBehaviour
         return Mathf.Atan2(shootVec.y, shootVec.x) / Mathf.PI * 180 + 90;
     }
 
-
-
-    /// <summary> str : 플레이어 조준 공격 </summary>
-    public static void Attack_Str(ref AttackData data) => Fire(ref data);
-
-    /// <summary> way : n개 탄 방사 공격 </summary>
-    public static void Attack_n_Way(ref AttackData data)
-    {
-
-        int n_Count = data.shootLimit;
-        float degEach = 20f;
-        float setDeg = data.degree - degEach * (n_Count - 1) / 2;
-
-        for (int i = 0; i < n_Count; i++)
-        {
-            Fire(ref data);
-            setDeg += degEach;
-        }
-    }
-
-    /// <summary> cir : 원형 공격 </summary>
-    public static void Attack_Cir(ref AttackData data)
-    {
-
-        int n_Count = 20;
-        float degEach = 360 / n_Count;
-        float setDeg = data.degree;
-
-        for (int i = 0; i < n_Count; i++)
-        {
-            Fire(ref data);
-            setDeg += degEach;
-        }
-    }
-
-    /// <summary> spr : 역삼각형 모양 방사 반복 공격 </summary>
-    public static void Attack_Spr(ref AttackData data)
-    {
-        float degEach = 10f;
-
-        for (int i = 0; i < 2; i++)
-        {
-            float setDeg = (i == 0) ?
-                data.degree - degEach * (data.shootCount % 4) : data.degree + degEach * (data.shootCount % 4);
-            Fire(ref data);
-            if (data.shootCount % 4 == 0) break;
-        }
-    }
-
-    /// <summary> sprR : 플레이어 기준 전방 무작위 각도 방사 공격 </summary>
-    public static void Attack_SprR(ref AttackData data)
-    {
-        int n_Count = 4;
-
-
-        for (int i = 0; i < n_Count; i++)
-        {
-            float setDeg = data.degree + Random.Range(-data.degreeLimit / 2, data.degreeLimit / 2);
-            Fire(ref data);
-        }
-    }
-
-    public static void Attack_Vtx(ref AttackData data)
-    {
-
-    }
-
-    /// <summary> down : 전방 고정 공격 </summary>
-    public static void Attack_Down(ref AttackData data) => Fire(ref data);
-
-    public static void Attack_None(ref AttackData data)
-    {
-        return;
-    }
-
-
-
-    /// <summary> 탄 발사 로직 </summary>
+    /// <summary> 탄 발사 </summary>
     private static void Fire(ref AttackData data)
     {
         // 1. 탄 오브젝트 및 속성 불러오기
@@ -187,5 +185,35 @@ public class Logic_Enemy : MonoBehaviour
         bulletCom.Set_Attribute(data.getBulletType, data.bulletSpeed);
         bulletCom.Init();
     }
-    
+
+
+
+
+
+    /*************** 기체 파괴 ***************/
+
+    /// <summary> 폭발 이펙트 출현 </summary>
+    public static GameObject Explosion(Enemy enemy, string obj, string audio, bool randomExplode = false)
+    {
+        GameObject explosion = PoolManager.instance.MakeObject(obj, false);
+
+        // 랜덤 위치 폭발 유무 확인
+        if (!randomExplode) explosion.transform.position = enemy.transform.position;
+        else
+        {
+            Vector2 Pos = enemy.transform.position;
+            Vector2 ExplosionPos = new Vector2(
+                Random.Range(Pos.x - 2, Pos.x + 2),
+                Random.Range(Pos.y - 1, Pos.y + 1));
+
+            explosion.transform.position = ExplosionPos;
+        }
+
+        explosion.GetComponent<Effect>().audio.clip =
+            AudioManager.instance.getAudioClip(audio);
+
+        explosion.SetActive(true);
+
+        return explosion;
+    }
 }

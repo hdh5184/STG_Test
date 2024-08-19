@@ -260,10 +260,10 @@ public class Player : MonoBehaviour
                     StageManager.playerLevel = (StageManager.playerLevel == 4) ? 4 : StageManager.playerLevel + 1;
                     audioSub.clip = audioManager.getAudioClip("GetItem"); break;
                 case ItemType.SilverCoin:
-                    StageManager.Score += 50;
+                    StageManager.score += 50;
                     audioSub.clip = audioManager.getAudioClip("GetCoin"); break;
                 case ItemType.GoldCoin:
-                    StageManager.Score += 250;
+                    StageManager.score += 250;
                     audioSub.clip = audioManager.getAudioClip("GetCoin"); break;
             }
             audioSub.Play();
