@@ -16,6 +16,9 @@ public class Enemy_Boss : Enemy
     public Queue<BossData> queue_Attack;
     public BossData finalAttack;
 
+    // Coroutine
+    Coroutine bossCoroutine;
+
     protected override void Awake()
     {
         base.Awake();
@@ -35,7 +38,7 @@ public class Enemy_Boss : Enemy
         SetBossData(this, queue_Attack.Dequeue());
         Change_Attack(attackType);
         Init_AttackData(this, ref attackData);
-        StartCoroutine(FinalAttack());
+        bossCoroutine = StartCoroutine(FinalAttack());
 
         fieldTimeLimit = 10000;
     }
@@ -75,6 +78,8 @@ public class Enemy_Boss : Enemy
 
     protected override void Dead()
     {
+        StopCoroutine(bossCoroutine);
+
         enemyState = EnemyState.Dead;
         score += setScore;
         EnemyList.Remove(gameObject);

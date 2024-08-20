@@ -208,6 +208,7 @@ public class Enemy : MonoBehaviour
 
     /*************** 초기 로직 모음 ***************/
 
+    /// <summary> 감쇠 후 직진 전환용 Coroutine </summary>
     protected IEnumerator SlowToStr()
     {
         yield return new WaitForSeconds(1f);
@@ -215,6 +216,7 @@ public class Enemy : MonoBehaviour
         Change_Move(MoveType.Straight);
     }
 
+    /// <summary> 초기 대기 </summary>
     protected virtual void FirstIdle()
     {
         if (fieldTime < firstWaitTime) return;
@@ -358,7 +360,7 @@ public class Enemy : MonoBehaviour
 
 
 
-    /*************** 기체 충돌 로직 모음 ***************/
+    /*************** Enemy 충돌 로직 모음 ***************/
 
     /// <summary> 충돌 </summary>
     private void OnTriggerEnter2D(Collider2D collision)
@@ -367,7 +369,7 @@ public class Enemy : MonoBehaviour
 
         if (collision.tag == "PlayerBullet")
         {
-            Health -= collision.GetComponent<PlayerBullet>().power;
+            Health -= collision.GetComponent<Bullet>().power;
             collision.gameObject.SetActive(false);
         }
 

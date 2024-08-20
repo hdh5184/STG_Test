@@ -27,8 +27,8 @@ public class PlayerBullet : MonoBehaviour
     public enum PBulletType { Bullet, Accel, Homing }
 
     // @. 대리자
-    delegate void Move_Set();
-    Move_Set Move;
+    public delegate void Set_Move();
+    Set_Move Move;
 
 
 

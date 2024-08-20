@@ -259,7 +259,7 @@ public class StageManager : MonoBehaviour
         {
             case 1:
                 //StageDataName = "Spawn_Stage1 copy";
-                StageDataName = "Spawn_Stage1";
+                StageDataName = "Spawn_Stage1 copy";
                 StageBossDataName = "BossLogic_A"; break;
             case 2:
                 StageDataName = "Spawn_Stage2";

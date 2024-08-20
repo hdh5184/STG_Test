@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5097537188923291581}
   - component: {fileID: 6753474218934383274}
   - component: {fileID: 9036237662571584009}
-  - component: {fileID: 4282976021336295641}
   - component: {fileID: 663496048503812249}
   - component: {fileID: -5600677712229299446}
+  - component: {fileID: -6450403001020156110}
   m_Layer: 0
   m_Name: PA_Bullet_LvMAX
   m_TagString: PlayerBullet
@@ -109,22 +109,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &4282976021336295641
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1566952591324084448}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e110075007c61492f8a014fa9d002b1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 0}
-  PBType: 0
-  PBLevel: 3
-  power: 0
 --- !u!58 &663496048503812249
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -172,3 +156,18 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_SortAtRoot: 0
+--- !u!114 &-6450403001020156110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1566952591324084448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cd20698b0e5b4e0a9d427ede32e4e48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  getBulletType: 
+  speed: 0
+  power: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 using static Enemy;
+using static Logic_Bullet;
 
 /* <Enemy 로직 모음> */
 public class Logic_Enemy : MonoBehaviour
@@ -49,18 +50,18 @@ public class Logic_Enemy : MonoBehaviour
         (data.moveVec * data.movSpeed * Time.deltaTime * data.fieldTime * 2);
     }
 
-    /// <summary> str : 직진 이동 </summary>
-    public static void Move_Str(ref MoveData data)
-    {
-        data.transform.Translate
-        (data.moveVec * data.movSpeed * Time.deltaTime);
-    }
-
     /// <summary> slow : 지정 위치까지 감쇠 이동 </summary>
     public static void Move_Slow(ref MoveData data)
     {
         data.transform.position =
         Vector2.Lerp(data.transform.position, data.moveVec, 0.07f);
+    }
+
+    /// <summary> str : 직진 이동 </summary>
+    public static void Move_Str(ref MoveData data)
+    {
+        data.transform.Translate
+        (data.moveVec * data.movSpeed * Time.deltaTime);
     }
 
     /// <summary> none : 이동 없음 </summary>
@@ -172,8 +173,8 @@ public class Logic_Enemy : MonoBehaviour
     private static void Fire(ref AttackData data)
     {
         // 1. 탄 오브젝트 및 속성 불러오기
-        GameObject bullet = data.pool.MakeObject(data.getBulletName);
-        EnemyBullet bulletCom = bullet.GetComponent<EnemyBullet>();
+        GameObject bullet = data.pool.MakeObject(data.getBulletName, false);
+        Bullet bulletCom = bullet.GetComponent<Bullet>();
 
         // 2. Transform 속성 지정
         Quaternion rotate = Quaternion.Euler(0, 0, data.degree);
@@ -182,8 +183,9 @@ public class Logic_Enemy : MonoBehaviour
         bullet.transform.rotation = rotate;
 
         // 3. 탄 속성 지정 및 초기화
-        bulletCom.Set_Attribute(data.getBulletType, data.bulletSpeed);
-        bulletCom.Init();
+        Set_Attribute(bulletCom, data.getBulletType, data.bulletSpeed);
+        //bulletCom.Init();
+        bullet.SetActive(true);
     }
 
 

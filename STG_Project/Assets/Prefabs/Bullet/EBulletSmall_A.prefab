@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 441417343391813539}
   - component: {fileID: 8243488344210258175}
   - component: {fileID: 2687404117995728147}
-  - component: {fileID: -5757013541152083558}
+  - component: {fileID: -403401841454678093}
   m_Layer: 0
   m_Name: EBulletSmall_A
   m_TagString: EnemyBullet
@@ -171,7 +171,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-5757013541152083558
+--- !u!114 &-403401841454678093
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -180,10 +180,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 9100620385646925958}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e506ff223e5b34c60b184c05eaabb8bd, type: 3}
+  m_Script: {fileID: 11500000, guid: f354534072be54511bf75ee4db56ff7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletType: 0
   getBulletType: 
-  enemyFromCode: 0
   speed: 0
+  power: 0

@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3049694052447837003}
   - component: {fileID: 7484725724437332556}
-  - component: {fileID: 7509816208370349014}
   - component: {fileID: -4749117782657233194}
+  - component: {fileID: 4316514880376106125}
   m_Layer: 0
   m_Name: PA_Bullet_Lv3
   m_TagString: PlayerBullet
@@ -72,22 +72,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0.15}
   m_Size: {x: 0.5, y: 0.3}
   m_Direction: 1
---- !u!114 &7509816208370349014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2188580186563214276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e110075007c61492f8a014fa9d002b1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetEnemy: {fileID: 0}
-  PBType: 0
-  PBLevel: 2
-  power: 0
 --- !u!210 &-4749117782657233194
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -100,6 +84,22 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_SortAtRoot: 0
+--- !u!114 &4316514880376106125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2188580186563214276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1942ca0c9522544738477e110a91db25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  getBulletType: 
+  speed: 0
+  power: 0
+  pBullet_Lv: 5
 --- !u!1 &4387693078073091171
 GameObject:
   m_ObjectHideFlags: 0

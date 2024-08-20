@@ -502,7 +502,7 @@ public class Enemy_Legacy : MonoBehaviour
     {
         // 1. 탄 오브젝트 및 속성 불러오기
         GameObject bullet = pool.MakeObject(getBulletName);
-        EnemyBullet bulletCom = bullet.GetComponent<EnemyBullet>();
+        Bullet bulletCom = bullet.GetComponent<Bullet>();
 
         // 2. Transform 속성 지정
         Vector2 pos = (shootPos == null) ?
@@ -514,7 +514,7 @@ public class Enemy_Legacy : MonoBehaviour
 
         // 3. 탄 속성 지정 및 초기화
         bulletCom.Set_Attribute(getBulletType, bulletSpeed);
-        bulletCom.Init();
+        //bulletCom.Init();
 
         // 4. 기타
         IdleTime = 0;
