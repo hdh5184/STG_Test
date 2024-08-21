@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1548284935227467727}
   - component: {fileID: 1548284935227467762}
   - component: {fileID: 1548284935227467763}
-  - component: {fileID: 620461741338154116}
   - component: {fileID: -5913444059756155701}
+  - component: {fileID: -47701178635599254}
   m_Layer: 0
   m_Name: SilverCoin
   m_TagString: Item
@@ -172,19 +172,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &620461741338154116
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1548284935227467726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74064b7ac66be4e838ab1b6502026572, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemType: 2
 --- !u!210 &-5913444059756155701
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -197,3 +184,17 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 7
   m_SortAtRoot: 0
+--- !u!114 &-47701178635599254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1548284935227467726}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c18691670f424b88ba99b74fa0a0601, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioManager: {fileID: 0}
+  coinType: 50

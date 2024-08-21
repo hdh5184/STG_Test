@@ -254,18 +254,7 @@ public class Player : MonoBehaviour
         {
             Item item = collision.GetComponent<Item>();
 
-            switch (item.itemType)
-            {
-                case ItemType.PowerUp:
-                    StageManager.playerLevel = (StageManager.playerLevel == 4) ? 4 : StageManager.playerLevel + 1;
-                    audioSub.clip = audioManager.getAudioClip("GetItem"); break;
-                case ItemType.SilverCoin:
-                    StageManager.score += 50;
-                    audioSub.clip = audioManager.getAudioClip("GetCoin"); break;
-                case ItemType.GoldCoin:
-                    StageManager.score += 250;
-                    audioSub.clip = audioManager.getAudioClip("GetCoin"); break;
-            }
+            item.GetItem(audioSub);
             audioSub.Play();
             collision.gameObject.SetActive(false);
         }

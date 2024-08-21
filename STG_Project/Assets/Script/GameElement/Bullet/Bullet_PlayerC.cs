@@ -2,8 +2,10 @@ using UnityEngine;
 using static StageManager;
 using static Logic_Bullet;
 
+/* <Bullet 플레이어 C타입 최고 레벨 전용> */
 public class Bullet_PlayerC : Bullet
 {
+    // 추적용 적기 오브젝트
     GameObject targetEnemy;
 
     private void Awake()
@@ -42,7 +44,13 @@ public class Bullet_PlayerC : Bullet
         base.Move();
     }
 
-    /// <summary> Target 검사 </summary>
+
+
+
+
+    /*************** 개별 매서드 모음 ***************/
+
+    /// <summary> Target 존재 유무 검사 </summary>
     void Target_Compare()
     {
         // Target 미존재 시 미실행
@@ -52,13 +60,13 @@ public class Bullet_PlayerC : Bullet
         if (targetEnemy.gameObject.activeSelf == false) targetEnemy = null;
     }
 
-    /// <summary> Target 설정 </summary>
+    /// <summary> Target 검색 </summary>
     void Target_Search()
     {
         // Target 존재 시 미실행
         if (targetEnemy != null) return;
 
-        // PlayerBullet와 가장 가까운 Enemy를 타겟으로 지정
+        // 탄과 가장 가까운 Enemy를 타겟으로 지정
         float minDis = 100;
 
         foreach (var enemy in EnemyList)

@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 3218407322416919725}
   - component: {fileID: 1775241348762999033}
   - component: {fileID: 2553503837820620458}
-  - component: {fileID: 3327289496730001479}
   - component: {fileID: -7220835520271937711}
+  - component: {fileID: -8689397441764156288}
   m_Layer: 0
   m_Name: Item_PowerUp
   m_TagString: Item
@@ -150,19 +150,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3327289496730001479
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5750233356497935653}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74064b7ac66be4e838ab1b6502026572, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemType: 0
 --- !u!210 &-7220835520271937711
 SortingGroup:
   m_ObjectHideFlags: 0
@@ -175,3 +162,16 @@ SortingGroup:
   m_SortingLayer: 0
   m_SortingOrder: 7
   m_SortAtRoot: 0
+--- !u!114 &-8689397441764156288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5750233356497935653}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82fcbad89214f454a86b4d58db52db37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioManager: {fileID: 0}

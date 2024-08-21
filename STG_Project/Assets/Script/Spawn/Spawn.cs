@@ -1,14 +1,16 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static Init_Enemy;
 
-public struct BossData
+/* <Enemy 데이터> */
+public struct EnemyData
 {
     // 1. 기본 속성
     public float delay;
+    public string enemyType;
     public float posX;
     public float posY;
+    public string dropItemName;
 
     // 2. 이동 속성
     public float movX;
@@ -21,8 +23,8 @@ public struct BossData
     public float movExitX;
     public float movExitY;
 
-    // 3. Boss 파츠 위치
-    public bool[] isShoot;
+    // 3. 필드 출현 시간 (제한)
+    public float fieldTimeLimit;
 
     // 4. 공격 속성
     public string bulletType;
@@ -33,39 +35,38 @@ public struct BossData
     public float firstWaitTime;
     public float waitTime;
 
-    // 0. Boss 진행 코드
-    public string BossLogicCode;
+    // 0. 편대 코드
+    public string spawnCode;
 }
 
 
 
 
 
-public class Spawn_Boss
+/* <Enemy 생성 클래스> */
+public class Spawn
 {
-    /// <summary> Boss 데이터 설정 </summary>
-    public static void SetBossLogicData(string stageName, Enemy_Boss boss)
+    /// <summary> Enemy 데이터 불러오기 </summary>
+    public static void SetSpawnLogicData(string stageName, List<EnemyData> spawnList)
     {
         // Enemy 컴포넌트 불러오기 및 초기화
-        Queue<BossData> bossAttact = new Queue<BossData>();
-        BossData finalAttackData = new BossData();
+        spawnList.Clear();
 
         // Enemy 데이터 불러오기
         List<Dictionary<string, object>> getData = CSVReader.Read(stageName);
 
-        boss.queue_Attack = new Queue<BossData>();
-        boss.finalAttack = new BossData();
-
-        // Boss 데이터 적용
+        // Enemy 데이터 적용
         for (int i = 0; i < getData.Count; i++)
         {
-            BossData listData = new BossData();
+            EnemyData listData = new EnemyData();
 
-            listData.BossLogicCode = getData[i]["BossLogicCode"].ToString();
+            listData.spawnCode = getData[i]["spawnCode"].ToString();
 
             listData.delay = float.Parse(getData[i]["delay"].ToString());
+            listData.enemyType = getData[i]["enemyType"].ToString();
             listData.posX = float.Parse(getData[i]["posX"].ToString());
             listData.posY = float.Parse(getData[i]["posY"].ToString());
+            listData.dropItemName = getData[i]["dropItemName"].ToString();
 
             listData.movX = float.Parse(getData[i]["movX"].ToString());
             listData.movY = float.Parse(getData[i]["movY"].ToString());
@@ -76,13 +77,7 @@ public class Spawn_Boss
             listData.movDesY = float.Parse(getData[i]["movDesY"].ToString());
             listData.movExitX = float.Parse(getData[i]["movExitX"].ToString());
             listData.movExitY = float.Parse(getData[i]["movExitY"].ToString());
-
-            listData.isShoot = new bool[5];
-            listData.isShoot[0] = (getData[i]["pos1"].ToString() == "1") ? true : false;
-            listData.isShoot[1] = (getData[i]["pos2"].ToString() == "1") ? true : false;
-            listData.isShoot[2] = (getData[i]["pos3"].ToString() == "1") ? true : false;
-            listData.isShoot[3] = (getData[i]["pos4"].ToString() == "1") ? true : false;
-            listData.isShoot[4] = (getData[i]["pos5"].ToString() == "1") ? true : false;
+            listData.fieldTimeLimit = float.Parse(getData[i]["fieldTimeLimit"].ToString());
 
             listData.bulletType = getData[i]["bulletType"].ToString();
             listData.bulletName = getData[i]["bulletName"].ToString();
@@ -92,46 +87,41 @@ public class Spawn_Boss
             listData.firstWaitTime = float.Parse(getData[i]["firstWaitTime"].ToString());
             listData.waitTime = float.Parse(getData[i]["waitTime"].ToString());
 
-
-            if (getData[i]["BossLogicCode"].ToString() == "Final")
-            finalAttackData = listData;
-
-            else bossAttact.Enqueue(listData);
+            spawnList.Add(listData);
         }
-
-        boss.queue_Attack = bossAttact;
-        boss.finalAttack = finalAttackData;
     }
 
-
-    public static void SetBossData(Enemy_Boss boss, BossData data)
+    /// <summary> Enemy 데이터 적용 </summary>
+    public static void SetEnemyData(Enemy enemy, EnemyData data)
     {
+        // 1. Item
+        enemy.getDropItemName = data.dropItemName;
+
         // 2. Vector
-        boss.moveVec = new Vector2(data.movX, data.movY).normalized;
-        boss.moveDesVec = new Vector2(data.movDesX, data.movDesY);
-        boss.moveExitVec = new Vector2(data.movExitX, data.movExitY).normalized;
+        enemy.moveVec = new Vector2(data.movX, data.movY).normalized;
+        enemy.moveDesVec = new Vector2(data.movDesX, data.movDesY);
+        enemy.moveExitVec = new Vector2(data.movExitX, data.movExitY).normalized;
 
         // 3. Enemy Attribute
-        boss.degreeZ = data.degreeZ;
-        boss.movSpeed = data.movSpeed;
-        boss.getMovingType = data.movingType;
+        enemy.degreeZ = data.degreeZ;
+        enemy.movSpeed = data.movSpeed;
+        enemy.getMovingType = data.movingType;
+        enemy.fieldTimeLimit = data.fieldTimeLimit;
 
         // 4. Bullet Attribute
-        boss.getBulletType = data.bulletType;
-        boss.getBulletName = data.bulletName;
-        boss.getPatternType = data.patternType;
-        boss.bulletSpeed = data.bulletSpeed;
-        boss.shootLimit = data.shootLimit;
-
-        boss.shootPos_isShoot = data.isShoot;
-
+        enemy.getBulletType = data.bulletType;
+        enemy.getBulletName = data.bulletName;
+        enemy.getPatternType = data.patternType;
+        enemy.bulletSpeed = data.bulletSpeed;
+        enemy.shootLimit = data.shootLimit;
 
         // 5. Time
-        boss.waitTime = data.delay;
+        enemy.firstWaitTime = data.firstWaitTime;
+        enemy.waitTime = data.waitTime;
 
-        Init_Pattern(boss, boss.getPatternType);
-        Init_Moving(boss, boss.getMovingType);
+        Init_Pattern(enemy, enemy.getPatternType);
+        Init_Moving(enemy, enemy.getMovingType);
 
-        boss.queue_Attack.Enqueue(data);
+        enemy.transform.rotation = Quaternion.Euler(0, 0, enemy.degreeZ);
     }
 }

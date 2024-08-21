@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1582078956130931353}
   - component: {fileID: 4685896207995287714}
   - component: {fileID: 274699194853195084}
+  - component: {fileID: 2709700462646483855}
   - component: {fileID: 7100868000604192577}
   m_Layer: 0
   m_Name: Item_Heal
@@ -149,6 +150,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2709700462646483855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4036358780111200627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74064b7ac66be4e838ab1b6502026572, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemType: 1
 --- !u!210 &7100868000604192577
 SortingGroup:
   m_ObjectHideFlags: 0

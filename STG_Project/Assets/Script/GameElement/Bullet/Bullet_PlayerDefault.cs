@@ -2,6 +2,7 @@ using UnityEngine;
 using static StageManager;
 using static Logic_Bullet;
 
+/* <Bullet 플레이어 전용> */
 public class Bullet_PlayerDefault : Bullet
 {
     public enum PBullet_Lv { Lv1 = 3, Lv2 = 4, Lv3 = 5 };

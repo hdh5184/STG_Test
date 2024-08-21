@@ -135,7 +135,7 @@ public class Enemy : MonoBehaviour
         Move();
         Attack();
         Act();
-        CompareExit();
+        Compare_Exit();
     }
 
 
@@ -280,7 +280,7 @@ public class Enemy : MonoBehaviour
     protected void Act() => set_Act();
 
     /// <summary> 필드 탈출 검사 로직 </summary>
-    protected void CompareExit()
+    protected void Compare_Exit()
     {
         if (enemyState == EnemyState.Exit) return;
         if (fieldTime < fieldTimeLimit) return;

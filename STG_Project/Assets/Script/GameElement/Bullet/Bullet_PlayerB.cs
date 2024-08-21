@@ -2,6 +2,7 @@ using UnityEngine;
 using static StageManager;
 using static Logic_Bullet;
 
+/* <Bullet 플레이어 B타입 최고 레벨 전용> */
 public class Bullet_PlayerB : Bullet
 {
     private void Awake()

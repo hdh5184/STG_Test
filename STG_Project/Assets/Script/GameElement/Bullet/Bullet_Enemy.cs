@@ -2,6 +2,7 @@ using UnityEngine;
 using static StageManager;
 using static Logic_Bullet;
 
+/* <Bullet 적기 전용> */
 public class Bullet_Enemy : Bullet
 {
     private void Awake()
